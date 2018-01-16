@@ -1,16 +1,10 @@
 apply plugin: 'com.android.application'
 apply plugin: 'vip.mystery0.autoversion'
 
-//一种常见软件版本号的形式是major.minor.patch.build：
-//major是主版本号，一般在软件有重大升级时增长
-//minor是次版本号，一般在软件有新功能时增长
-//patch，一般在软件有主要的问题修复后增长
-//build是构建版本，一般只要软件被重新编译过就会增长
-
 autoVersion {
-    major 3
+    major 2
     minor 0
-    patch 2
+    patch 0
     beta 0
     alpha 0
 }
@@ -24,6 +18,7 @@ android {
         versionCode autoVersion.code
         versionName autoVersion.name
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        setProperty("archivesBaseName", "JanYo Share-$versionName-$versionCode")
     }
     buildTypes {
         release {
