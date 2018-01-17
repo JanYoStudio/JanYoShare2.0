@@ -1,15 +1,18 @@
 package pw.janyo.janyoshare.classes;
 
+import android.graphics.drawable.Drawable;
+
 public class InstallAPP {
-    String name;
-    String versionName;
-    int versionCode;
-    String sourceDir;
-    String packageName;
-    String iconPath;
-    long size;
-    long installTime;
-    long updateTime;
+    private String name;
+    private String versionName;
+    private int versionCode;
+    private String sourceDir;
+    private String packageName;
+    private String iconPath;
+    private Drawable icon;
+    private long size;
+    private long installTime;
+    private long updateTime;
 
     public String getName() {
         return name;
@@ -57,6 +60,14 @@ public class InstallAPP {
 
     public void setIconPath(String iconPath) {
         this.iconPath = iconPath;
+    }
+
+    public Drawable getIcon() {
+        return icon;
+    }
+
+    public void setIcon(Drawable icon) {
+        this.icon = icon;
     }
 
     public long getSize() {

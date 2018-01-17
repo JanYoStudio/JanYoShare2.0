@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pw.janyo.janyoshare.classes.InstallAPP;
+import pw.janyo.janyoshare.util.drawable.DrawableFactory;
 import vip.mystery0.tools.logs.Logs;
 
 public class AppManager {
@@ -18,6 +19,7 @@ public class AppManager {
     public final static int SYSTEM = 2;
 
     public static List<InstallAPP> getInstallAPPList(Context context, int appType) {
+        DrawableFactory drawableFactory = new DrawableFactory();
         PackageManager packageManager = context.getPackageManager();
         List<PackageInfo> packageInfoList = packageManager.getInstalledPackages(0);
         List<InstallAPP> installAPPList = new ArrayList<>();
@@ -31,7 +33,11 @@ public class AppManager {
                         installAPP.setVersionCode(packageInfo.versionCode);
                         installAPP.setSourceDir(packageInfo.applicationInfo.sourceDir);
                         installAPP.setPackageName(packageInfo.applicationInfo.packageName);
-//                        String sourceIconPath=context.getCacheDir()
+                        String sourceIconPath = context.getCacheDir().getAbsolutePath() + File.separator + "icon" + File.separator + packageInfo.applicationInfo.packageName;
+                        if (drawableFactory.save(packageInfo.applicationInfo.loadIcon(packageManager), sourceIconPath))
+                            installAPP.setIconPath(sourceIconPath);
+                        else
+                            installAPP.setIcon(packageInfo.applicationInfo.loadIcon(packageManager));
                         installAPP.setSize((new File(packageInfo.applicationInfo.publicSourceDir)).length());
                         installAPP.setInstallTime(packageInfo.firstInstallTime);
                         installAPP.setUpdateTime(packageInfo.lastUpdateTime);
@@ -48,7 +54,11 @@ public class AppManager {
                         installAPP.setVersionCode(packageInfo.versionCode);
                         installAPP.setSourceDir(packageInfo.applicationInfo.sourceDir);
                         installAPP.setPackageName(packageInfo.applicationInfo.packageName);
-//                        String sourceIconPath=context.getCacheDir()
+                        String sourceIconPath = context.getCacheDir().getAbsolutePath() + File.separator + "icon" + File.separator + packageInfo.applicationInfo.packageName;
+                        if (drawableFactory.save(packageInfo.applicationInfo.loadIcon(packageManager), sourceIconPath))
+                            installAPP.setIconPath(sourceIconPath);
+                        else
+                            installAPP.setIcon(packageInfo.applicationInfo.loadIcon(packageManager));
                         installAPP.setSize((new File(packageInfo.applicationInfo.publicSourceDir)).length());
                         installAPP.setInstallTime(packageInfo.firstInstallTime);
                         installAPP.setUpdateTime(packageInfo.lastUpdateTime);

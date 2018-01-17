@@ -9,6 +9,11 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.MediaStoreSignature;
+
 import java.util.List;
 
 import pw.janyo.janyoshare.R;
@@ -19,6 +24,8 @@ import vip.mystery0.tools.fileUtil.FileUtil;
 public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
     private Context context;
     private List<InstallAPP> installAPPList;
+    private RequestOptions options = new RequestOptions()
+            .diskCacheStrategy(DiskCacheStrategy.NONE);
 
     public AppAdapter(Context context, List<InstallAPP> installAPPList) {
         this.context = context;
@@ -38,6 +45,10 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
         holder.textViewPackageName.setText(installAPP.getPackageName());
         holder.textViewVersionName.setText(installAPP.getVersionName());
         holder.textViewSize.setText(FileUtil.INSTANCE.FormatFileSize(installAPP.getSize()));
+        if (installAPP.getIconPath() != null)
+            Glide.with(context).load(installAPP.getIconPath()).apply(options).into(holder.imageView);
+        else
+            holder.imageView.setImageDrawable(installAPP.getIcon());
     }
 
     @Override

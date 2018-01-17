@@ -8,4 +8,7 @@
     <string name="title_fragment_system">System</string>
 
     <string name="action_settings">Settings</string>
+    <string name="action_grant_permission">Authorized</string>
+
+    <string name="hint_permission">Please grant permission to copy apk file to SD card! </string>
 </resources>

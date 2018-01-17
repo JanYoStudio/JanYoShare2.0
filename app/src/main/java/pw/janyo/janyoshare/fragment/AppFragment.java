@@ -74,13 +74,7 @@ public class AppFragment extends Fragment {
         return view;
     }
 
-    public void refresh() {
-        Logs.i(TAG, "refresh: ");
-        swipeRefreshLayout.setRefreshing(true);
-        refreshList();
-    }
-
-    private void refreshList() {
+    public void refreshList() {
         Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> subscriber) throws Exception {
@@ -89,6 +83,7 @@ public class AppFragment extends Fragment {
                         break;
                     Thread.sleep(200);
                 }
+                subscriber.onNext(true);
                 list.clear();
                 list.addAll(AppManager.getInstallAPPList(getActivity(), type));
                 subscriber.onComplete();
@@ -105,6 +100,8 @@ public class AppFragment extends Fragment {
 
                     @Override
                     public void onNext(Boolean aBoolean) {
+                        if (aBoolean)
+                            swipeRefreshLayout.setRefreshing(true);
                     }
 
                     @Override
