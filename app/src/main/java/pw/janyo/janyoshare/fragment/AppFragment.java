@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import pw.janyo.janyoshare.R;
 import pw.janyo.janyoshare.adapter.AppAdapter;
 import pw.janyo.janyoshare.classes.InstallAPP;
 import pw.janyo.janyoshare.util.AppManager;
+import pw.janyo.janyoshare.util.JanYoFileUtil;
 import vip.mystery0.tools.logs.Logs;
 
 
@@ -68,22 +70,13 @@ public class AppFragment extends Fragment {
                 refreshList();
             }
         });
-
-        refreshList();
-
         return view;
     }
 
-    public void refreshList() {
+    private void refreshList() {
         Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> subscriber) throws Exception {
-                while (true) {
-                    if (appAdapter != null)
-                        break;
-                    Thread.sleep(200);
-                }
-                subscriber.onNext(true);
                 list.clear();
                 list.addAll(AppManager.getInstallAPPList(getActivity(), type));
                 subscriber.onComplete();
@@ -95,13 +88,11 @@ public class AppFragment extends Fragment {
                 .subscribe(new Observer<Boolean>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        Logs.i(TAG, "onSubscribe: ");
+                        swipeRefreshLayout.setRefreshing(true);
                     }
 
                     @Override
                     public void onNext(Boolean aBoolean) {
-                        if (aBoolean)
-                            swipeRefreshLayout.setRefreshing(true);
                     }
 
                     @Override
@@ -116,6 +107,68 @@ public class AppFragment extends Fragment {
                         Logs.i(TAG, "onComplete: " + list.size());
                         appAdapter.notifyDataSetChanged();
                         swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+    }
+
+    public void loadCacheList() {
+        Observable.create(new ObservableOnSubscribe<List<InstallAPP>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<InstallAPP>> subscriber) throws Exception {
+                while (true) {
+                    if (appAdapter != null)
+                        break;
+                    Thread.sleep(200);
+                }
+                String fileName;
+                switch (type) {
+                    case AppManager.USER:
+                        fileName = JanYoFileUtil.USER_LIST_FILE;
+                        break;
+                    case AppManager.SYSTEM:
+                        fileName = JanYoFileUtil.SYSTEM_LIST_FILE;
+                        break;
+                    default:
+                        Logs.e(TAG, "subscribe: 应用类型错误");
+                        fileName = "";
+                        break;
+                }
+                File file = new File(getActivity().getExternalCacheDir(), fileName);
+                subscriber.onNext(JanYoFileUtil.getListFromFile(file, InstallAPP.class));
+                subscriber.onComplete();
+            }
+        })
+                .subscribeOn(Schedulers.newThread())
+                .unsubscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<InstallAPP>>() {
+                    private List<InstallAPP> installAPPList = new ArrayList<>();
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Logs.i(TAG, "onSubscribe: ");
+                    }
+
+                    @Override
+                    public void onNext(List<InstallAPP> installAPPList) {
+                        this.installAPPList.clear();
+                        this.installAPPList.addAll(installAPPList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        refreshList();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        if (installAPPList.size() != 0) {
+                            list.clear();
+                            list.addAll(installAPPList);
+                            appAdapter.notifyDataSetChanged();
+                            swipeRefreshLayout.setRefreshing(false);
+                        } else
+                            refreshList();
                     }
                 });
     }

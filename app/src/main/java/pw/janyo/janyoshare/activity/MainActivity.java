@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         viewPagerAdapter.addFragment(userFragment, getString(R.string.title_fragment_user));
         viewPagerAdapter.addFragment(systemFragment, getString(R.string.title_fragment_system));
         currentFragment = userFragment;
-        currentFragment.refreshList();
+        currentFragment.loadCacheList();
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 AppFragment fragment = (AppFragment) viewPagerAdapter.getItem(position);
-                fragment.refreshList();
+                fragment.loadCacheList();
                 currentFragment = fragment;
             }
 

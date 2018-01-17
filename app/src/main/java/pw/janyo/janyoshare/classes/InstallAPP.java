@@ -93,4 +93,19 @@ public class InstallAPP {
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"name\":\"" + name + '"' +
+                ", \"versionName\":\"" + versionName + '"' +
+                ", \"versionCode\":" + versionCode +
+                ", \"sourceDir\":\"" + sourceDir + '"' +
+                ", \"packageName\":\"" + packageName + '"' +
+                ", \"iconPath\":\"" + iconPath + '"' +
+                ", \"size\":" + size +
+                ", \"installTime\":" + installTime +
+                ", \"updateTime\":" + updateTime +
+                '}';
+    }
 }
