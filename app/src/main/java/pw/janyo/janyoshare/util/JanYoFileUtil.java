@@ -62,12 +62,8 @@ public class JanYoFileUtil {
     }
 
     public static boolean saveAppList(Context context, List<InstallAPP> list, String fileName) {
-        List<String> stringList = new ArrayList<>();
-        for (InstallAPP installAPP : list) {
-            stringList.add(installAPP.toString());
-        }
         File file = new File(context.getExternalCacheDir(), fileName);
-        return saveObject(stringList, file);
+        return saveObject(list, file);
     }
 
     public static boolean saveObject(Object object, File file) {

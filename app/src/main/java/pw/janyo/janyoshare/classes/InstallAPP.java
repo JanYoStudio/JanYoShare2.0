@@ -9,7 +9,7 @@ public class InstallAPP {
     private String sourceDir;
     private String packageName;
     private String iconPath;
-    private Drawable icon;
+    private transient Drawable icon;
     private long size;
     private long installTime;
     private long updateTime;
@@ -92,20 +92,5 @@ public class InstallAPP {
 
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-                "\"name\":\"" + name + '"' +
-                ", \"versionName\":\"" + versionName + '"' +
-                ", \"versionCode\":" + versionCode +
-                ", \"sourceDir\":\"" + sourceDir + '"' +
-                ", \"packageName\":\"" + packageName + '"' +
-                ", \"iconPath\":\"" + iconPath + '"' +
-                ", \"size\":" + size +
-                ", \"installTime\":" + installTime +
-                ", \"updateTime\":" + updateTime +
-                '}';
     }
 }
