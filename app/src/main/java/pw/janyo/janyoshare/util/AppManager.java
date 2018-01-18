@@ -26,7 +26,7 @@ public class AppManager {
         switch (appType) {
             case USER:
                 for (PackageInfo packageInfo : packageInfoList) {
-                    if ((packageInfo.applicationInfo.flags | ApplicationInfo.FLAG_SYSTEM) > 0) {
+                    if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) > 0) {
                         InstallAPP installAPP = new InstallAPP();
                         installAPP.setName(packageInfo.applicationInfo.loadLabel(packageManager).toString());
                         installAPP.setVersionName(packageInfo.versionName);
@@ -49,7 +49,7 @@ public class AppManager {
                 break;
             case SYSTEM:
                 for (PackageInfo packageInfo : packageInfoList) {
-                    if ((packageInfo.applicationInfo.flags | ApplicationInfo.FLAG_SYSTEM) <= 0) {
+                    if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) <= 0) {
                         InstallAPP installAPP = new InstallAPP();
                         installAPP.setName(packageInfo.applicationInfo.loadLabel(packageManager).toString());
                         installAPP.setVersionName(packageInfo.versionName);
