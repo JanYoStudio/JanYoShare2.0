@@ -1,6 +1,7 @@
 package pw.janyo.janyoshare.util;
 
 import android.content.Context;
+import android.os.Environment;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -9,7 +10,6 @@ import com.google.gson.JsonParser;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,13 +17,54 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import pw.janyo.janyoshare.APP;
 import pw.janyo.janyoshare.classes.InstallAPP;
 import vip.mystery0.tools.logs.Logs;
 
 public class JanYoFileUtil {
     private static final String TAG = "JanYoFileUtil";
+    private static final String JANYO_SHARE = "JanYo Share";
     public static final String USER_LIST_FILE = "user.list";
     public static final String SYSTEM_LIST_FILE = "system.list";
+    public static final int EXPORT_DIR_DATA = 0;
+    public static final int EXPORT_DIR_SDCARD_DATA = 1;
+    public static final int EXPORT_DIR_SDCARD = 2;
+    public static File EXPORT_APK_DIR;
+
+    private JanYoFileUtil() {
+    }
+
+    private static void initExportDir() {
+        switch (Settings.getTempDir()) {
+            case 0:
+                EXPORT_APK_DIR = new File(APP.getContext().getFilesDir(), JANYO_SHARE);
+                break;
+            case 1:
+                EXPORT_APK_DIR = new File(APP.getContext().getExternalFilesDir(null), JANYO_SHARE);
+                break;
+            case 2:
+                EXPORT_APK_DIR = new File(Environment.getExternalStorageDirectory(), JANYO_SHARE);
+                break;
+            default:
+                throw new NullPointerException("存储位置错误");
+        }
+    }
+
+    public static boolean cleanFileDir() {
+        initExportDir();
+        if (!EXPORT_APK_DIR.exists()) {
+            boolean mkdirs = EXPORT_APK_DIR.mkdirs();
+            Logs.i(TAG, "cleanFileDir: 创建导出临时目录: " + mkdirs);
+            if (!mkdirs)
+                return false;
+        }
+        if (EXPORT_APK_DIR.isDirectory()) {
+            for (File file : EXPORT_APK_DIR.listFiles())
+                Logs.i(TAG, "cleanFileDir: fileName: " + file.getName() + " deleteResult: " + file.delete());
+            return true;
+        }
+        return false;
+    }
 
     public static boolean copyFile(String inputPath, String outputPath) {
         if (!(new File(inputPath)).exists()) {

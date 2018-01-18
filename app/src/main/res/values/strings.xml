@@ -11,4 +11,8 @@
     <string name="action_grant_permission">Authorized</string>
 
     <string name="hint_permission">Please grant permission to copy apk file to SD card! </string>
+    <string name="hint_permission_denied">Some of the permissions were rejected, this will cause some problems…</string>
+    <string name="hint_clean_dir_done">Temporary directory cleanup completed! </string>
+    <string name="hint_clean_dir_error">Temporary directory cleanup failed! </string>
+    <string name="hint_twice_press_exit">Press again to exit! </string>
 </resources>

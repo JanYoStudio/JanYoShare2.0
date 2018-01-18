@@ -73,6 +73,10 @@ public class AppFragment extends Fragment {
         return view;
     }
 
+    public boolean isEmpty() {
+        return list.isEmpty();
+    }
+
     private void refreshList() {
         Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override

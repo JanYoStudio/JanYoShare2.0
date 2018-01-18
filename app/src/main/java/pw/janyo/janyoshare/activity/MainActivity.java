@@ -20,13 +20,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.Calendar;
+
 import pw.janyo.janyoshare.R;
 import pw.janyo.janyoshare.adapter.ViewPagerAdapter;
 import pw.janyo.janyoshare.fragment.AppFragment;
 import pw.janyo.janyoshare.util.AppManager;
+import pw.janyo.janyoshare.util.JanYoFileUtil;
+import pw.janyo.janyoshare.util.Settings;
+import vip.mystery0.tools.logs.Logs;
 
 public class MainActivity extends AppCompatActivity {
-    private final static int PERMISSION_CODE = 233;
+    private static final String TAG = "MainActivity";
+    private final static int PERMISSION_AUTO_CLEAN = 233;
+    private long lastPressTime = 0;
     private AppFragment currentFragment;
     private Toolbar toolbar;
     private CoordinatorLayout coordinatorLayout;
@@ -37,15 +44,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkPermission();
         initialization();
         monitor();
-    }
-
-    private void checkPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_CODE);
-        }
     }
 
     private void initialization() {
@@ -75,7 +75,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 AppFragment fragment = (AppFragment) viewPagerAdapter.getItem(position);
-                fragment.loadCacheList();
+                if (fragment.isEmpty())
+                    fragment.loadCacheList();
                 currentFragment = fragment;
             }
 
@@ -89,6 +90,13 @@ public class MainActivity extends AppCompatActivity {
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        if (Settings.isAutoClean())
+            if (Settings.getTempDir() == JanYoFileUtil.EXPORT_DIR_SDCARD && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_AUTO_CLEAN);
+            else
+                Snackbar.make(coordinatorLayout, JanYoFileUtil.cleanFileDir() ? R.string.hint_clean_dir_done : R.string.hint_clean_dir_error, Snackbar.LENGTH_LONG)
+                        .show();
     }
 
     private void monitor() {
@@ -107,9 +115,12 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        } else if (Calendar.getInstance().getTimeInMillis() - lastPressTime >= 3000) {
+            lastPressTime = Calendar.getInstance().getTimeInMillis();
+            Snackbar.make(coordinatorLayout, R.string.hint_twice_press_exit, Snackbar.LENGTH_LONG)
+                    .show();
+        } else
+            finish();
     }
 
     @Override
@@ -127,21 +138,22 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == PERMISSION_CODE) {
+        if (requestCode == PERMISSION_AUTO_CLEAN) {
             for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
                     Snackbar.make(coordinatorLayout, R.string.hint_permission, Snackbar.LENGTH_LONG)
                             .setAction(R.string.action_grant_permission, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    checkPermission();
+                                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_AUTO_CLEAN);
                                 }
                             })
                             .addCallback(new Snackbar.Callback() {
                                 @Override
                                 public void onDismissed(Snackbar transientBottomBar, int event) {
                                     if (event != Snackbar.Callback.DISMISS_EVENT_ACTION)
-                                        finish();
+                                        Snackbar.make(coordinatorLayout, R.string.hint_permission_denied, Snackbar.LENGTH_LONG)
+                                                .show();
                                 }
                             })
                             .show();
