@@ -26,4 +26,20 @@ public class Settings {
     public static void setExportDir(int tempDir) {
         SHARED_PREFERENCES.edit().putInt("tempDir", tempDir).apply();
     }
+
+    public static boolean isCustomFormat() {
+        return SHARED_PREFERENCES.getBoolean("isCustomFormat", false);
+    }
+
+    public static void setCustomFormat(boolean isCustomFormat) {
+        SHARED_PREFERENCES.edit().putBoolean("isCustomFormat", isCustomFormat).apply();
+    }
+
+    public static String getRenameFormat() {
+        return SHARED_PREFERENCES.getString("renameFormat", "");
+    }
+
+    public static void setRenameFormat(String renameFormat) {
+        SHARED_PREFERENCES.edit().putString("renameFormat", renameFormat).apply();
+    }
 }

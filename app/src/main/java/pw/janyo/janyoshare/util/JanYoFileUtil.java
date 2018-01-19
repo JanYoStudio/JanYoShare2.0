@@ -71,6 +71,12 @@ public class JanYoFileUtil {
         return EXPORT_APK_DIR.getAbsolutePath();
     }
 
+    public static boolean exportAPK(InstallAPP installAPP) {
+        initExportDir();
+        String outputPath = EXPORT_APK_DIR.getAbsolutePath() + File.separator + installAPP.getName();
+        return copyFile(installAPP.getSourceDir(), outputPath);
+    }
+
     public static boolean copyFile(String inputPath, String outputPath) {
         if (!(new File(inputPath)).exists()) {
             Logs.e(TAG, "copyFile: 输入文件不存在");
@@ -181,5 +187,39 @@ public class JanYoFileUtil {
             }
         }
         return temp == 0;
+    }
+
+    public static String formatName(InstallAPP installAPP, String format) {
+        StringBuilder fileName = new StringBuilder();
+        int index = 0;
+        while (index < format.length())
+            if (format.charAt(index) == '%' && index + 1 < format.length())
+                switch (format.charAt(index + 1)) {
+                    case 'N':
+                        fileName.append(installAPP.getName());
+                        index += 2;
+                        break;
+                    case 'V':
+                        fileName.append(installAPP.getVersionName());
+                        index += 2;
+                        break;
+                    case 'W':
+                        fileName.append(installAPP.getVersionCode());
+                        index += 2;
+                        break;
+                    case 'P':
+                        fileName.append(installAPP.getPackageName());
+                        index += 2;
+                        break;
+                    default:
+                        fileName.append('%');
+                        index++;
+                        break;
+                }
+            else {
+                fileName.append(format.charAt(index));
+                index++;
+            }
+        return fileName.toString();
     }
 }

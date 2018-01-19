@@ -21,7 +21,19 @@ android {
         setProperty("archivesBaseName", "JanYo Share-$versionName-$versionCode")
     }
     buildTypes {
+        debug {
+            resValue "string", "app_version_name", autoVersion.name
+            resValue "string", "app_version_code", autoVersion.code + ''
+            resValue "string", "app_version", "$autoVersion.name-$autoVersion.code"
+            resValue "string", "app_package_name", "pw.janyo.janyoshare"
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
+            resValue "string", "app_version_name", autoVersion.name
+            resValue "string", "app_version_code", autoVersion.code + ''
+            resValue "string", "app_version", "$autoVersion.name-$autoVersion.code"
+            resValue "string", "app_package_name", "pw.janyo.janyoshare"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

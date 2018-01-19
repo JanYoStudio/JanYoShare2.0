@@ -29,7 +29,6 @@ import pw.janyo.janyoshare.util.AppManager;
 import pw.janyo.janyoshare.util.JanYoFileUtil;
 import vip.mystery0.tools.logs.Logs;
 
-
 public class AppFragment extends Fragment {
     public static AppFragment newInstance(int type) {
         Bundle bundle = new Bundle();

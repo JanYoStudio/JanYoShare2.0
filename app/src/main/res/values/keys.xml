@@ -7,4 +7,9 @@
     <string name="key_export_dir">key_export_dir</string>
     <string name="title_export_dir">Export path</string>
     <string name="summary_export_dir">Will be saved to %1$s.</string>
+    <string name="key_custom_rename_format">key_custom_rename_format</string>
+    <string name="title_custom_rename_format">Custom rename format</string>
+    <string name="key_custom_format">key_custom_format</string>
+    <string name="title_custom_format">Custom format</string>
+    <string name="summary_custom_format">Will rename like: %1$s</string>
 </resources>

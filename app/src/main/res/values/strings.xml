@@ -15,6 +15,9 @@
     <string name="action_license">License</string>
     <string name="action_support_us">Support us</string>
     <string name="action_open">Open</string>
+    <string name="action_search">Search</string>
+    <string name="action_sort">Sort</string>
+    <string name="action_insert">Insert \'%\'</string>
 
     <string name="hint_permission">Please grant permission to copy apk file to SD card! </string>
     <string name="hint_permission_denied">Some of the permissions were rejected, this will cause some problems…</string>
@@ -23,10 +26,20 @@
     <string name="hint_twice_press_exit">Press again to exit! </string>
     
     <string name="hint_warning_auto_clean">Please note that after you use JanYo Share to extract your desired app to TEMP directory, if you need to perform additional operations on the extracted application install package, make sure that you moved packages from the TEMP directory before the next time you start JanYo Share, otherwise it will be cleaned automatically.</string>
+    <string name="hint_custom_rename_format">%N represents the application name, \n%V represents the version name of the application, \n%W represents the version number of the application, and \n%P represents the package name of the application.</string>
 
-    <string name="array_data">Android internal storage (/data/data/pw.janyo.janyoshare/files/JanYo Share)</string>
-    <string name="array_sdcard_data">SDCard storage(without permissions) (/sdcard/Android/data/pw.janyo.janyoshare/files/JanYo Share)</string>
-    <string name="array_sdcard">SDCard storage (/sdcard/JanYo Share/)</string>
-
+    <string name="array_export_dir_data">Android internal storage (/data/data/pw.janyo.janyoshare/files/JanYo Share)</string>
+    <string name="array_export_dir_sdcard_data">SDCard storage(without permissions) (/sdcard/Android/data/pw.janyo.janyoshare/files/JanYo Share)</string>
+    <string name="array_export_dir_sdcard">SDCard storage (/sdcard/JanYo Share/)</string>
+    
+    <string name="array_copy_operation_export_only">Export only</string>
+    <string name="array_copy_operation_export_and_share">Export and share</string>
+    <string name="array_copy_operation_rename_and_share">Rename and share</string>
+    <string name="array_copy_operation_rename_extension_and_share">Rename extension name and share</string>
+    <string name="array_copy_operation_export_and_share_with_data">Export and share with data</string>
+    <string name="array_copy_operation_face_to_face_share">Face to face share</string>
+    <string name="array_copy_operation_copy_info">Copy info</string>
+    
+    <string name="title_dialog_select_operation">Please select operation</string>
     <string name="title_activity_settings">Settings</string>
 </resources>
