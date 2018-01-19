@@ -19,11 +19,11 @@ public class Settings {
         SHARED_PREFERENCES.edit().putBoolean("isAutoClean", autoClean).apply();
     }
 
-    public static int getTempDir() {
+    public static int getExportDir() {
         return SHARED_PREFERENCES.getInt("tempDir", 0);
     }
 
-    public static void setTempDir(int tempDir) {
+    public static void setExportDir(int tempDir) {
         SHARED_PREFERENCES.edit().putInt("tempDir", tempDir).apply();
     }
 }

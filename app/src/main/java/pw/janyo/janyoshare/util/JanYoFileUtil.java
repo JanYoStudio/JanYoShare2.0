@@ -29,13 +29,13 @@ public class JanYoFileUtil {
     public static final int EXPORT_DIR_DATA = 0;
     public static final int EXPORT_DIR_SDCARD_DATA = 1;
     public static final int EXPORT_DIR_SDCARD = 2;
-    public static File EXPORT_APK_DIR;
+    private static File EXPORT_APK_DIR;
 
     private JanYoFileUtil() {
     }
 
     private static void initExportDir() {
-        switch (Settings.getTempDir()) {
+        switch (Settings.getExportDir()) {
             case 0:
                 EXPORT_APK_DIR = new File(APP.getContext().getFilesDir(), JANYO_SHARE);
                 break;
@@ -64,6 +64,11 @@ public class JanYoFileUtil {
             return true;
         }
         return false;
+    }
+
+    public static String getExportDirPath() {
+        initExportDir();
+        return EXPORT_APK_DIR.getAbsolutePath();
     }
 
     public static boolean copyFile(String inputPath, String outputPath) {

@@ -1,6 +1,7 @@
 package pw.janyo.janyoshare.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,7 +29,6 @@ import pw.janyo.janyoshare.fragment.AppFragment;
 import pw.janyo.janyoshare.util.AppManager;
 import pw.janyo.janyoshare.util.JanYoFileUtil;
 import pw.janyo.janyoshare.util.Settings;
-import vip.mystery0.tools.logs.Logs;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         toggle.syncState();
 
         if (Settings.isAutoClean())
-            if (Settings.getTempDir() == JanYoFileUtil.EXPORT_DIR_SDCARD && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            if (Settings.getExportDir() == JanYoFileUtil.EXPORT_DIR_SDCARD && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_AUTO_CLEAN);
             else
                 Snackbar.make(coordinatorLayout, JanYoFileUtil.cleanFileDir() ? R.string.hint_clean_dir_done : R.string.hint_clean_dir_error, Snackbar.LENGTH_LONG)
@@ -103,7 +103,21 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
+                switch (item.getItemId()) {
+                    case R.id.action_face_to_face_share:
+                        break;
+                    case R.id.action_clear_temp_dir:
+                        break;
+                    case R.id.action_night_mode:
+                        break;
+                    case R.id.action_license:
+                        break;
+                    case R.id.action_support_us:
+                        break;
+                    case R.id.action_settings:
+                        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                        break;
+                }
 
                 drawer.closeDrawer(GravityCompat.START);
                 return true;

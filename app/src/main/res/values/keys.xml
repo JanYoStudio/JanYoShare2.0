@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_ato_clean">key_ato_clean</string>
-    <string name="title_ato_clean">Auto clean temp directory</string>
+    <string name="key_auto_clean">key_auto_clean</string>
+    <string name="title_auto_clean">Auto clean temp directory</string>
+    <string name="summary_auto_clean_on">Automatic cleanup is turned on, and temporary files will be cleaned up on the next startup. </string>
+    <string name="summary_auto_clean_off">Automatic cleanup is turned off.</string>
     <string name="key_export_dir">key_export_dir</string>
     <string name="title_export_dir">Export path</string>
-    <string name="summary_export_dir">Will be saved to %1$s</string>
+    <string name="summary_export_dir">Will be saved to %1$s.</string>
 </resources>

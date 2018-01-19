@@ -3,36 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
-    </group>
+    <item
+        android:id="@+id/action_face_to_face_share"
+        android:icon="@drawable/ic_face_to_face_share"
+        android:title="@string/action_face_to_face_share"/>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
+    <item
+        android:id="@+id/action_clear_temp_dir"
+        android:icon="@drawable/ic_clear_temp_dir"
+        android:title="@string/action_clear_temp_dir"/>
+
+    <item
+        android:id="@+id/action_night_mode"
+        android:icon="@drawable/ic_night_mode"
+        android:title="@string/action_night_mode"/>
+
+    <item
+        android:id="@+id/action_license"
+        android:icon="@drawable/ic_license"
+        android:title="@string/action_license"/>
+
+    <item
+        android:id="@+id/action_support_us"
+        android:icon="@drawable/ic_support_us"
+        android:title="@string/action_support_us"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/action_settings"/>
 
 </menu>

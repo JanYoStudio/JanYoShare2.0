@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--<SwitchPreference-->
-        <!--android:key="@string/key_auto_clean"-->
-        <!--android:title="@string/title_auto_clean"/>-->
+    <SwitchPreference
+        android:key="@string/key_auto_clean"
+        android:title="@string/title_auto_clean" />
 
-    <!--<Preference-->
-        <!--android:key="@string/key_export_dir"-->
-        <!--android:summary="@string/summary_export_dir"-->
-        <!--android:title="@string/title_export_dir"/>-->
+    <Preference
+        android:key="@string/key_export_dir"
+        android:title="@string/title_export_dir" />
 
 </PreferenceScreen>
