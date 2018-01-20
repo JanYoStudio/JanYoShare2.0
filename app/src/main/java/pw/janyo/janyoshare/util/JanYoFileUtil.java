@@ -185,6 +185,12 @@ public class JanYoFileUtil {
         return copyFile(installAPP.getSourceDir(), outputPath);
     }
 
+    /**
+     * 重命名文件
+     * @param installAPP 导出的软件
+     * @param fileName 新的文件名（不包含扩展名）
+     * @return 返回码
+     */
     public static int renameFile(InstallAPP installAPP, String fileName) {
         File exportFile = getExportFile(installAPP);
         if (!exportFile.exists())
@@ -193,6 +199,11 @@ public class JanYoFileUtil {
         return exportFile.renameTo(newFile) ? DONE : ERROR;
     }
 
+    /**
+     * 调用分享菜单，分享多个文件
+     * @param context Context
+     * @param fileList 要分享的文件列表
+     */
     public static void doShareFile(Context context, List<File> fileList) {
         ArrayList<Uri> uriList = new ArrayList<>();
         for (File file : fileList) {
@@ -204,6 +215,11 @@ public class JanYoFileUtil {
         doShare(context, uriList);
     }
 
+    /**
+     * 同上
+     * @param context Context
+     * @param uriList 要分享的文件，Uri
+     */
     public static void doShare(Context context, ArrayList<Uri> uriList) {
         Intent share = new Intent(Intent.ACTION_SEND_MULTIPLE);
         share.setType("*/*");
@@ -211,11 +227,21 @@ public class JanYoFileUtil {
         context.startActivity(Intent.createChooser(share, context.getString(R.string.title_activity_share)));
     }
 
+    /**
+     * 分享单个文件
+     * @param context Context
+     * @param file 要分享的文件
+     */
     public static void share(Context context, File file) {
         Uri uri = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? FileProvider.getUriForFile(context, context.getString(R.string.authorities), file) : Uri.fromFile(file);
         share(context, uri);
     }
 
+    /**
+     * 分享单个文件
+     * @param context Context
+     * @param uri 要分享的uri
+     */
     public static void share(Context context, Uri uri) {
         Logs.i(TAG, "share: " + uri);
         Intent share = new Intent(Intent.ACTION_SEND);
@@ -225,6 +251,12 @@ public class JanYoFileUtil {
         context.startActivity(Intent.createChooser(share, context.getString(R.string.title_activity_share)));
     }
 
+    /**
+     * intent分享的uri授权
+     * @param context Context
+     * @param intent 分享的intent
+     * @param uri 分享的uri
+     */
     private static void grantUriPermission(Context context, Intent intent, Uri uri) {
         List<ResolveInfo> list = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         for (ResolveInfo resolveInfo : list) {
@@ -232,9 +264,14 @@ public class JanYoFileUtil {
         }
     }
 
+    /**
+     * 拷贝文件
+     * @param inputPath 输入路径
+     * @param outputPath 输出路径
+     * @return 返回码
+     */
     public static int copyFile(String inputPath, String outputPath) {
         if (!(new File(inputPath)).exists()) {
-            Logs.e(TAG, "copyFile: 输入文件不存在");
             return FILE_NOT_EXIST;
         }
         FileInputStream fileInputStream = null;
@@ -268,16 +305,35 @@ public class JanYoFileUtil {
         }
     }
 
+    /**
+     * 存储app临时列表
+     * @param context Context
+     * @param list 列表
+     * @param fileName 存储的文件名
+     * @return 存储结果
+     */
     public static boolean saveAppList(Context context, List<InstallAPP> list, String fileName) {
         File file = new File(context.getExternalCacheDir(), fileName);
         return saveObject(list, file);
     }
 
+    /**
+     * 存储对象
+     * @param object 要存储的对象
+     * @param file 存储到的文件
+     * @return 结果
+     */
     public static boolean saveObject(Object object, File file) {
         Gson gson = new Gson();
         return saveMessage(gson.toJson(object), file);
     }
 
+    /**
+     * 存储文本信息
+     * @param message 信息
+     * @param file 文件
+     * @return 结果
+     */
     public static boolean saveMessage(String message, File file) {
         if (file.exists())
             file.delete();
@@ -301,6 +357,13 @@ public class JanYoFileUtil {
         return true;
     }
 
+    /**
+     * 从文件中获取缓存的列表
+     * @param file 文件
+     * @param tClass 列表中的类
+     * @param <T> 泛型
+     * @return 列表
+     */
     public static <T> List<T> getListFromFile(File file, Class<T> tClass) {
         if (!file.exists())
             return new ArrayList<>();
@@ -328,6 +391,11 @@ public class JanYoFileUtil {
         }
     }
 
+    /**
+     * 判断缓存是否可用
+     * @param context Context
+     * @return 结果
+     */
     public static boolean isCacheAvailable(Context context) {
         File dir = context.getExternalCacheDir();
         if (dir == null)
@@ -344,6 +412,12 @@ public class JanYoFileUtil {
         return temp == 0;
     }
 
+    /**
+     * 格式化文件名
+     * @param installAPP 提取的软件
+     * @param format 格式
+     * @return 文件名，不包含扩展名
+     */
     public static String formatName(InstallAPP installAPP, String format) {
         StringBuilder fileName = new StringBuilder();
         int index = 0;
