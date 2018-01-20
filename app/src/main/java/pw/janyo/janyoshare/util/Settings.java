@@ -32,11 +32,15 @@ public class Settings {
     }
 
     public static void setCustomFormat(boolean isCustomFormat) {
-        SHARED_PREFERENCES.edit().putBoolean("isCustomFormat", isCustomFormat).apply();
+        SharedPreferences.Editor editor = SHARED_PREFERENCES.edit();
+        if (!isCustomFormat)
+            editor.remove("renameFormat");
+        editor.putBoolean("isCustomFormat", isCustomFormat);
+        editor.apply();
     }
 
-    public static String getRenameFormat() {
-        return SHARED_PREFERENCES.getString("renameFormat", "");
+    public static String getRenameFormat() {//默认格式：名称-版本名称
+        return SHARED_PREFERENCES.getString("renameFormat", "%N-%V");
     }
 
     public static void setRenameFormat(String renameFormat) {

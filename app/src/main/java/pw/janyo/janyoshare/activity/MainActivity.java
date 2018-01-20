@@ -95,8 +95,20 @@ public class MainActivity extends AppCompatActivity {
             if (Settings.getExportDir() == JanYoFileUtil.EXPORT_DIR_SDCARD && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_AUTO_CLEAN);
             else
-                Snackbar.make(coordinatorLayout, JanYoFileUtil.cleanFileDir() ? R.string.hint_clean_dir_done : R.string.hint_clean_dir_error, Snackbar.LENGTH_LONG)
-                        .show();
+                switch (JanYoFileUtil.cleanFileDir()) {
+                    case JanYoFileUtil.MAKE_DIR_ERROR:
+                        Snackbar.make(coordinatorLayout, R.string.hint_export_dir_create_failed, Snackbar.LENGTH_LONG)
+                                .show();
+                        break;
+                    case JanYoFileUtil.DONE:
+                        Snackbar.make(coordinatorLayout, R.string.hint_clean_dir_done, Snackbar.LENGTH_LONG)
+                                .show();
+                        break;
+                    case JanYoFileUtil.ERROR:
+                        Snackbar.make(coordinatorLayout, R.string.hint_clean_dir_error, Snackbar.LENGTH_LONG)
+                                .show();
+                        break;
+                }
     }
 
     private void monitor() {

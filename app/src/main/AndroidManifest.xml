@@ -26,7 +26,17 @@
         </activity>
         <activity
             android:name=".activity.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="@string/authorities"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
 </manifest>

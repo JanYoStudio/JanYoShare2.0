@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-path
+        name="JanYoShare"
+        path="JanYo Share/" />
+    <external-path
+        name="obb"
+        path="Android/obb/" />
+    <external-files-path
+        name="sdcard_data"
+        path="/" />
+    <files-path
+        name="data"
+        path="/" />
+</paths>

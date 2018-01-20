@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import pw.janyo.janyoshare.R;
 import pw.janyo.janyoshare.activity.SettingsActivity;
@@ -135,7 +136,7 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Logs.i(TAG, "onClick: " + which);
-                                if (which != 2 || ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+                                if (which != JanYoFileUtil.EXPORT_DIR_SDCARD || ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
                                     Settings.setExportDir(which);
                                 else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
@@ -199,22 +200,30 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
                         showText.setText(getString(R.string.summary_custom_format, JanYoFileUtil.formatName(test, format)));
                     }
                 });
-                AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                final AlertDialog dialog = new AlertDialog.Builder(getActivity())
                         .setTitle(R.string.title_custom_rename_format)
                         .setView(view)
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String format = textInputLayout.getEditText().getText().toString();
-                                Settings.setRenameFormat(format);
-                                customRenameFormatPreference.setSummary(getString(R.string.summary_custom_format, JanYoFileUtil.formatName(test, Settings.getRenameFormat())));
-                            }
-                        })
+                        .setPositiveButton(android.R.string.ok, null)
                         .setNegativeButton(android.R.string.cancel, null)
                         .setNeutralButton(R.string.action_insert, null)
                         .create();
                 dialog.show();
-                if (dialog.getButton(AlertDialog.BUTTON_NEUTRAL) != null) {
+                if (dialog.getButton(AlertDialog.BUTTON_POSITIVE) != null)
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String format = textInputLayout.getEditText().getText().toString();
+                            if (format.length() <= 0) {
+                                Toast.makeText(getActivity(), R.string.hint_custom_rename_format_empty, Toast.LENGTH_SHORT)
+                                        .show();
+                                return;
+                            }
+                            Settings.setRenameFormat(format);
+                            customRenameFormatPreference.setSummary(getString(R.string.summary_custom_format, JanYoFileUtil.formatName(test, Settings.getRenameFormat())));
+                            dialog.dismiss();
+                        }
+                    });
+                if (dialog.getButton(AlertDialog.BUTTON_NEUTRAL) != null)
                     dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -223,7 +232,6 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
                             textInputLayout.getEditText().setSelection(temp.length());
                         }
                     });
-                }
                 return true;
             }
         });
@@ -238,7 +246,7 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST_CODE)
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                Settings.setExportDir(2);
+                Settings.setExportDir(JanYoFileUtil.EXPORT_DIR_SDCARD);
             else
                 Snackbar.make(coordinatorLayout, R.string.hint_permission_denied, Snackbar.LENGTH_LONG)
                         .show();
