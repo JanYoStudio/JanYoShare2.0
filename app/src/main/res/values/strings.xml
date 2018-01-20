@@ -1,9 +1,17 @@
 <resources>
-    <string name="app_name">JanYo Share</string>
-    <string name="authorities">@string/app_package_name</string>
+    <string name="app_name" translatable="false">JanYo Share</string>
+    <string name="authorities" translatable="false">@string/app_package_name</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+
+    <string name="janyo_studio" translatable="false">JanYo Studio</string>
+    <string name="dick_light" translatable="false">Dick Light</string>
+    <string name="zh_lyh" translatable="false">ZH_LYH</string>
+    <string name="cieyget" translatable="false">CieyGet</string>
+    <string name="kiva" translatable="false">Kiva</string>
+    <string name="mystery0" translatable="false">Mystery0</string>
+    <string name="gsoy" translatable="false">Gsoy</string>
 
     <string name="title_fragment_user">User</string>
     <string name="title_fragment_system">System</string>
