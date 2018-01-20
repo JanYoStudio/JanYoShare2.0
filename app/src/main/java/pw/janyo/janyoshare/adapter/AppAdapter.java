@@ -207,7 +207,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
         TextView textViewVersionName;
         TextView textViewSize;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
             this.checkBox = itemView.findViewById(R.id.checkBox);
