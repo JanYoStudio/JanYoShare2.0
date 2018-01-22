@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +24,22 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import pw.janyo.janyoshare.R;
 import pw.janyo.janyoshare.classes.InstallAPP;
 import pw.janyo.janyoshare.util.JanYoFileUtil;
 import pw.janyo.janyoshare.util.Settings;
 import vip.mystery0.tools.fileUtil.FileUtil;
+import vip.mystery0.tools.logs.Logs;
 
 public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
+    private static final String TAG = "AppAdapter";
     private Context context;
     private CoordinatorLayout coordinatorLayout;
     private List<InstallAPP> installAPPList;
@@ -90,29 +100,60 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
         });
     }
 
-    private void exportThen(InstallAPP installAPP, int choose) {
+    private void exportThen(final InstallAPP installAPP, final int choose) {
         if (choose == 6) {
             copyInfoToClipboard(installAPP);
             return;
         }
-        int code = JanYoFileUtil.exportAPK(installAPP);
-        switch (code) {
-            case JanYoFileUtil.DIR_NOT_EXIST:
-                Snackbar.make(coordinatorLayout, R.string.hint_export_dir_create_failed, Snackbar.LENGTH_LONG)
-                        .show();
-                break;
-            case JanYoFileUtil.FILE_NOT_EXIST:
-                Snackbar.make(coordinatorLayout, R.string.hint_source_file_not_exist, Snackbar.LENGTH_LONG)
-                        .show();
-                break;
-            case JanYoFileUtil.ERROR:
-                Snackbar.make(coordinatorLayout, R.string.hint_export_failed, Snackbar.LENGTH_LONG)
-                        .show();
-                break;
-            case JanYoFileUtil.DONE:
-                doSomething(installAPP, choose);
-                break;
-        }
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> subscriber) throws Exception {
+                subscriber.onNext(JanYoFileUtil.exportAPK(installAPP));
+                subscriber.onComplete();
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Integer>() {
+                    private int code;
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Logs.i(TAG, "onSubscribe: ");
+                    }
+
+                    @Override
+                    public void onNext(Integer integer) {
+                        code = integer;
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.wtf(TAG, "exportThen: onError: ", e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        switch (code) {
+                            case JanYoFileUtil.DIR_NOT_EXIST:
+                                Snackbar.make(coordinatorLayout, R.string.hint_export_dir_create_failed, Snackbar.LENGTH_LONG)
+                                        .show();
+                                break;
+                            case JanYoFileUtil.FILE_NOT_EXIST:
+                                Snackbar.make(coordinatorLayout, R.string.hint_source_file_not_exist, Snackbar.LENGTH_LONG)
+                                        .show();
+                                break;
+                            case JanYoFileUtil.ERROR:
+                                Snackbar.make(coordinatorLayout, R.string.hint_export_failed, Snackbar.LENGTH_LONG)
+                                        .show();
+                                break;
+                            case JanYoFileUtil.DONE:
+                                doSomething(installAPP, choose);
+                                break;
+                        }
+                    }
+                });
     }
 
     private void doSomething(final InstallAPP installAPP, int whatToDo) {
