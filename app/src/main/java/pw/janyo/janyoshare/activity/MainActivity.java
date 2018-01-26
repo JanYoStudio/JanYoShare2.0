@@ -117,8 +117,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_settings:
                         startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                         break;
-                }
-
+            }
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -112,7 +113,7 @@ public class JanYoFileUtil {
      */
     public static String appendExtensionFileName(String filePath) {
         String extensionFileName = getExtensionFileName(filePath);
-        return extensionFileName.length() == 0 ? "" : '.' + extensionFileName;
+        return TextUtils.isEmpty(extensionFileName) ? "" : '.' + extensionFileName;
     }
 
     /**
@@ -223,7 +224,7 @@ public class JanYoFileUtil {
         File exportFile = getExportFile(installAPP);
         if (!exportFile.exists())
             return FILE_NOT_EXIST;
-        File newFile = new File(getExportDirFile(), formatName(installAPP, Settings.getRenameFormat()) + (extensionName.length() == 0 ? "" : '.' + extensionName));
+        File newFile = new File(getExportDirFile(), formatName(installAPP, Settings.getRenameFormat()) + (TextUtils.isEmpty(extensionName) ? "" : '.' + extensionName));
         if (newFile.exists())
             if (isDelete)
                 //noinspection ResultOfMethodCallIgnored
