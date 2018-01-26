@@ -186,8 +186,6 @@ public class JanYoFileUtil {
             return DIR_NOT_EXIST;
         String oldName = installAPP.getSourceDir().substring(installAPP.getSourceDir().lastIndexOf(File.separator) + 1);
         String outputPath = EXPORT_APK_DIR.getAbsolutePath() + File.separator + formatName(installAPP, Settings.getRenameFormat()) + appendExtensionFileName(oldName);
-        Logs.i(TAG, "exportAPK: oldName: " + oldName);
-        Logs.i(TAG, "exportAPK: outputPath: " + outputPath);
         return copyFile(installAPP.getSourceDir(), outputPath);
     }
 
@@ -196,13 +194,20 @@ public class JanYoFileUtil {
      *
      * @param installAPP 导出的软件
      * @param fileName   新的文件名（不包含扩展名）
+     * @param isDelete   是否删除已存在的文件
      * @return 返回码
      */
-    public static int renameFile(InstallAPP installAPP, String fileName) {
+    public static int renameFile(InstallAPP installAPP, String fileName, boolean isDelete) {
         File exportFile = getExportFile(installAPP);
         if (!exportFile.exists())
             return FILE_NOT_EXIST;
         File newFile = new File(getExportDirFile(), fileName + appendExtensionFileName(installAPP.getSourceDir()));
+        if (newFile.exists())
+            if (isDelete)
+                //noinspection ResultOfMethodCallIgnored
+                newFile.delete();
+            else
+                return FILE_EXIST;
         return exportFile.renameTo(newFile) ? DONE : ERROR;
     }
 
@@ -211,15 +216,20 @@ public class JanYoFileUtil {
      *
      * @param installAPP    导出的软件
      * @param extensionName 新的扩展名
+     * @param isDelete      是否删除已存在的文件
      * @return 返回码
      */
-    public static int renameExtension(InstallAPP installAPP, String extensionName) {
+    public static int renameExtension(InstallAPP installAPP, String extensionName, boolean isDelete) {
         File exportFile = getExportFile(installAPP);
         if (!exportFile.exists())
             return FILE_NOT_EXIST;
-        File newFile = new File(getExportDirFile(), exportFile.getName() + (extensionName.length() == 0 ? "" : '.' + extensionName));
+        File newFile = new File(getExportDirFile(), formatName(installAPP, Settings.getRenameFormat()) + (extensionName.length() == 0 ? "" : '.' + extensionName));
         if (newFile.exists())
-            return FILE_EXIST;
+            if (isDelete)
+                //noinspection ResultOfMethodCallIgnored
+                newFile.delete();
+            else
+                return FILE_EXIST;
         return exportFile.renameTo(newFile) ? DONE : ERROR;
     }
 
@@ -449,6 +459,7 @@ public class JanYoFileUtil {
 
     /**
      * 检查数据包是否存在
+     *
      * @param packageName 包名
      * @return 列表，不存在则为空
      */

@@ -175,16 +175,37 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
                 //noinspection ConstantConditions
                 renameFileNameTextInputLayout.getEditText().setText(oldFileName);
                 new AlertDialog.Builder(context)
-                        .setTitle("")
+                        .setTitle(" ")
                         .setView(renameFileNameView)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                String newName = renameFileNameTextInputLayout.getEditText().getText().toString();
-                                int code = JanYoFileUtil.renameFile(installAPP, newName);
+                                final String newName = renameFileNameTextInputLayout.getEditText().getText().toString();
+                                int code = JanYoFileUtil.renameFile(installAPP, newName, false);
                                 switch (code) {
                                     case JanYoFileUtil.FILE_NOT_EXIST:
                                         Snackbar.make(coordinatorLayout, R.string.hint_source_file_not_exist, Snackbar.LENGTH_LONG)
+                                                .show();
+                                        break;
+                                    case JanYoFileUtil.FILE_EXIST:
+                                        Snackbar.make(coordinatorLayout, R.string.hint_file_exist, Snackbar.LENGTH_LONG)
+                                                .setAction(R.string.action_redo, new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        if (JanYoFileUtil.renameFile(installAPP, newName, true) == JanYoFileUtil.DONE)
+                                                            JanYoFileUtil.share(context, JanYoFileUtil.getFile(newName + JanYoFileUtil.appendExtensionFileName(installAPP.getSourceDir())));
+                                                        else
+                                                            Snackbar.make(coordinatorLayout, R.string.hint_rename_failed, Snackbar.LENGTH_LONG)
+                                                                    .show();
+                                                    }
+                                                })
+                                                .addCallback(new Snackbar.Callback() {
+                                                    @Override
+                                                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                                                        if (event != DISMISS_EVENT_ACTION)
+                                                            JanYoFileUtil.share(context, JanYoFileUtil.getFile(newName + JanYoFileUtil.appendExtensionFileName(installAPP.getSourceDir())));
+                                                    }
+                                                })
                                                 .show();
                                         break;
                                     case JanYoFileUtil.ERROR:
@@ -207,20 +228,37 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
                 //noinspection ConstantConditions
                 renameExtensionTextInputLayout.getEditText().setText(oldExtensionName);
                 new AlertDialog.Builder(context)
-                        .setTitle("")
+                        .setTitle(" ")
                         .setView(renameExtensionView)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                String newExtensionName = renameExtensionTextInputLayout.getEditText().getText().toString();
-                                int code = JanYoFileUtil.renameExtension(installAPP, newExtensionName);
+                                final String newExtensionName = renameExtensionTextInputLayout.getEditText().getText().toString();
+                                int code = JanYoFileUtil.renameExtension(installAPP, newExtensionName, false);
                                 switch (code) {
                                     case JanYoFileUtil.FILE_NOT_EXIST:
                                         Snackbar.make(coordinatorLayout, R.string.hint_source_file_not_exist, Snackbar.LENGTH_LONG)
                                                 .show();
                                         break;
                                     case JanYoFileUtil.FILE_EXIST:
-                                        Snackbar.make(coordinatorLayout, R.string.hint_rename_file_exist, Snackbar.LENGTH_LONG)
+                                        Snackbar.make(coordinatorLayout, R.string.hint_file_exist, Snackbar.LENGTH_LONG)
+                                                .setAction(R.string.action_redo, new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        if (JanYoFileUtil.renameExtension(installAPP, newExtensionName, true) == JanYoFileUtil.DONE)
+                                                            JanYoFileUtil.share(context, JanYoFileUtil.getFile(JanYoFileUtil.formatName(installAPP, Settings.getRenameFormat()) + (newExtensionName.length() == 0 ? "" : '.' + newExtensionName)));
+                                                        else
+                                                            Snackbar.make(coordinatorLayout, R.string.hint_rename_failed, Snackbar.LENGTH_LONG)
+                                                                    .show();
+                                                    }
+                                                })
+                                                .addCallback(new Snackbar.Callback() {
+                                                    @Override
+                                                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                                                        if (event != DISMISS_EVENT_ACTION)
+                                                            JanYoFileUtil.share(context, JanYoFileUtil.getFile(JanYoFileUtil.formatName(installAPP, Settings.getRenameFormat()) + (newExtensionName.length() == 0 ? "" : '.' + newExtensionName)));
+                                                    }
+                                                })
                                                 .show();
                                         break;
                                     case JanYoFileUtil.ERROR:
@@ -248,6 +286,8 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
                             }
                         })
                         .show();
+                break;
+            case 5://面对面分享
                 break;
         }
     }
