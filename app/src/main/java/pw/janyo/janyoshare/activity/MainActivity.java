@@ -95,20 +95,7 @@ public class MainActivity extends AppCompatActivity {
             if (Settings.getExportDir() == JanYoFileUtil.EXPORT_DIR_SDCARD && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_AUTO_CLEAN);
             else
-                switch (JanYoFileUtil.cleanFileDir()) {
-                    case JanYoFileUtil.MAKE_DIR_ERROR:
-                        Snackbar.make(coordinatorLayout, R.string.hint_export_dir_create_failed, Snackbar.LENGTH_LONG)
-                                .show();
-                        break;
-                    case JanYoFileUtil.DONE:
-                        Snackbar.make(coordinatorLayout, R.string.hint_clean_dir_done, Snackbar.LENGTH_LONG)
-                                .show();
-                        break;
-                    case JanYoFileUtil.ERROR:
-                        Snackbar.make(coordinatorLayout, R.string.hint_clean_dir_error, Snackbar.LENGTH_LONG)
-                                .show();
-                        break;
-                }
+                clearFiles();
     }
 
     private void monitor() {
@@ -119,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_face_to_face_share:
                         break;
                     case R.id.action_clear_temp_dir:
+                        clearFiles();
                         break;
                     case R.id.action_night_mode:
                         break;
@@ -135,6 +123,23 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private void clearFiles() {
+        switch (JanYoFileUtil.cleanFileDir()) {
+            case JanYoFileUtil.MAKE_DIR_ERROR:
+                Snackbar.make(coordinatorLayout, R.string.hint_export_dir_create_failed, Snackbar.LENGTH_LONG)
+                        .show();
+                break;
+            case JanYoFileUtil.DONE:
+                Snackbar.make(coordinatorLayout, R.string.hint_clean_dir_done, Snackbar.LENGTH_LONG)
+                        .show();
+                break;
+            case JanYoFileUtil.ERROR:
+                Snackbar.make(coordinatorLayout, R.string.hint_clean_dir_error, Snackbar.LENGTH_LONG)
+                        .show();
+                break;
+        }
     }
 
     @Override
