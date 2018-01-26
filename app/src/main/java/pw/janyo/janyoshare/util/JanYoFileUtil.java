@@ -104,6 +104,12 @@ public class JanYoFileUtil {
         return "";
     }
 
+    /**
+     * 获取文件扩展名，适用于拼接路径字符串
+     *
+     * @param filePath 文件路径
+     * @return 扩展名（带点或者空）
+     */
     public static String appendExtensionFileName(String filePath) {
         String extensionFileName = getExtensionFileName(filePath);
         return extensionFileName.length() == 0 ? "" : '.' + extensionFileName;
@@ -187,8 +193,9 @@ public class JanYoFileUtil {
 
     /**
      * 重命名文件
+     *
      * @param installAPP 导出的软件
-     * @param fileName 新的文件名（不包含扩展名）
+     * @param fileName   新的文件名（不包含扩展名）
      * @return 返回码
      */
     public static int renameFile(InstallAPP installAPP, String fileName) {
@@ -200,8 +207,26 @@ public class JanYoFileUtil {
     }
 
     /**
+     * 重命名文件扩展名
+     *
+     * @param installAPP    导出的软件
+     * @param extensionName 新的扩展名
+     * @return 返回码
+     */
+    public static int renameExtension(InstallAPP installAPP, String extensionName) {
+        File exportFile = getExportFile(installAPP);
+        if (!exportFile.exists())
+            return FILE_NOT_EXIST;
+        File newFile = new File(getExportDirFile(), exportFile.getName() + (extensionName.length() == 0 ? "" : '.' + extensionName));
+        if (newFile.exists())
+            return FILE_EXIST;
+        return exportFile.renameTo(newFile) ? DONE : ERROR;
+    }
+
+    /**
      * 调用分享菜单，分享多个文件
-     * @param context Context
+     *
+     * @param context  Context
      * @param fileList 要分享的文件列表
      */
     public static void doShareFile(Context context, List<File> fileList) {
@@ -217,6 +242,7 @@ public class JanYoFileUtil {
 
     /**
      * 同上
+     *
      * @param context Context
      * @param uriList 要分享的文件，Uri
      */
@@ -229,8 +255,9 @@ public class JanYoFileUtil {
 
     /**
      * 分享单个文件
+     *
      * @param context Context
-     * @param file 要分享的文件
+     * @param file    要分享的文件
      */
     public static void share(Context context, File file) {
         Uri uri = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? FileProvider.getUriForFile(context, context.getString(R.string.authorities), file) : Uri.fromFile(file);
@@ -239,8 +266,9 @@ public class JanYoFileUtil {
 
     /**
      * 分享单个文件
+     *
      * @param context Context
-     * @param uri 要分享的uri
+     * @param uri     要分享的uri
      */
     public static void share(Context context, Uri uri) {
         Logs.i(TAG, "share: " + uri);
@@ -253,9 +281,10 @@ public class JanYoFileUtil {
 
     /**
      * intent分享的uri授权
+     *
      * @param context Context
-     * @param intent 分享的intent
-     * @param uri 分享的uri
+     * @param intent  分享的intent
+     * @param uri     分享的uri
      */
     private static void grantUriPermission(Context context, Intent intent, Uri uri) {
         List<ResolveInfo> list = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
@@ -266,7 +295,8 @@ public class JanYoFileUtil {
 
     /**
      * 拷贝文件
-     * @param inputPath 输入路径
+     *
+     * @param inputPath  输入路径
      * @param outputPath 输出路径
      * @return 返回码
      */
@@ -307,8 +337,9 @@ public class JanYoFileUtil {
 
     /**
      * 存储app临时列表
-     * @param context Context
-     * @param list 列表
+     *
+     * @param context  Context
+     * @param list     列表
      * @param fileName 存储的文件名
      * @return 存储结果
      */
@@ -319,8 +350,9 @@ public class JanYoFileUtil {
 
     /**
      * 存储对象
+     *
      * @param object 要存储的对象
-     * @param file 存储到的文件
+     * @param file   存储到的文件
      * @return 结果
      */
     public static boolean saveObject(Object object, File file) {
@@ -330,8 +362,9 @@ public class JanYoFileUtil {
 
     /**
      * 存储文本信息
+     *
      * @param message 信息
-     * @param file 文件
+     * @param file    文件
      * @return 结果
      */
     public static boolean saveMessage(String message, File file) {
@@ -359,9 +392,10 @@ public class JanYoFileUtil {
 
     /**
      * 从文件中获取缓存的列表
-     * @param file 文件
+     *
+     * @param file   文件
      * @param tClass 列表中的类
-     * @param <T> 泛型
+     * @param <T>    泛型
      * @return 列表
      */
     public static <T> List<T> getListFromFile(File file, Class<T> tClass) {
@@ -393,6 +427,7 @@ public class JanYoFileUtil {
 
     /**
      * 判断缓存是否可用
+     *
      * @param context Context
      * @return 结果
      */
@@ -414,8 +449,9 @@ public class JanYoFileUtil {
 
     /**
      * 格式化文件名
+     *
      * @param installAPP 提取的软件
-     * @param format 格式
+     * @param format     格式
      * @return 文件名，不包含扩展名
      */
     public static String formatName(InstallAPP installAPP, String format) {
