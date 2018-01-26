@@ -448,6 +448,22 @@ public class JanYoFileUtil {
     }
 
     /**
+     * 检查数据包是否存在
+     * @param packageName 包名
+     * @return 列表，不存在则为空
+     */
+    public static List<File> checkObb(String packageName) {
+        List<File> list = new ArrayList<>();
+        File dir = new File(Environment.getExternalStoragePublicDirectory("Android") + File.separator + "obb" + File.separator + packageName + File.separator);
+        if (!dir.exists() || !dir.isDirectory())
+            return list;
+        for (File temp : dir.listFiles())
+            if (temp.getAbsolutePath().toLowerCase().endsWith("obb"))
+                list.add(temp);
+        return list;
+    }
+
+    /**
      * 格式化文件名
      *
      * @param installAPP 提取的软件

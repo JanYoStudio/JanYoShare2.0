@@ -22,6 +22,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -234,6 +236,18 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
                         .show();
                 break;
             case 4://和数据包一起提取分享
+                final List<File> shareList = new ArrayList<>();
+                shareList.add(JanYoFileUtil.getExportFile(installAPP));
+                List<File> obbList = JanYoFileUtil.checkObb(installAPP.getPackageName());
+                shareList.addAll(obbList);
+                Snackbar.make(coordinatorLayout, context.getString(R.string.hint_warning_check_obb, obbList.size(), obbList.size() == 1 || obbList.size() == 0 ? "" : 's'), Snackbar.LENGTH_SHORT)
+                        .addCallback(new Snackbar.Callback() {
+                            @Override
+                            public void onDismissed(Snackbar transientBottomBar, int event) {
+                                JanYoFileUtil.doShareFile(context, shareList);
+                            }
+                        })
+                        .show();
                 break;
         }
     }
