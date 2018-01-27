@@ -1,7 +1,10 @@
 <component name="ProjectDictionaryState">
   <dictionary name="myste">
     <words>
+      <w>bssid</w>
+      <w>ibss</w>
       <w>ssid</w>
+      <w>wificipher</w>
     </words>
   </dictionary>
 </component>
