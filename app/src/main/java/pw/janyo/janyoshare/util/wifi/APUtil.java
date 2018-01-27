@@ -57,10 +57,9 @@ public class APUtil {
      *
      * @param context  上下文
      * @param SSID     便携热点SSID
-     * @param password 便携热点密码
      * @return 结果
      */
-    public static boolean openAP(Context context, String SSID, String password) {
+    public static boolean openAP(Context context, String SSID) {
         Logs.i("TAG", "openAP: ");
         if (TextUtils.isEmpty(SSID)) {
             return false;
@@ -73,7 +72,7 @@ public class APUtil {
             wifimanager.setWifiEnabled(false);
         }
 
-        WifiConfiguration wifiConfiguration = getApConfig(SSID, password);
+        WifiConfiguration wifiConfiguration = getApConfig(SSID);
         try {
             if (isApOn(context)) {
                 wifimanager.setWifiEnabled(false);
@@ -132,21 +131,15 @@ public class APUtil {
      * 设置有密码的热点信息
      *
      * @param SSID 便携热点SSID
-     * @param pwd  便携热点密码
      */
-    private static WifiConfiguration getApConfig(String SSID, String pwd) {
-        if (TextUtils.isEmpty(pwd)) {
-            return null;
-        }
-
+    private static WifiConfiguration getApConfig(String SSID) {
         WifiConfiguration config = new WifiConfiguration();
         config.SSID = SSID;
-        config.preSharedKey = pwd;
 //        config.hiddenSSID = true;
         config.status = WifiConfiguration.Status.ENABLED;
         config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
         config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-        config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+        config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
         config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
         config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
         config.allowedProtocols.set(WifiConfiguration.Protocol.RSN);

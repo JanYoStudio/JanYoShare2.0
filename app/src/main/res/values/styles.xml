@@ -21,6 +21,11 @@
         <item name="toolbarStyle">@style/Widget.Toolbar</item>
     </style>
 
+    <style name="AppTheme.NoActionBar.FullScreen">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
     <style name="Widget.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
         <item name="android:background">?attr/colorPrimary</item>
         <item name="android:navigationIcon">?attr/homeAsUpIndicator</item>

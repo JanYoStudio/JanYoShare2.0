@@ -29,7 +29,6 @@ import pw.janyo.janyoshare.fragment.AppFragment;
 import pw.janyo.janyoshare.util.AppManager;
 import pw.janyo.janyoshare.util.JanYoFileUtil;
 import pw.janyo.janyoshare.util.Settings;
-import pw.janyo.janyoshare.util.wifi.APUtil;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -105,7 +104,8 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_face_to_face_share:
-                        APUtil.openAP(MainActivity.this, "test", "testtest");
+                        startActivity(new Intent(MainActivity.this, FaceToFaceActivity.class));
+//                        APUtil.openAP(MainActivity.this, "test", "testtest");
                         break;
                     case R.id.action_clear_temp_dir:
                         clearFiles();
