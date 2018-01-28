@@ -28,6 +28,7 @@
     <string name="action_sort">Sort</string>
     <string name="action_insert">Insert \'%\'</string>\
     <string name="action_redo">Redo</string>
+    <string name="action_refresh">Refresh</string>
 
     <string name="hint_permission_write_external">Please grant permission to copy apk file to SD card! </string>
     <string name="hint_permission_location">Please grant permission to open WiFi! </string>
@@ -72,6 +73,7 @@
 
     <string name="title_dialog_select_operation">Please select operation</string>
     <string name="title_dialog_select_copy_info">Please select info which you want to copy</string>
+    <string name="title_dialog_select_wifi">Which user do you want to connect? </string>
     <string name="title_activity_share">Share to</string>
     <string name="title_activity_settings">Settings</string>
 </resources>

@@ -196,7 +196,6 @@ public class FaceToFaceActivity extends AppCompatActivity {
     }
 
     private void connectWIFI(final String SSID) {
-        Logs.i(TAG, "connectWIFI: " + SSID);
         Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> subscriber) throws Exception {
@@ -248,7 +247,7 @@ public class FaceToFaceActivity extends AppCompatActivity {
         }
         if (builder == null)
             builder = new AlertDialog.Builder(FaceToFaceActivity.this)
-                    .setTitle("test")
+                    .setTitle(R.string.title_dialog_select_wifi)
                     .setItems(items, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -256,10 +255,9 @@ public class FaceToFaceActivity extends AppCompatActivity {
                             connectWIFI(items[which]);
                         }
                     })
-                    .setPositiveButton("刷新", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.action_refresh, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Logs.i(TAG, "onClick: 刷新");
                             scanWIFI();
                         }
                     })
@@ -267,7 +265,6 @@ public class FaceToFaceActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            //取消
                         }
                     });
         else
