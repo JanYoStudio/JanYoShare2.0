@@ -141,7 +141,7 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
                                 else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
                                 } else
-                                    Snackbar.make(coordinatorLayout, R.string.hint_permission, Snackbar.LENGTH_LONG)
+                                    Snackbar.make(coordinatorLayout, R.string.hint_permission_write_external, Snackbar.LENGTH_LONG)
                                             .show();
                                 exportDirPreference.setSummary(getString(R.string.summary_export_dir, JanYoFileUtil.getExportDirPath()));
                             }

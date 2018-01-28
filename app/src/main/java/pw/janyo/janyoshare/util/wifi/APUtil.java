@@ -2,7 +2,6 @@ package pw.janyo.janyoshare.util.wifi;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
@@ -17,74 +16,58 @@ import vip.mystery0.tools.logs.Logs;
  * Modified by Mystery0 on 2018/1/26
  */
 public class APUtil {
+    private static final String TAG = "APUtil";
+    private Context context;
+    private WifiManager wifiManager;
+
+    public APUtil(Context context){
+        this.context=context;
+        wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+    }
 
     /**
      * 便携热点是否开启
      *
-     * @param context 上下文
      * @return 热点是否开启
      */
-    public static boolean isApOn(Context context) {
-        WifiManager wifimanager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (wifimanager == null)
-            return false;
+    public boolean isAPOn() {
+        Logs.i(TAG, "isAPOn: ");
         try {
             @SuppressLint("PrivateApi")
-            Method method = wifimanager.getClass().getDeclaredMethod("isWifiApEnabled");
+            Method method = wifiManager.getClass().getDeclaredMethod("isWifiApEnabled");
             method.setAccessible(true);
-            return (Boolean) method.invoke(wifimanager);
-        } catch (Throwable ignored) {
+            return (Boolean) method.invoke(wifiManager);
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
         return false;
     }
 
     /**
-     * 关闭Wi-Fi
-     *
-     * @param context 上下文
-     */
-    public static void closeWifi(Context context) {
-        WifiManager wifimanager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (wifimanager == null)
-            return;
-        if (wifimanager.isWifiEnabled()) {
-            wifimanager.setWifiEnabled(false);
-        }
-    }
-
-    /**
      * 开启便携热点
      *
-     * @param context  上下文
-     * @param SSID     便携热点SSID
+     * @param SSID    便携热点SSID
      * @return 结果
      */
-    public static boolean openAP(Context context, String SSID) {
+    public boolean openAP(String SSID) {
         Logs.i("TAG", "openAP: ");
         if (TextUtils.isEmpty(SSID)) {
             return false;
         }
 
-        WifiManager wifimanager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (wifimanager == null)
-            return false;
-        if (wifimanager.isWifiEnabled()) {
-            wifimanager.setWifiEnabled(false);
-        }
+        WIFIUtil wifiUtil=new WIFIUtil(context);
+        wifiUtil.closeWifi();
 
-        WifiConfiguration wifiConfiguration = getApConfig(SSID);
+        WifiConfiguration wifiConfiguration = getAPConfig(SSID);
         try {
-            if (isApOn(context)) {
-                wifimanager.setWifiEnabled(false);
-                closeAp(context);
+            if (isAPOn()) {
+                wifiManager.setWifiEnabled(false);
+                closeAP();
             }
 
-//            ConnectivityManager connectivityManager=(ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//            connectivityManager
-
             //使用反射开启Wi-Fi热点
-            Method method = wifimanager.getClass().getMethod("setWifiApEnabled", WifiConfiguration.class, boolean.class);
-            method.invoke(wifimanager, wifiConfiguration, true);
+            Method method = wifiManager.getClass().getMethod("setWifiApEnabled", WifiConfiguration.class, boolean.class);
+            method.invoke(wifiManager, wifiConfiguration, true);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,16 +77,13 @@ public class APUtil {
 
     /**
      * 关闭便携热点
-     *
-     * @param context 上下文
      */
-    public static void closeAp(Context context) {
-        WifiManager wifimanager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (wifimanager == null)
-            return;
+    public void closeAP() {
+        Logs.i(TAG, "closeAP: ");
         try {
-            Method method = wifimanager.getClass().getMethod("setWifiApEnabled", WifiConfiguration.class, boolean.class);
-            method.invoke(wifimanager, null, false);
+            //等待适配8.0
+            Method method = wifiManager.getClass().getMethod("setWifiApEnabled", WifiConfiguration.class, boolean.class);
+            method.invoke(wifiManager, null, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -112,11 +92,8 @@ public class APUtil {
     /**
      * 获取开启便携热点后自身热点IP地址
      */
-    public static String getHotspotLocalIpAddress(Context context) {
-        WifiManager wifimanager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (wifimanager == null)
-            return null;
-        DhcpInfo dhcpInfo = wifimanager.getDhcpInfo();
+    public String getHotspotLocalIpAddress() {
+        DhcpInfo dhcpInfo = wifiManager.getDhcpInfo();
         if (dhcpInfo != null) {
             int address = dhcpInfo.serverAddress;
             return ((address & 0xFF)
@@ -128,11 +105,11 @@ public class APUtil {
     }
 
     /**
-     * 设置有密码的热点信息
+     * 设置没有密码的热点信息
      *
      * @param SSID 便携热点SSID
      */
-    private static WifiConfiguration getApConfig(String SSID) {
+    private WifiConfiguration getAPConfig(String SSID) {
         WifiConfiguration config = new WifiConfiguration();
         config.SSID = SSID;
 //        config.hiddenSSID = true;

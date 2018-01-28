@@ -2,6 +2,7 @@
   <dictionary name="myste">
     <words>
       <w>bssid</w>
+      <w>hotspots</w>
       <w>ibss</w>
       <w>ssid</w>
       <w>wificipher</w>

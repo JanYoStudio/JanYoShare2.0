@@ -12,38 +12,46 @@ public class Settings {
     }
 
     public static boolean isAutoClean() {
-        return SHARED_PREFERENCES.getBoolean("isAutoClean", true);
+        return SHARED_PREFERENCES.getBoolean(Constant.IS_AUTO_CLEAN, true);
     }
 
     public static void setAutoClean(boolean autoClean) {
-        SHARED_PREFERENCES.edit().putBoolean("isAutoClean", autoClean).apply();
+        SHARED_PREFERENCES.edit().putBoolean(Constant.IS_AUTO_CLEAN, autoClean).apply();
     }
 
     public static int getExportDir() {
-        return SHARED_PREFERENCES.getInt("tempDir", 0);
+        return SHARED_PREFERENCES.getInt(Constant.TEMP_DIR, 0);
     }
 
     public static void setExportDir(int tempDir) {
-        SHARED_PREFERENCES.edit().putInt("tempDir", tempDir).apply();
+        SHARED_PREFERENCES.edit().putInt(Constant.TEMP_DIR, tempDir).apply();
     }
 
     public static boolean isCustomFormat() {
-        return SHARED_PREFERENCES.getBoolean("isCustomFormat", false);
+        return SHARED_PREFERENCES.getBoolean(Constant.IS_CUSTOM_FORMAT, false);
     }
 
     public static void setCustomFormat(boolean isCustomFormat) {
         SharedPreferences.Editor editor = SHARED_PREFERENCES.edit();
         if (!isCustomFormat)
-            editor.remove("renameFormat");
-        editor.putBoolean("isCustomFormat", isCustomFormat);
+            editor.remove(Constant.RENAME_FORMAT);
+        editor.putBoolean(Constant.IS_CUSTOM_FORMAT, isCustomFormat);
         editor.apply();
     }
 
     public static String getRenameFormat() {//默认格式：名称-版本名称
-        return SHARED_PREFERENCES.getString("renameFormat", "%N-%V");
+        return SHARED_PREFERENCES.getString(Constant.RENAME_FORMAT, "%N-%V");
     }
 
     public static void setRenameFormat(String renameFormat) {
-        SHARED_PREFERENCES.edit().putString("renameFormat", renameFormat).apply();
+        SHARED_PREFERENCES.edit().putString(Constant.RENAME_FORMAT, renameFormat).apply();
+    }
+
+    public static String getNickName() {
+        return SHARED_PREFERENCES.getString(Constant.NICK_NAME, "janyo");
+    }
+
+    public static void setNickName(String nickName) {
+        SHARED_PREFERENCES.edit().putString(Constant.NICK_NAME, nickName).apply();
     }
 }

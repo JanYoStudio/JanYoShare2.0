@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PERMISSION_AUTO_CLEAN) {
             for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
-                    Snackbar.make(coordinatorLayout, R.string.hint_permission, Snackbar.LENGTH_LONG)
+                    Snackbar.make(coordinatorLayout, R.string.hint_permission_write_external, Snackbar.LENGTH_LONG)
                             .setAction(R.string.action_grant_permission, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
