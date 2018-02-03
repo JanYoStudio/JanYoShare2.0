@@ -31,6 +31,7 @@ public class AppManager {
         DrawableFactory drawableFactory = new DrawableFactory();
         PackageManager packageManager = context.getPackageManager();
         List<PackageInfo> packageInfoList = packageManager.getInstalledPackages(0);
+        List<InstallAPP> tempList = new ArrayList<>();
         List<InstallAPP> installAPPList = new ArrayList<>();
         switch (appType) {
             case USER:
@@ -50,10 +51,11 @@ public class AppManager {
                         installAPP.setSize((new File(packageInfo.applicationInfo.publicSourceDir)).length());
                         installAPP.setInstallTime(packageInfo.firstInstallTime);
                         installAPP.setUpdateTime(packageInfo.lastUpdateTime);
-                        installAPPList.add(installAPP);
+                        tempList.add(installAPP);
                     }
                 }
-                boolean saveUserResult = JanYoFileUtil.saveAppList(context, sort(installAPPList), JanYoFileUtil.USER_LIST_FILE);
+                installAPPList.addAll(sort(tempList));
+                boolean saveUserResult = JanYoFileUtil.saveAppList(context, installAPPList, JanYoFileUtil.USER_LIST_FILE);
                 Logs.i(TAG, "getInstallAPPList: 存储APP列表结果: " + saveUserResult);
                 break;
             case SYSTEM:
@@ -73,10 +75,11 @@ public class AppManager {
                         installAPP.setSize((new File(packageInfo.applicationInfo.publicSourceDir)).length());
                         installAPP.setInstallTime(packageInfo.firstInstallTime);
                         installAPP.setUpdateTime(packageInfo.lastUpdateTime);
-                        installAPPList.add(installAPP);
+                        tempList.add(installAPP);
                     }
                 }
-                boolean saveSystemResult = JanYoFileUtil.saveAppList(context, sort(installAPPList), JanYoFileUtil.SYSTEM_LIST_FILE);
+                installAPPList.addAll(sort(tempList));
+                boolean saveSystemResult = JanYoFileUtil.saveAppList(context, installAPPList, JanYoFileUtil.SYSTEM_LIST_FILE);
                 Logs.i(TAG, "getInstallAPPList: 存储APP列表结果: " + saveSystemResult);
                 break;
         }
@@ -143,23 +146,23 @@ public class AppManager {
                     break;
                 case SORT_TYPE_NAME_DOWN:
                     while (left < right && n[left].getName().compareToIgnoreCase(pivot.getName()) >= 0)
-                        right--;
+                        left++;
                     break;
                 case SORT_TYPE_SIZE_UP:
-                    while (left < right && n[left].getSize() >= pivot.getSize())
-                        right--;
+                    while (left < right && n[left].getSize() <= pivot.getSize())
+                        left++;
                     break;
                 case SORT_TYPE_SIZE_DOWN:
-                    while (left < right && n[left].getSize() <= pivot.getSize())
-                        right--;
+                    while (left < right && n[left].getSize() >= pivot.getSize())
+                        left++;
                     break;
                 case SORT_TYPE_PACKAGE_UP:
-                    while (left < right && n[left].getPackageName().compareToIgnoreCase(pivot.getPackageName()) >= 0)
-                        right--;
+                    while (left < right && n[left].getPackageName().compareToIgnoreCase(pivot.getPackageName()) <= 0)
+                        left++;
                     break;
                 case SORT_TYPE_PACKAGE_DOWN:
-                    while (left < right && n[left].getPackageName().compareToIgnoreCase(pivot.getPackageName()) <= 0)
-                        right--;
+                    while (left < right && n[left].getPackageName().compareToIgnoreCase(pivot.getPackageName()) >= 0)
+                        left++;
                     break;
             }
             if (left < right)
