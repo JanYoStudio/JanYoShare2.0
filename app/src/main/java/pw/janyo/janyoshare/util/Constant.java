@@ -11,4 +11,5 @@ public class Constant {
     static final String IS_CUSTOM_FORMAT="isCustomFormat";
     static final String RENAME_FORMAT="renameFormat";
     static final String NICK_NAME="nickName";
+    static final String SORT_TYPE="sortType";
 }

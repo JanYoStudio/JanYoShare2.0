@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import pw.janyo.janyoshare.classes.InstallAPP;
@@ -17,6 +18,14 @@ public class AppManager {
     private static final String TAG = "AppManager";
     public final static int USER = 1;
     public final static int SYSTEM = 2;
+
+    public final static int SORT_TYPE_NONE = 0;
+    public final static int SORT_TYPE_NAME_UP = 1;
+    public final static int SORT_TYPE_NAME_DOWN = 2;
+    public final static int SORT_TYPE_SIZE_UP = 3;
+    public final static int SORT_TYPE_SIZE_DOWN = 4;
+    public final static int SORT_TYPE_PACKAGE_UP = 5;
+    public final static int SORT_TYPE_PACKAGE_DOWN = 6;
 
     public static List<InstallAPP> getInstallAPPList(Context context, int appType) {
         DrawableFactory drawableFactory = new DrawableFactory();
@@ -44,7 +53,7 @@ public class AppManager {
                         installAPPList.add(installAPP);
                     }
                 }
-                boolean saveUserResult = JanYoFileUtil.saveAppList(context, installAPPList, JanYoFileUtil.USER_LIST_FILE);
+                boolean saveUserResult = JanYoFileUtil.saveAppList(context, sort(installAPPList), JanYoFileUtil.USER_LIST_FILE);
                 Logs.i(TAG, "getInstallAPPList: 存储APP列表结果: " + saveUserResult);
                 break;
             case SYSTEM:
@@ -67,10 +76,96 @@ public class AppManager {
                         installAPPList.add(installAPP);
                     }
                 }
-                boolean saveSystemResult = JanYoFileUtil.saveAppList(context, installAPPList, JanYoFileUtil.SYSTEM_LIST_FILE);
+                boolean saveSystemResult = JanYoFileUtil.saveAppList(context, sort(installAPPList), JanYoFileUtil.SYSTEM_LIST_FILE);
                 Logs.i(TAG, "getInstallAPPList: 存储APP列表结果: " + saveSystemResult);
                 break;
         }
         return installAPPList;
+    }
+
+    private static List<InstallAPP> sort(List<InstallAPP> originList) {
+        int sortType = Settings.getSortType();
+        if (sortType == 0)
+            return originList;
+        InstallAPP array[] = new InstallAPP[originList.size()];
+        for (int i = 0; i < originList.size(); i++)
+            array[i] = originList.get(i);
+        quickSort(array, 0, array.length - 1, sortType);
+        List<InstallAPP> sortList = new ArrayList<>();
+        sortList.addAll(Arrays.asList(array));
+        return sortList;
+    }
+
+    private static void quickSort(InstallAPP n[], int left, int right, int sortType) {
+        int dp;
+        if (left < right) {
+            dp = partition(n, left, right, sortType);
+            quickSort(n, left, dp - 1, sortType);
+            quickSort(n, dp + 1, right, sortType);
+        }
+    }
+
+    private static int partition(InstallAPP n[], int left, int right, int sortType) {
+        InstallAPP pivot = n[left];
+        while (left < right) {
+            switch (sortType) {
+                case SORT_TYPE_NAME_UP:
+                    while (left < right && n[right].getName().compareToIgnoreCase(pivot.getName()) >= 0)
+                        right--;
+                    break;
+                case SORT_TYPE_NAME_DOWN:
+                    while (left < right && n[right].getName().compareToIgnoreCase(pivot.getName()) <= 0)
+                        right--;
+                    break;
+                case SORT_TYPE_SIZE_UP:
+                    while (left < right && n[right].getSize() >= pivot.getSize())
+                        right--;
+                    break;
+                case SORT_TYPE_SIZE_DOWN:
+                    while (left < right && n[right].getSize() <= pivot.getSize())
+                        right--;
+                    break;
+                case SORT_TYPE_PACKAGE_UP:
+                    while (left < right && n[right].getPackageName().compareToIgnoreCase(pivot.getPackageName()) >= 0)
+                        right--;
+                    break;
+                case SORT_TYPE_PACKAGE_DOWN:
+                    while (left < right && n[right].getPackageName().compareToIgnoreCase(pivot.getPackageName()) <= 0)
+                        right--;
+                    break;
+            }
+            if (left < right)
+                n[left++] = n[right];
+            switch (sortType) {
+                case SORT_TYPE_NAME_UP:
+                    while (left < right && n[left].getName().compareToIgnoreCase(pivot.getName()) <= 0)
+                        left++;
+                    break;
+                case SORT_TYPE_NAME_DOWN:
+                    while (left < right && n[left].getName().compareToIgnoreCase(pivot.getName()) >= 0)
+                        right--;
+                    break;
+                case SORT_TYPE_SIZE_UP:
+                    while (left < right && n[left].getSize() >= pivot.getSize())
+                        right--;
+                    break;
+                case SORT_TYPE_SIZE_DOWN:
+                    while (left < right && n[left].getSize() <= pivot.getSize())
+                        right--;
+                    break;
+                case SORT_TYPE_PACKAGE_UP:
+                    while (left < right && n[left].getPackageName().compareToIgnoreCase(pivot.getPackageName()) >= 0)
+                        right--;
+                    break;
+                case SORT_TYPE_PACKAGE_DOWN:
+                    while (left < right && n[left].getPackageName().compareToIgnoreCase(pivot.getPackageName()) <= 0)
+                        right--;
+                    break;
+            }
+            if (left < right)
+                n[right--] = n[left];
+        }
+        n[left] = pivot;
+        return left;
     }
 }

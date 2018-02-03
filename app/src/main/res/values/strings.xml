@@ -16,6 +16,8 @@
     <string name="title_fragment_user">User</string>
     <string name="title_fragment_system">System</string>
 
+    <string name="hint_service_unavailable">Service is temporarily unavailable! </string>
+
     <string name="action_settings">Settings</string>
     <string name="action_grant_permission">Authorized</string>
     <string name="action_face_to_face_share">Share face to face</string>
@@ -77,8 +79,17 @@
     <string name="array_copy_info_version_name">Version name</string>
     <string name="array_copy_info_version_code">Version code</string>
 
+    <string name="array_sort_type_none">None</string>
+    <string name="array_sort_type_name_ascending_order">By application name in ascending order</string>
+    <string name="array_sort_type_name_descending_order">By application name in descending order</string>
+    <string name="array_sort_type_size_ascending_order">By application size in ascending order</string>
+    <string name="array_sort_type_size_descending_order">By application size in descending order</string>
+    <string name="array_sort_type_package_name_ascending_order">By package name in ascending order</string>
+    <string name="array_sort_type_package_name_descending_order">By package name in descending order</string>
+
     <string name="title_dialog_select_operation">Please select operation</string>
     <string name="title_dialog_select_copy_info">Please select info which you want to copy</string>
+    <string name="title_dialog_select_sort_type">Please select method which you want to sort</string>
     <string name="title_dialog_select_wifi">Which user do you want to connect? </string>
     <string name="title_activity_share">Share to</string>
     <string name="title_activity_settings">Settings</string>

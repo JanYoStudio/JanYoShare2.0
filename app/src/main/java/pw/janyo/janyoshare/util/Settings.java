@@ -54,4 +54,12 @@ public class Settings {
     public static void setNickName(String nickName) {
         SHARED_PREFERENCES.edit().putString(Constant.NICK_NAME, nickName).apply();
     }
+
+    public static int getSortType() {
+        return SHARED_PREFERENCES.getInt(Constant.SORT_TYPE, 0);
+    }
+
+    public static void setSortType(int sortType) {
+        SHARED_PREFERENCES.edit().putInt(Constant.SORT_TYPE, sortType).apply();
+    }
 }

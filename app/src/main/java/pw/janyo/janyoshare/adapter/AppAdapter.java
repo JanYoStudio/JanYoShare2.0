@@ -288,6 +288,8 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
                         .show();
                 break;
             case 5://面对面分享
+                Snackbar.make(coordinatorLayout, R.string.hint_service_unavailable, Snackbar.LENGTH_LONG)
+                        .show();
                 break;
         }
     }

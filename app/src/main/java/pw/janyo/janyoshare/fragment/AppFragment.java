@@ -78,7 +78,7 @@ public class AppFragment extends Fragment {
         return list.isEmpty();
     }
 
-    private void refreshList() {
+    public void refreshList() {
         Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> subscriber) throws Exception {

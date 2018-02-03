@@ -1,6 +1,7 @@
 package pw.janyo.janyoshare.activity;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -104,17 +106,22 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_face_to_face_share:
-                        startActivity(new Intent(MainActivity.this, FaceToFaceActivity.class));
-//                        APUtil.openAP(MainActivity.this, "test", "testtest");
+//                        startActivity(new Intent(MainActivity.this, FaceToFaceActivity.class));
+                        Snackbar.make(coordinatorLayout, R.string.hint_service_unavailable, Snackbar.LENGTH_LONG)
+                                .show();
                         break;
                     case R.id.action_clear_temp_dir:
                         clearFiles();
                         break;
                     case R.id.action_night_mode:
+                        Snackbar.make(coordinatorLayout, R.string.hint_service_unavailable, Snackbar.LENGTH_LONG)
+                                .show();
                         break;
                     case R.id.action_license:
                         break;
                     case R.id.action_support_us:
+                        Snackbar.make(coordinatorLayout, R.string.hint_service_unavailable, Snackbar.LENGTH_LONG)
+                                .show();
                         break;
                     case R.id.action_settings:
                         startActivity(new Intent(MainActivity.this, SettingsActivity.class));
@@ -163,8 +170,32 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                break;
+            case R.id.action_sort:
+                final int current = Settings.getSortType();
+                final int[] temp = {current};
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(R.string.title_dialog_select_sort_type)
+                        .setSingleChoiceItems(R.array.sortType, current, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                temp[0] = which;
+                            }
+                        })
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                int selected = temp[0];
+                                Settings.setSortType(selected);
+                                if (current != selected)
+                                    currentFragment.refreshList();
+                            }
+                        })
+                        .show();
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
