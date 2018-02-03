@@ -10,6 +10,8 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,7 +94,6 @@ public class WIFIUtil {
         Logs.i(TAG, "scanWIFI: ");
         if (!isWifiEnabled() || !wifiManager.startScan())
             return new ArrayList<>();
-        Logs.i(TAG, "scanWIFI: test");
         List<ScanResult> scanResults = wifiManager.getScanResults();
         if (scanResults != null && scanResults.size() > 0) {
             return filterScanResult(scanResults);
@@ -175,16 +176,14 @@ public class WIFIUtil {
     /**
      * 获取连接WiFi后的IP地址
      */
-    public String getIPAddressFromHotspot() {
-        DhcpInfo dhcpInfo = wifiManager.getDhcpInfo();
-        if (dhcpInfo != null) {
-            int address = dhcpInfo.gateway;
-            return ((address & 0xFF)
-                    + "." + ((address >> 8) & 0xFF)
-                    + "." + ((address >> 16) & 0xFF)
-                    + "." + ((address >> 24) & 0xFF));
-        }
-        return null;
+    public String getIPAddressFromHotspot() throws UnknownHostException {
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        int hostAddress = wifiInfo.getIpAddress();
+        byte[] addressBytes = {(byte) (0xff & hostAddress),
+                (byte) (0xff & (hostAddress >> 8)),
+                (byte) (0xff & (hostAddress >> 16)),
+                (byte) (0xff & (hostAddress >> 24))};
+        return InetAddress.getByAddress(addressBytes).toString();
     }
 
     /**
@@ -278,7 +277,6 @@ public class WIFIUtil {
      * @return 排序后列表
      */
     private List<ScanResult> sortScanResultWithLevel(List<ScanResult> scanResultList) {
-        Logs.i(TAG, "sortScanResultWithLevel: ");
         for (int i = 0; i < scanResultList.size(); i++) {
             for (int j = 0; j < scanResultList.size(); j++) {
                 if (scanResultList.get(i).level > scanResultList.get(j).level) {

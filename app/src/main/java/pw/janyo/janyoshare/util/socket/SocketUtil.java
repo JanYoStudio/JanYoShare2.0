@@ -8,11 +8,15 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import vip.mystery0.tools.logs.Logs;
 
 public class SocketUtil {
     private static final String TAG = "SocketUtil";
-    private static final int port = 22333;
+    private static final int PORT = 22333;
+    public static final String VERIFY_MESSAGE = "VERIFY_MESSAGE";
     private String host;
     private Socket socket = null;
 
@@ -20,11 +24,14 @@ public class SocketUtil {
         this.host = host;
     }
 
+    public SocketUtil() {
+    }
+
     public boolean connect() {
         try {
             if (socket != null)
                 socket.close();
-            socket = new Socket(host, port);
+            socket = new Socket(host, PORT);
             socket.setKeepAlive(true);
             return socket.isConnected();
         } catch (IOException e) {
@@ -35,18 +42,23 @@ public class SocketUtil {
 
     public boolean accept() {
         try {
-            if (socket != null)
+            if (socket != null) {
                 socket.close();
-            socket = new ServerSocket(port).accept();
+                Thread.sleep(200);
+            }
+            if (socket == null)
+                socket = new ServerSocket(PORT).accept();
             socket.setKeepAlive(true);
             return socket.isConnected();
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             Logs.wtf(TAG, "accept: ", e);
             return false;
         }
     }
 
     public String receiveMessage() {
+        if (!socket.isConnected())
+            return "null";
         StringBuilder response = new StringBuilder();
         InputStream inputStream = null;
         try {
@@ -68,6 +80,8 @@ public class SocketUtil {
     }
 
     public void sendMessage(String message) {
+        if (!socket.isConnected())
+            return;
         OutputStream outputStream = null;
         try {
             outputStream = socket.getOutputStream();
@@ -76,8 +90,8 @@ public class SocketUtil {
             outputStream.flush();
         } catch (IOException e) {
             Logs.wtf(TAG, "sendMessage: ", e);
-        }finally {
-            if (outputStream!=null)
+        } finally {
+            if (outputStream != null)
                 try {
                     outputStream.close();
                 } catch (IOException e) {

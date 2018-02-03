@@ -5,6 +5,9 @@ import android.content.Context;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 
 import java.lang.reflect.Method;
@@ -20,8 +23,8 @@ public class APUtil {
     private Context context;
     private WifiManager wifiManager;
 
-    public APUtil(Context context){
-        this.context=context;
+    public APUtil(Context context) {
+        this.context = context;
         wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
     }
 
@@ -46,7 +49,7 @@ public class APUtil {
     /**
      * 开启便携热点
      *
-     * @param SSID    便携热点SSID
+     * @param SSID 便携热点SSID
      * @return 结果
      */
     public boolean openAP(String SSID) {
@@ -54,17 +57,14 @@ public class APUtil {
         if (TextUtils.isEmpty(SSID)) {
             return false;
         }
-
-        WIFIUtil wifiUtil=new WIFIUtil(context);
+        WIFIUtil wifiUtil = new WIFIUtil(context);
         wifiUtil.closeWifi();
-
         WifiConfiguration wifiConfiguration = getAPConfig(SSID);
         try {
             if (isAPOn()) {
                 wifiManager.setWifiEnabled(false);
                 closeAP();
             }
-
             //使用反射开启Wi-Fi热点
             Method method = wifiManager.getClass().getMethod("setWifiApEnabled", WifiConfiguration.class, boolean.class);
             method.invoke(wifiManager, wifiConfiguration, true);
@@ -76,14 +76,33 @@ public class APUtil {
     }
 
     /**
+     * 在Android 8.0以上开启热点
+     *
+     * @param handler 回调的Handler
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void openAP(Handler handler, WifiManager.LocalOnlyHotspotCallback callback) {
+        if (isAPOn()) {
+            wifiManager.setWifiEnabled(false);
+            closeAP();
+        }
+        wifiManager.startLocalOnlyHotspot(callback, handler);
+    }
+
+    /**
      * 关闭便携热点
      */
     public void closeAP() {
         Logs.i(TAG, "closeAP: ");
         try {
-            //等待适配8.0
-            Method method = wifiManager.getClass().getMethod("setWifiApEnabled", WifiConfiguration.class, boolean.class);
-            method.invoke(wifiManager, null, false);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                @SuppressLint("PrivateApi")
+                Method method = wifiManager.getClass().getDeclaredMethod("cancelLocalOnlyHotspotRequest");
+                method.invoke(wifiManager);
+            } else {
+                Method method = wifiManager.getClass().getMethod("setWifiApEnabled", WifiConfiguration.class, boolean.class);
+                method.invoke(wifiManager, null, false);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

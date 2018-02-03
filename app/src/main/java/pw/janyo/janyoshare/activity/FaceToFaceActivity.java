@@ -3,10 +3,13 @@ package pw.janyo.janyoshare.activity;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -22,6 +25,7 @@ import com.zyao89.view.zloading.ZLoadingDialog;
 import com.zyao89.view.zloading.Z_TYPE;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -33,9 +37,13 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import pw.janyo.janyoshare.R;
+import pw.janyo.janyoshare.classes.ConnectedSocket;
 import pw.janyo.janyoshare.util.Constant;
+import pw.janyo.janyoshare.util.socket.SocketUtil;
 import pw.janyo.janyoshare.util.wifi.APUtil;
+import pw.janyo.janyoshare.util.wifi.IPScanner;
 import pw.janyo.janyoshare.util.wifi.WIFIUtil;
+import pw.janyo.janyoshare.util.wifi.WiFiBroadcastReceiver;
 import vip.mystery0.tools.logs.Logs;
 
 public class FaceToFaceActivity extends AppCompatActivity {
@@ -47,17 +55,19 @@ public class FaceToFaceActivity extends AppCompatActivity {
     private AlertDialog.Builder builder;
     private APUtil apUtil;
     private WIFIUtil wifiUtil;
+    private SocketUtil socketUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_to_face);
+        wifiUtil = new WIFIUtil(FaceToFaceActivity.this);
 
         receiveDialog = new ZLoadingDialog(FaceToFaceActivity.this)
                 .setLoadingBuilder(Z_TYPE.STAR_LOADING)
                 .setHintTextSize(16)
-//                .setCancelable(false)
-//                .setCanceledOnTouchOutside(false)
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(false)
                 .setLoadingColor(ContextCompat.getColor(FaceToFaceActivity.this, R.color.colorAccent))
                 .setHintTextColor(ContextCompat.getColor(FaceToFaceActivity.this, R.color.colorAccent));
 
@@ -76,27 +86,87 @@ public class FaceToFaceActivity extends AppCompatActivity {
         fab_receive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Logs.i(TAG, "onClick: receive");
-                requestLocationPermission();
+                if (wifiUtil.isWifi())
+                    new AlertDialog.Builder(FaceToFaceActivity.this)
+                            .setTitle(" ")
+                            .setMessage(R.string.hint_direct_wifi)
+                            .setPositiveButton(R.string.action_direct_wifi, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    scanIP();
+                                }
+                            })
+                            .setNegativeButton(R.string.action_reconnect, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    requestLocationPermission();
+                                }
+                            })
+                            .show();
+                else
+                    requestLocationPermission();
             }
         });
         fab_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Logs.i(TAG, "onClick: send");
-                requestWriteSettings();
+                if (wifiUtil.isWifi())
+                    new AlertDialog.Builder(FaceToFaceActivity.this)
+                            .setTitle(" ")
+                            .setMessage(R.string.hint_direct_wifi)
+                            .setPositiveButton(R.string.action_direct_wifi, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    readySocketServer();
+                                }
+                            })
+                            .setNegativeButton(R.string.action_new_hotspot, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    requestWriteSettings();
+                                }
+                            })
+                            .show();
+                else
+                    requestWriteSettings();
             }
         });
     }
 
     private void readyToShare() {
+        final Handler handler = new Handler();
         Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
-            public void subscribe(ObservableEmitter<Boolean> subscriber) throws Exception {
+            public void subscribe(final ObservableEmitter<Boolean> subscriber) throws Exception {
                 apUtil = new APUtil(FaceToFaceActivity.this);
-                apUtil.openAP(Constant.WIFI_SSID + '_' + pw.janyo.janyoshare.util.Settings.getNickName());
-                Logs.i(TAG, "readyToShare: " + apUtil.getHotspotLocalIpAddress());
-                subscriber.onComplete();
+                //开始检测现有的热点配置是否正确
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    apUtil.openAP(handler, new WifiManager.LocalOnlyHotspotCallback() {
+                        @Override
+                        public void onStarted(WifiManager.LocalOnlyHotspotReservation reservation) {
+                            super.onStarted(reservation);
+                            Logs.i(TAG, "onStarted: ");
+                            subscriber.onComplete();
+                        }
+
+                        @Override
+                        public void onStopped() {
+                            super.onStopped();
+                            Logs.i(TAG, "onStopped: ");
+                            subscriber.onComplete();
+                        }
+
+                        @Override
+                        public void onFailed(int reason) {
+                            super.onFailed(reason);
+                            Logs.i(TAG, "onFailed: ");
+                            subscriber.onComplete();
+                        }
+                    });
+                } else {
+                    apUtil.openAP(Constant.WIFI_SSID + '_' + pw.janyo.janyoshare.util.Settings.getNickName());
+                    subscriber.onComplete();
+                }
             }
         })
                 .subscribeOn(Schedulers.newThread())
@@ -110,6 +180,21 @@ public class FaceToFaceActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(Boolean aBoolean) {
+                        if (aBoolean) {//8.0以上
+                            sendDialog.dismiss();
+                            new AlertDialog.Builder(FaceToFaceActivity.this)
+                                    .setTitle(" ")
+                                    .setMessage("test")
+                                    .setPositiveButton(R.string.action_go, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+                                            startActivity(intent);
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.cancel, null)
+                                    .show();
+                        }
                     }
 
                     @Override
@@ -120,8 +205,8 @@ public class FaceToFaceActivity extends AppCompatActivity {
 
                     @Override
                     public void onComplete() {
-                        sendDialog.setHintText("waiting……");
-//                        sendDialog.dismiss();
+                        sendDialog.dismiss();
+                        readySocketServer();
                     }
                 });
     }
@@ -130,7 +215,6 @@ public class FaceToFaceActivity extends AppCompatActivity {
         Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> subscriber) throws Exception {
-                wifiUtil = new WIFIUtil(FaceToFaceActivity.this);
                 if (!wifiUtil.isWifi())
                     wifiUtil.openWifi();
                 subscriber.onComplete();
@@ -142,6 +226,7 @@ public class FaceToFaceActivity extends AppCompatActivity {
                 .subscribe(new Observer<Boolean>() {
                     @Override
                     public void onSubscribe(Disposable d) {
+                        Logs.i(TAG, "onSubscribe: start: " + Calendar.getInstance().getTimeInMillis());
                         receiveDialog.setHintText(getString(R.string.hint_face_scan_hotspot))
                                 .show();
                     }
@@ -198,14 +283,28 @@ public class FaceToFaceActivity extends AppCompatActivity {
     private void connectWIFI(final String SSID) {
         Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
-            public void subscribe(ObservableEmitter<Boolean> subscriber) throws Exception {
-                if (!wifiUtil.connectWiFi(SSID))
+            public void subscribe(final ObservableEmitter<Boolean> subscriber) throws Exception {
+                WiFiBroadcastReceiver wiFiBroadcastReceiver = new WiFiBroadcastReceiver() {
+                    @Override
+                    public void onWifiConnected(String connectedSSID) {
+                        if (connectedSSID.equals(SSID)) {
+                            Logs.i(TAG, "onWifiConnected: ");
+                            subscriber.onNext(wifiUtil.getConnectedSSID().equals(SSID));
+                            try{
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            subscriber.onComplete();
+                            unRegisterWiFiReceiver(this);
+                        }
+                    }
+                };
+                registerWiFiReceiver(wiFiBroadcastReceiver);
+                if (!wifiUtil.connectWiFi(SSID)) {
                     subscriber.onNext(false);
-                else {
-                    Thread.sleep(1000);//睡眠1秒获取信息
-                    subscriber.onNext(wifiUtil.getConnectedSSID().equals(SSID));
+                    subscriber.onComplete();
                 }
-                subscriber.onComplete();
             }
         })
                 .subscribeOn(Schedulers.newThread())
@@ -236,6 +335,8 @@ public class FaceToFaceActivity extends AppCompatActivity {
                     public void onComplete() {
                         receiveDialog.dismiss();
                         Logs.i(TAG, "onComplete: " + result);
+                        if (result)
+                            scanIP();
                     }
                 });
     }
@@ -300,6 +401,113 @@ public class FaceToFaceActivity extends AppCompatActivity {
                 }, SCAN_WIFI_PERMISSION_CODE);
             else
                 readyToReceive();
+    }
+
+    private void scanIP() {
+        IPScanner ipScanner = new IPScanner();
+        ipScanner.startScan(FaceToFaceActivity.this, new IPScanner.OnScanListener() {
+            @Override
+            public void connected(ConnectedSocket connectedSocket) {
+                Logs.i(TAG, "connected: " + connectedSocket);
+                readySocket(connectedSocket);
+            }
+
+            @Override
+            public void none() {
+                Logs.i(TAG, "none: ");
+            }
+        });
+    }
+
+    private void readySocket(final ConnectedSocket connectedSocket) {
+        Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> subscriber) throws Exception {
+                Logs.i(TAG, "readySocket: " + wifiUtil.getIPAddressFromHotspot());
+                SocketUtil socketUtil = connectedSocket.socketUtil;
+                Logs.i(TAG, "receiveMessage: " + socketUtil.receiveMessage());
+                subscriber.onComplete();
+            }
+        })
+                .subscribeOn(Schedulers.newThread())
+                .unsubscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Logs.i(TAG, "onComplete: end: " + Calendar.getInstance().getTimeInMillis());
+                    }
+                });
+    }
+
+    private void readySocketServer() {
+        Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> subscriber) throws Exception {
+                if (wifiUtil.isWifi())
+                    Logs.i(TAG, "subscribe: " + wifiUtil.getIPAddressFromHotspot());
+                else
+                    Logs.i(TAG, "subscribe: " + apUtil.getHotspotLocalIpAddress());
+                if (socketUtil == null)
+                    socketUtil = new SocketUtil();
+                socketUtil.accept();
+                socketUtil.sendMessage(SocketUtil.VERIFY_MESSAGE);
+                subscriber.onComplete();
+            }
+        })
+                .subscribeOn(Schedulers.newThread())
+                .unsubscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        sendDialog.setHintText(getString(R.string.hint_face_wait_connect));
+                        sendDialog.dismiss();
+                        sendDialog.show();
+                    }
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        sendDialog.dismiss();
+                        Logs.wtf(TAG, "onError: ", e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        sendDialog.dismiss();
+                    }
+                });
+    }
+
+    private void registerWiFiReceiver(WiFiBroadcastReceiver wiFiBroadcastReceiver) {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+        intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        registerReceiver(wiFiBroadcastReceiver, intentFilter);
+    }
+
+    private void unRegisterWiFiReceiver(WiFiBroadcastReceiver wiFiBroadcastReceiver) {
+        unregisterReceiver(wiFiBroadcastReceiver);
     }
 
     @Override
