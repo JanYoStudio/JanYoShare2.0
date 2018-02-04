@@ -5,7 +5,7 @@ autoVersion {
     major 2
     minor 0
     patch 0
-    beta 0
+    beta 1
     alpha 0
 }
 
@@ -23,7 +23,7 @@ android {
     buildTypes {
         debug {
             resValue "string", "app_version_name", autoVersion.name
-            resValue "string", "app_version_code", autoVersion.code + ''
+            resValue "string", "app_version_code", "$autoVersion.code"
             resValue "string", "app_version", "$autoVersion.name-$autoVersion.code"
             resValue "string", "app_package_name", "pw.janyo.janyoshare"
             minifyEnabled false
@@ -31,7 +31,7 @@ android {
         }
         release {
             resValue "string", "app_version_name", autoVersion.name
-            resValue "string", "app_version_code", autoVersion.code + ''
+            resValue "string", "app_version_code", "$autoVersion.code"
             resValue "string", "app_version", "$autoVersion.name-$autoVersion.code"
             resValue "string", "app_package_name", "pw.janyo.janyoshare"
             minifyEnabled false
