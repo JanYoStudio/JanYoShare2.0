@@ -69,7 +69,9 @@
     <string name="hint_warning_auto_clean">Please note that after you use JanYo Share to extract your desired app to TEMP directory, if you need to perform additional operations on the extracted application install package, make sure that you moved packages from the TEMP directory before the next time you start JanYo Share, otherwise it will be cleaned automatically.</string>
     <string name="hint_custom_rename_format">%N represents the application name, \n%V represents the version name of the application, \n%W represents the version number of the application, and \n%P represents the package name of the application.</string>
     <string name="hint_custom_rename_format_empty">Format can not be empty! </string>
-    <string name="hint_warning_check_obb">The file was exported and %1$d packet%2$s was found! </string>
+    <string name="hint_warning_check_obb">The file was exported and %1$d packet was found! </string>
+    <string name="hint_warning_check_obb_s">The file was exported and %1$d packets was found! </string>
+    <string name="hint_warning_check_obb_no">The file was exported and no packets was found! </string>
     <string name="hint_direct_wifi">Detect that you are using a WiFi network, do you want to share files directly? </string>
 
     <string name="array_export_dir_data">Android internal storage (/data/data/pw.janyo.janyoshare/files/JanYo Share)</string>

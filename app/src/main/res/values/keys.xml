@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_auto_clean">key_auto_clean</string>
+    <string name="key_auto_clean" translatable="false">key_auto_clean</string>
     <string name="title_auto_clean">Auto clean temp directory</string>
     <string name="summary_auto_clean_on">Automatic cleanup is turned on, and temporary files will be cleaned up on the next startup. </string>
     <string name="summary_auto_clean_off">Automatic cleanup is turned off.</string>
-    <string name="key_export_dir">key_export_dir</string>
+    <string name="key_export_dir" translatable="false">key_export_dir</string>
     <string name="title_export_dir">Export path</string>
     <string name="summary_export_dir">Will be saved to %1$s.</string>
-    <string name="key_custom_rename_format">key_custom_rename_format</string>
+    <string name="key_custom_rename_format" translatable="false">key_custom_rename_format</string>
     <string name="title_custom_rename_format">Custom rename format</string>
-    <string name="key_custom_format">key_custom_format</string>
+    <string name="key_custom_format" translatable="false">key_custom_format</string>
     <string name="title_custom_format">Custom format</string>
     <string name="summary_custom_format">Will rename like: %1$s</string>
 </resources>

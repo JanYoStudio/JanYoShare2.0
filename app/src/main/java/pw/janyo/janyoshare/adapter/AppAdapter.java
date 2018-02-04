@@ -278,14 +278,33 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
                 shareList.add(JanYoFileUtil.getExportFile(installAPP));
                 List<File> obbList = JanYoFileUtil.checkObb(installAPP.getPackageName());
                 shareList.addAll(obbList);
-                Snackbar.make(coordinatorLayout, context.getString(R.string.hint_warning_check_obb, obbList.size(), obbList.size() == 1 || obbList.size() == 0 ? "" : 's'), Snackbar.LENGTH_SHORT)
-                        .addCallback(new Snackbar.Callback() {
-                            @Override
-                            public void onDismissed(Snackbar transientBottomBar, int event) {
-                                JanYoFileUtil.doShareFile(context, shareList);
-                            }
-                        })
-                        .show();
+                if (obbList.size() == 0)
+                    Snackbar.make(coordinatorLayout, context.getString(R.string.hint_warning_check_obb_no), Snackbar.LENGTH_SHORT)
+                            .addCallback(new Snackbar.Callback() {
+                                @Override
+                                public void onDismissed(Snackbar transientBottomBar, int event) {
+                                    JanYoFileUtil.doShareFile(context, shareList);
+                                }
+                            })
+                            .show();
+                else if (obbList.size() == 1)
+                    Snackbar.make(coordinatorLayout, context.getString(R.string.hint_warning_check_obb, obbList.size()), Snackbar.LENGTH_SHORT)
+                            .addCallback(new Snackbar.Callback() {
+                                @Override
+                                public void onDismissed(Snackbar transientBottomBar, int event) {
+                                    JanYoFileUtil.doShareFile(context, shareList);
+                                }
+                            })
+                            .show();
+                else
+                    Snackbar.make(coordinatorLayout, context.getString(R.string.hint_warning_check_obb_s, obbList.size()), Snackbar.LENGTH_SHORT)
+                            .addCallback(new Snackbar.Callback() {
+                                @Override
+                                public void onDismissed(Snackbar transientBottomBar, int event) {
+                                    JanYoFileUtil.doShareFile(context, shareList);
+                                }
+                            })
+                            .show();
                 break;
             case 5://面对面分享
                 Snackbar.make(coordinatorLayout, R.string.hint_service_unavailable, Snackbar.LENGTH_LONG)
