@@ -58,7 +58,7 @@ public class Settings {
     }
 
     public static int getSortType() {
-        return SHARED_PREFERENCES.getInt(Constant.SORT_TYPE, 0);
+        return SHARED_PREFERENCES.getInt(Constant.SORT_TYPE, AppManager.SORT_TYPE_NONE);
     }
 
     public static void setSortType(int sortType) {
