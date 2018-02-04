@@ -128,7 +128,6 @@ public class AppFragment extends Fragment {
         Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> subscriber) throws Exception {
-                sortType = Settings.getSortType();
                 List<InstallAPP> appList = AppManager.getInstallAPPList(getActivity(), type);
                 list.clear();
                 list.addAll(appList);
@@ -175,6 +174,7 @@ public class AppFragment extends Fragment {
                         break;
                     Thread.sleep(200);
                 }
+                sortType = Settings.getSortType();
                 String fileName;
                 switch (type) {
                     case AppManager.USER:
