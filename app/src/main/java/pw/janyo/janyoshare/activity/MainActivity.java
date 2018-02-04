@@ -10,27 +10,38 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.Calendar;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import pw.janyo.janyoshare.R;
 import pw.janyo.janyoshare.adapter.ViewPagerAdapter;
 import pw.janyo.janyoshare.fragment.AppFragment;
 import pw.janyo.janyoshare.util.AppManager;
 import pw.janyo.janyoshare.util.JanYoFileUtil;
 import pw.janyo.janyoshare.util.Settings;
+import vip.mystery0.tools.logs.Logs;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -118,6 +129,53 @@ public class MainActivity extends AppCompatActivity {
                                 .show();
                         break;
                     case R.id.action_license:
+                        Observable.create(new ObservableOnSubscribe<View>() {
+                            @Override
+                            public void subscribe(ObservableEmitter<View> subscriber) throws Exception {
+                                View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_license, new NestedScrollView(MainActivity.this), false);
+                                TextView licensePoint1 = view.findViewById(R.id.license_point1);
+                                TextView licensePoint2 = view.findViewById(R.id.license_point2);
+                                TextView licensePoint3 = view.findViewById(R.id.license_point3);
+                                VectorDrawableCompat point = VectorDrawableCompat.create(getResources(), R.drawable.ic_point, null);
+                                if (point != null)
+                                    point.setBounds(0, 0, point.getMinimumWidth(), point.getMinimumHeight());
+                                licensePoint1.setCompoundDrawables(point, null, null, null);
+                                licensePoint2.setCompoundDrawables(point, null, null, null);
+                                licensePoint3.setCompoundDrawables(point, null, null, null);
+                                subscriber.onNext(view);
+                                subscriber.onComplete();
+                            }
+                        })
+                                .subscribeOn(Schedulers.newThread())
+                                .unsubscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new DisposableObserver<View>() {
+                                    private View view;
+
+                                    @Override
+                                    public void onNext(View view) {
+                                        this.view = view;
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Logs.wtf(TAG, "onError: ", e);
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+                                        new AlertDialog.Builder(MainActivity.this)
+                                                .setTitle(" ")
+                                                .setView(view)
+                                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        Logs.i(TAG, "onClick: ");
+                                                    }
+                                                })
+                                                .show();
+                                    }
+                                });
                         break;
                     case R.id.action_support_us:
                         Snackbar.make(coordinatorLayout, R.string.hint_service_unavailable, Snackbar.LENGTH_LONG)
