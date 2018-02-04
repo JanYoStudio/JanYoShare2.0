@@ -44,6 +44,7 @@ public class AppFragment extends Fragment {
     private int sortType = Settings.getSortType();
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<InstallAPP> list = new ArrayList<>();
+    private List<InstallAPP> originList = new ArrayList<>();
     private AppAdapter appAdapter = null;
 
     @Override
@@ -80,13 +81,59 @@ public class AppFragment extends Fragment {
         return list.isEmpty() || sortType != Settings.getSortType();
     }
 
+    public void search(final String query) {
+        Logs.i(TAG, "search: " + query);
+        Observable.create(new ObservableOnSubscribe<List<InstallAPP>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<InstallAPP>> subscriber) throws Exception {
+                while (true) {
+                    if (appAdapter != null)
+                        break;
+                    Thread.sleep(200);
+                }
+                list.clear();
+                list.addAll(originList);
+                if (query.length() > 0)
+                    AppManager.search(list, query);
+                subscriber.onComplete();
+            }
+        })
+                .subscribeOn(Schedulers.newThread())
+                .unsubscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<InstallAPP>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<InstallAPP> installAPPList) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Logs.wtf(TAG, "onError: ", e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        appAdapter.notifyDataSetChanged();
+                    }
+                });
+    }
+
     private void refreshList() {
         Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> subscriber) throws Exception {
                 sortType = Settings.getSortType();
+                List<InstallAPP> appList = AppManager.getInstallAPPList(getActivity(), type);
                 list.clear();
-                list.addAll(AppManager.getInstallAPPList(getActivity(), type));
+                list.addAll(appList);
+                originList.clear();
+                originList.addAll(appList);
                 Settings.setCurrentListSize(type, list.size());
                 subscriber.onComplete();
             }
@@ -177,6 +224,8 @@ public class AppFragment extends Fragment {
                         if (installAPPList.size() != 0) {
                             list.clear();
                             list.addAll(installAPPList);
+                            originList.clear();
+                            originList.addAll(installAPPList);
                             appAdapter.notifyDataSetChanged();
                             swipeRefreshLayout.setRefreshing(false);
                         } else

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import pw.janyo.janyoshare.classes.InstallAPP;
@@ -84,6 +85,15 @@ public class AppManager {
                 break;
         }
         return installAPPList;
+    }
+
+    public static void search(List<InstallAPP> originList, String query) {
+        Iterator<InstallAPP> iterator = originList.iterator();
+        while (iterator.hasNext()) {
+            InstallAPP installAPP = iterator.next();
+            if (!installAPP.getName().toLowerCase().contains(query.toLowerCase()) && !installAPP.getPackageName().toLowerCase().contains(query.toLowerCase()))
+                iterator.remove();
+        }
     }
 
     private static List<InstallAPP> sort(List<InstallAPP> originList) {
