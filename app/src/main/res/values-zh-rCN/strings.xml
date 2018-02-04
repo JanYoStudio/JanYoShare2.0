@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">JanYo Share</string>
     <string name="title_auto_clean">自动清理临时目录</string>
     <string name="summary_auto_clean_on">自动清理已经开启，将会在下一次重新启动时进行清理</string>
     <string name="summary_auto_clean_off">自动清理已经关闭</string>
