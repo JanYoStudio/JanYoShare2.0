@@ -27,6 +27,7 @@ import pw.janyo.janyoshare.adapter.AppAdapter;
 import pw.janyo.janyoshare.classes.InstallAPP;
 import pw.janyo.janyoshare.util.AppManager;
 import pw.janyo.janyoshare.util.JanYoFileUtil;
+import pw.janyo.janyoshare.util.Settings;
 import vip.mystery0.tools.logs.Logs;
 
 public class AppFragment extends Fragment {
@@ -40,6 +41,7 @@ public class AppFragment extends Fragment {
 
     private static final String TAG = "AppFragment";
     private int type = 0;
+    private int sortType = Settings.getSortType();
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<InstallAPP> list = new ArrayList<>();
     private AppAdapter appAdapter = null;
@@ -74,14 +76,15 @@ public class AppFragment extends Fragment {
         return view;
     }
 
-    public boolean isEmpty() {
-        return list.isEmpty();
+    public boolean shouldRefresh() {
+        return list.isEmpty() || sortType != Settings.getSortType();
     }
 
-    public void refreshList() {
+    private void refreshList() {
         Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> subscriber) throws Exception {
+                sortType = Settings.getSortType();
                 list.clear();
                 list.addAll(AppManager.getInstallAPPList(getActivity(), type));
                 subscriber.onComplete();
@@ -128,10 +131,10 @@ public class AppFragment extends Fragment {
                 String fileName;
                 switch (type) {
                     case AppManager.USER:
-                        fileName = JanYoFileUtil.USER_LIST_FILE;
+                        fileName = JanYoFileUtil.USER_LIST_FILE + String.valueOf(Settings.getSortType());
                         break;
                     case AppManager.SYSTEM:
-                        fileName = JanYoFileUtil.SYSTEM_LIST_FILE;
+                        fileName = JanYoFileUtil.SYSTEM_LIST_FILE + String.valueOf(Settings.getSortType());
                         break;
                     default:
                         Logs.e(TAG, "subscribe: 应用类型错误");

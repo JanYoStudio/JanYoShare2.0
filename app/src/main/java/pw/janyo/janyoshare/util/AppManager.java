@@ -55,7 +55,7 @@ public class AppManager {
                     }
                 }
                 installAPPList.addAll(sort(tempList));
-                boolean saveUserResult = JanYoFileUtil.saveAppList(context, installAPPList, JanYoFileUtil.USER_LIST_FILE);
+                boolean saveUserResult = JanYoFileUtil.saveAppList(context, installAPPList, JanYoFileUtil.USER_LIST_FILE + String.valueOf(Settings.getSortType()));
                 Logs.i(TAG, "getInstallAPPList: 存储APP列表结果: " + saveUserResult);
                 break;
             case SYSTEM:
@@ -79,7 +79,7 @@ public class AppManager {
                     }
                 }
                 installAPPList.addAll(sort(tempList));
-                boolean saveSystemResult = JanYoFileUtil.saveAppList(context, installAPPList, JanYoFileUtil.SYSTEM_LIST_FILE);
+                boolean saveSystemResult = JanYoFileUtil.saveAppList(context, installAPPList, JanYoFileUtil.SYSTEM_LIST_FILE + String.valueOf(Settings.getSortType()));
                 Logs.i(TAG, "getInstallAPPList: 存储APP列表结果: " + saveSystemResult);
                 break;
         }

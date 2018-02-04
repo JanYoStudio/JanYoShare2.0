@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 AppFragment fragment = (AppFragment) viewPagerAdapter.getItem(position);
-                if (fragment.isEmpty())
+                if (fragment.shouldRefresh())
                     fragment.loadCacheList();
                 currentFragment = fragment;
             }
@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
                                 int selected = temp[0];
                                 Settings.setSortType(selected);
                                 if (current != selected)
-                                    currentFragment.refreshList();
+                                    currentFragment.loadCacheList();
                             }
                         })
                         .show();
