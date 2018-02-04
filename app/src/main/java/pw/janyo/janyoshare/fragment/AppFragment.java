@@ -87,6 +87,7 @@ public class AppFragment extends Fragment {
                 sortType = Settings.getSortType();
                 list.clear();
                 list.addAll(AppManager.getInstallAPPList(getActivity(), type));
+                Settings.setCurrentListSize(type, list.size());
                 subscriber.onComplete();
             }
         })
@@ -111,7 +112,6 @@ public class AppFragment extends Fragment {
 
                     @Override
                     public void onComplete() {
-                        Logs.i(TAG, "onComplete: ");
                         Logs.i(TAG, "onComplete: " + list.size());
                         appAdapter.notifyDataSetChanged();
                         swipeRefreshLayout.setRefreshing(false);
@@ -142,7 +142,11 @@ public class AppFragment extends Fragment {
                         break;
                 }
                 File file = new File(getActivity().getExternalCacheDir(), fileName);
-                subscriber.onNext(JanYoFileUtil.getListFromFile(file, InstallAPP.class));
+                List<InstallAPP> list = JanYoFileUtil.getListFromFile(file, InstallAPP.class);
+                if (list.size() != Settings.getCurrentListSize(type))
+                    subscriber.onNext(new ArrayList<InstallAPP>());
+                else
+                    subscriber.onNext(list);
                 subscriber.onComplete();
             }
         })

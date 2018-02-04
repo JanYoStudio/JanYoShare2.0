@@ -3,6 +3,8 @@ package pw.janyo.janyoshare.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.Locale;
+
 import pw.janyo.janyoshare.APP;
 
 public class Settings {
@@ -61,5 +63,13 @@ public class Settings {
 
     public static void setSortType(int sortType) {
         SHARED_PREFERENCES.edit().putInt(Constant.SORT_TYPE, sortType).apply();
+    }
+
+    public static int getCurrentListSize(int appType) {
+        return SHARED_PREFERENCES.getInt(String.format(Locale.CHINESE, Constant.CURRENT_LIST_SIZE, appType), 0);
+    }
+
+    public static void setCurrentListSize(int appType, int size) {
+        SHARED_PREFERENCES.edit().putInt(String.format(Locale.CHINESE, Constant.CURRENT_LIST_SIZE, appType), size).apply();
     }
 }

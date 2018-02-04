@@ -12,4 +12,5 @@ public class Constant {
     static final String RENAME_FORMAT="renameFormat";
     static final String NICK_NAME="nickName";
     static final String SORT_TYPE="sortType";
+    static final String CURRENT_LIST_SIZE="currentListSize_%d";
 }
