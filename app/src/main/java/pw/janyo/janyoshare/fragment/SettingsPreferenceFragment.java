@@ -35,6 +35,7 @@ package pw.janyo.janyoshare.fragment;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -59,15 +60,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import pw.janyo.janyoshare.R;
+import pw.janyo.janyoshare.activity.DirManagerActivity;
 import pw.janyo.janyoshare.activity.SettingsActivity;
 import pw.janyo.janyoshare.classes.InstallAPP;
 import pw.janyo.janyoshare.util.JanYoFileUtil;
 import pw.janyo.janyoshare.util.Settings;
-import vip.mystery0.tools.logs.Logs;
 
 public class SettingsPreferenceFragment extends PreferenceFragment {
     private static final String TAG = "SettingsPreferenceFragment";
-    private static final int PERMISSION_REQUEST_CODE = 233;
+    private static final int CODE_PERMISSION_REQUEST = 23;
+    private static final int CODE_SET_EXPORT_DIR = 24;
+    private int tempExportDir = -1;
 
     private CoordinatorLayout coordinatorLayout;
 
@@ -169,30 +172,42 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
         exportDirPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                new AlertDialog.Builder(getActivity())
+                tempExportDir = Settings.getExportDir();
+                final AlertDialog dialog = new AlertDialog.Builder(getActivity())
                         .setTitle(R.string.title_export_dir)
-                        .setSingleChoiceItems(R.array.exportDir, Settings.getExportDir(), new DialogInterface.OnClickListener() {
+                        .setSingleChoiceItems(R.array.exportDir, tempExportDir, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Logs.i(TAG, "onClick: " + which);
-                                if ((which != JanYoFileUtil.EXPORT_DIR_SDCARD && which != JanYoFileUtil.EXPORT_DIR_CUSTOM) || ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-                                    Settings.setExportDir(which);
-                                else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
-                                } else
-                                    Snackbar.make(coordinatorLayout, R.string.hint_permission_write_external, Snackbar.LENGTH_LONG)
-                                            .show();
-                                exportDirPreference.setSummary(getString(R.string.summary_export_dir, JanYoFileUtil.getExportDirPath()));
+                                tempExportDir = which;
                             }
                         })
                         .setPositiveButton(android.R.string.ok, null)
-                        .show();
+                        .create();
+                dialog.show();
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (tempExportDir == JanYoFileUtil.EXPORT_DIR_SDCARD || tempExportDir == JanYoFileUtil.EXPORT_DIR_CUSTOM)
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, CODE_PERMISSION_REQUEST);
+                                return;
+                            }
+                        Settings.setExportDir(tempExportDir);
+                        if (tempExportDir == JanYoFileUtil.EXPORT_DIR_CUSTOM)
+                            customExportDirPreference.setEnabled(true);
+                        else
+                            customExportDirPreference.setEnabled(false);
+                        exportDirPreference.setSummary(getString(R.string.summary_export_dir, JanYoFileUtil.getExportDirPath()));
+                        dialog.dismiss();
+                    }
+                });
                 return true;
             }
         });
         customExportDirPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
+                startActivityForResult(new Intent(getActivity(), DirManagerActivity.class), CODE_SET_EXPORT_DIR);
                 return true;
             }
         });
@@ -289,12 +304,17 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_CODE)
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                Settings.setExportDir(JanYoFileUtil.EXPORT_DIR_SDCARD);
-            else
-                Snackbar.make(coordinatorLayout, R.string.hint_permission_denied, Snackbar.LENGTH_LONG)
+        if (requestCode == CODE_PERMISSION_REQUEST)
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED)
+                Toast.makeText(getActivity(), R.string.hint_permission_write_external, Toast.LENGTH_LONG)
                         .show();
         exportDirPreference.setSummary(getString(R.string.summary_export_dir, JanYoFileUtil.getExportDirPath()));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CODE_SET_EXPORT_DIR)
+            exportDirPreference.setSummary(getString(R.string.summary_export_dir, JanYoFileUtil.getExportDirPath()));
     }
 }

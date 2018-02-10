@@ -139,10 +139,11 @@ public class MainActivity extends AppCompatActivity {
         toggle.syncState();
 
         if (Settings.isAutoClean())
-            if (Settings.getExportDir() == JanYoFileUtil.EXPORT_DIR_SDCARD && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_AUTO_CLEAN);
-            else
-                clearFiles();
+            if (Settings.getExportDir() == JanYoFileUtil.EXPORT_DIR_SDCARD || Settings.getExportDir() == JanYoFileUtil.EXPORT_DIR_CUSTOM)
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_AUTO_CLEAN);
+                else
+                    clearFiles();
     }
 
     private void monitor() {
@@ -257,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        SearchView searchView= (SearchView) menu.findItem(R.id.action_search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setIconified(true);
         menu.findItem(R.id.action_search).setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
@@ -322,25 +323,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PERMISSION_AUTO_CLEAN) {
-            for (int result : grantResults) {
-                if (result != PackageManager.PERMISSION_GRANTED) {
-                    Snackbar.make(coordinatorLayout, R.string.hint_permission_write_external, Snackbar.LENGTH_LONG)
-                            .setAction(R.string.action_grant_permission, new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_AUTO_CLEAN);
-                                }
-                            })
-                            .addCallback(new Snackbar.Callback() {
-                                @Override
-                                public void onDismissed(Snackbar transientBottomBar, int event) {
-                                    if (event != Snackbar.Callback.DISMISS_EVENT_ACTION)
-                                        Snackbar.make(coordinatorLayout, R.string.hint_permission_denied, Snackbar.LENGTH_LONG)
-                                                .show();
-                                }
-                            })
-                            .show();
-                }
+            boolean result = true;
+            for (int temp : grantResults)
+                result = result & temp == PackageManager.PERMISSION_GRANTED;
+            if (!result) {
+                Snackbar.make(coordinatorLayout, R.string.hint_permission_write_external, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.action_grant_permission, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_AUTO_CLEAN);
+                            }
+                        })
+                        .addCallback(new Snackbar.Callback() {
+                            @Override
+                            public void onDismissed(Snackbar transientBottomBar, int event) {
+                                if (event != Snackbar.Callback.DISMISS_EVENT_ACTION)
+                                    Snackbar.make(coordinatorLayout, R.string.hint_permission_denied, Snackbar.LENGTH_LONG)
+                                            .show();
+                            }
+                        })
+                        .show();
             }
         }
     }

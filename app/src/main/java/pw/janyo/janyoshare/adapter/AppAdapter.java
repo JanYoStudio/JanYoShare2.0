@@ -41,6 +41,7 @@ import android.content.DialogInterface;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -54,6 +55,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.zyao89.view.zloading.ZLoadingDialog;
+import com.zyao89.view.zloading.Z_TYPE;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -80,11 +83,19 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
     private List<InstallAPP> installAPPList;
     private RequestOptions options = new RequestOptions()
             .diskCacheStrategy(DiskCacheStrategy.NONE);
+    private ZLoadingDialog exportDialog;
 
     public AppAdapter(Context context, List<InstallAPP> installAPPList) {
         this.context = context;
         this.coordinatorLayout = ((Activity) context).findViewById(R.id.coordinatorLayout);
         this.installAPPList = installAPPList;
+        exportDialog = new ZLoadingDialog(context)
+                .setLoadingBuilder(Z_TYPE.DOUBLE_CIRCLE)
+                .setHintTextSize(16)
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(false)
+                .setLoadingColor(ContextCompat.getColor(context, R.color.colorAccent))
+                .setHintTextColor(ContextCompat.getColor(context, R.color.colorAccent));
     }
 
     @Override
@@ -99,7 +110,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
         holder.textViewName.setText(installAPP.getName());
         holder.textViewPackageName.setText(installAPP.getPackageName());
         holder.textViewVersionName.setText(installAPP.getVersionName());
-        holder.textViewSize.setText(FileUtil.INSTANCE.FormatFileSize(installAPP.getSize()));
+        holder.textViewSize.setText(FileUtil.INSTANCE.formatFileSize(installAPP.getSize()));
         if (installAPP.getIconPath() != null)
             Glide.with(context).load(installAPP.getIconPath()).apply(options).into(holder.imageView);
         else
@@ -156,6 +167,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
                     @Override
                     public void onSubscribe(Disposable d) {
                         Logs.i(TAG, "onSubscribe: ");
+                        exportDialog.show();
                     }
 
                     @Override
@@ -165,11 +177,13 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
 
                     @Override
                     public void onError(Throwable e) {
+                        exportDialog.dismiss();
                         Log.wtf(TAG, "exportThen: onError: ", e);
                     }
 
                     @Override
                     public void onComplete() {
+                        exportDialog.dismiss();
                         switch (code) {
                             case JanYoFileUtil.DIR_NOT_EXIST:
                                 Snackbar.make(coordinatorLayout, R.string.hint_export_dir_create_failed, Snackbar.LENGTH_LONG)

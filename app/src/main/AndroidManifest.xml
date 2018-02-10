@@ -28,10 +28,12 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+                android:resource="@xml/searchable" />
+
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH" />
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -54,6 +56,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
+        <activity
+            android:name=".activity.DirManagerActivity"
+            android:theme="@style/Theme.AppCompat.Dialog.Alert" />
     </application>
 
 </manifest>

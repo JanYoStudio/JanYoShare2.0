@@ -1,5 +1,5 @@
 /*
- * Created by Mystery0 on 18-2-10 下午4:00.
+ * Created by Mystery0 on 18-2-10 下午4:44.
  * Copyright (c) 2018. All Rights reserved.
  *
  *                    =====================================================
@@ -28,42 +28,57 @@
  *                    =                                                   =
  *                    =====================================================
  *
- * Last modified 18-2-10 下午4:00
+ * Last modified 18-2-10 下午4:44
  */
 
-package pw.janyo.janyoshare;
+package pw.janyo.janyoshare.activity;
 
-import android.annotation.SuppressLint;
-import android.app.Application;
-import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.util.DisplayMetrics;
+import android.app.Activity;
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
-import java.util.Locale;
-
-import vip.mystery0.tools.crashHandler.CrashHandler;
+import pw.janyo.janyoshare.R;
+import pw.janyo.janyoshare.util.Settings;
+import vip.mystery0.tools.dirManager.DirManager;
 import vip.mystery0.tools.logs.Logs;
 
-public class APP extends Application {
-    @SuppressLint("StaticFieldLeak")
-    private static Context context;
-
-    public static Context getContext() {
-        return context;
-    }
+public class DirManagerActivity extends AppCompatActivity {
+    private static final String TAG = "DirManagerActivity";
+    private DirManager dirManager;
+    private Button buttonOk;
+    private Button buttonCancel;
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        context = getApplicationContext();
-        Resources resources = getContext().getResources();
-        DisplayMetrics dm = resources.getDisplayMetrics();
-        Configuration config = resources.getConfiguration();
-        config.locale = Locale.getDefault();
-        resources.updateConfiguration(config, dm);
-        Logs.setLevel(Logs.INSTANCE.getDebug());
-        CrashHandler.getInstance(this)
-                .init();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initialization();
+        monitor();
+    }
+
+    private void initialization() {
+        setContentView(R.layout.activity_dir_manager);
+
+        dirManager = findViewById(R.id.dirManager);
+        buttonOk = findViewById(R.id.button_ok);
+        buttonCancel = findViewById(R.id.button_cancel);
+    }
+
+    private void monitor() {
+        buttonOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Settings.setCustomExportDir(dirManager.getCurrentPath());
+                finish();
+            }
+        });
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }
