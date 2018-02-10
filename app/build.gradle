@@ -43,11 +43,11 @@ autoVersion {
 }
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     defaultConfig {
         applicationId "pw.janyo.janyoshare"
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode autoVersion.code
         versionName autoVersion.name
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -74,26 +74,26 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:support-v4:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.github.Mystery00.ToolsDemo:tools:2.4.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.1.8'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'com.zyao89:zloading:1.0.8'
+    implementation 'com.github.bumptech.glide:glide:4.6.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
+    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support:support-v4:27.0.2'
+    implementation 'com.android.support:design:27.0.2'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    compile 'com.github.Mystery00.ToolsDemo:tools:2.3.4'
-    compile 'io.reactivex.rxjava2:rxjava:2.1.5'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'com.zyao89:zloading:1.0.8'
-    compile 'com.github.bumptech.glide:glide:4.3.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
 }
 buildscript {
     repositories {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.github.Mystery00.ToolsDemo:autoversion:2.3.4'
+        classpath 'com.github.Mystery00.ToolsDemo:autoversion:2.4.1'
     }
 }
