@@ -9,9 +9,13 @@
         android:key="@string/key_export_dir"
         android:title="@string/title_export_dir" />
 
+    <Preference
+        android:key="@string/key_custom_export_dir"
+        android:title="@string/title_custom_export_dir" />
+
     <SwitchPreference
         android:key="@string/key_custom_format"
-        android:title="@string/title_custom_format"/>
+        android:title="@string/title_custom_format" />
 
     <Preference
         android:key="@string/key_custom_rename_format"

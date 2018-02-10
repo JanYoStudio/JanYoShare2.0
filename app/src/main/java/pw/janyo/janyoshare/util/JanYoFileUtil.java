@@ -1,3 +1,36 @@
+/*
+ * Created by Mystery0 on 18-2-10 下午4:00.
+ * Copyright (c) 2018. All Rights reserved.
+ *
+ *                    =====================================================
+ *                    =                                                   =
+ *                    =                       _oo0oo_                     =
+ *                    =                      o8888888o                    =
+ *                    =                      88" . "88                    =
+ *                    =                      (| -_- |)                    =
+ *                    =                      0\  =  /0                    =
+ *                    =                    ___/`---'\___                  =
+ *                    =                  .' \\|     |# '.                 =
+ *                    =                 / \\|||  :  |||# \                =
+ *                    =                / _||||| -:- |||||- \              =
+ *                    =               |   | \\\  -  #/ |   |              =
+ *                    =               | \_|  ''\---/''  |_/ |             =
+ *                    =               \  .-\__  '-'  ___/-. /             =
+ *                    =             ___'. .'  /--.--\  `. .'___           =
+ *                    =          ."" '<  `.___\_<|>_/___.' >' "".         =
+ *                    =         | | :  `- \`.;`\ _ /`;.`/ - ` : | |       =
+ *                    =         \  \ `_.   \_ __\ /__ _/   .-` /  /       =
+ *                    =     =====`-.____`.___ \_____/___.-`___.-'=====    =
+ *                    =                       `=---='                     =
+ *                    =     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   =
+ *                    =                                                   =
+ *                    =               佛祖保佑         永无BUG              =
+ *                    =                                                   =
+ *                    =====================================================
+ *
+ * Last modified 18-2-10 下午4:00
+ */
+
 package pw.janyo.janyoshare.util;
 
 import android.content.Context;
@@ -38,6 +71,7 @@ public class JanYoFileUtil {
     public static final int EXPORT_DIR_DATA = 0;//导出到data分区
     public static final int EXPORT_DIR_SDCARD_DATA = 1;//导出到sdcard的data
     public static final int EXPORT_DIR_SDCARD = 2;//导出到sdcard根目录
+    public static final int EXPORT_DIR_CUSTOM = 3;//导出到自定义目录
 
     public static final int DONE = 100;//完成
     public static final int ERROR = 101;//失败
@@ -59,14 +93,17 @@ public class JanYoFileUtil {
      */
     private static void initExportDir() {
         switch (Settings.getExportDir()) {
-            case 0:
+            case EXPORT_DIR_DATA:
                 EXPORT_APK_DIR = new File(APP.getContext().getFilesDir(), JANYO_SHARE);
                 break;
-            case 1:
+            case EXPORT_DIR_SDCARD_DATA:
                 EXPORT_APK_DIR = new File(APP.getContext().getExternalFilesDir(null), JANYO_SHARE);
                 break;
-            case 2:
+            case EXPORT_DIR_SDCARD:
                 EXPORT_APK_DIR = new File(Environment.getExternalStorageDirectory(), JANYO_SHARE);
+                break;
+            case EXPORT_DIR_CUSTOM:
+                EXPORT_APK_DIR = new File(Settings.getCustomExportDir());
                 break;
             default:
                 throw new NullPointerException("存储位置错误");

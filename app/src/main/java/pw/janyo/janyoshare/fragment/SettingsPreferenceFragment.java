@@ -1,3 +1,36 @@
+/*
+ * Created by Mystery0 on 18-2-10 下午4:00.
+ * Copyright (c) 2018. All Rights reserved.
+ *
+ *                    =====================================================
+ *                    =                                                   =
+ *                    =                       _oo0oo_                     =
+ *                    =                      o8888888o                    =
+ *                    =                      88" . "88                    =
+ *                    =                      (| -_- |)                    =
+ *                    =                      0\  =  /0                    =
+ *                    =                    ___/`---'\___                  =
+ *                    =                  .' \\|     |# '.                 =
+ *                    =                 / \\|||  :  |||# \                =
+ *                    =                / _||||| -:- |||||- \              =
+ *                    =               |   | \\\  -  #/ |   |              =
+ *                    =               | \_|  ''\---/''  |_/ |             =
+ *                    =               \  .-\__  '-'  ___/-. /             =
+ *                    =             ___'. .'  /--.--\  `. .'___           =
+ *                    =          ."" '<  `.___\_<|>_/___.' >' "".         =
+ *                    =         | | :  `- \`.;`\ _ /`;.`/ - ` : | |       =
+ *                    =         \  \ `_.   \_ __\ /__ _/   .-` /  /       =
+ *                    =     =====`-.____`.___ \_____/___.-`___.-'=====    =
+ *                    =                       `=---='                     =
+ *                    =     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   =
+ *                    =                                                   =
+ *                    =               佛祖保佑         永无BUG              =
+ *                    =                                                   =
+ *                    =====================================================
+ *
+ * Last modified 18-2-10 下午4:00
+ */
+
 package pw.janyo.janyoshare.fragment;
 
 import android.Manifest;
@@ -40,6 +73,7 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
 
     private SwitchPreference isAutoCleanPreference;
     private Preference exportDirPreference;
+    private Preference customExportDirPreference;
     private SwitchPreference isCustomFormatPreference;
     private Preference customRenameFormatPreference;
 
@@ -61,6 +95,7 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
     private void bindView() {
         isAutoCleanPreference = (SwitchPreference) findPreferenceById(R.string.key_auto_clean);
         exportDirPreference = findPreferenceById(R.string.key_export_dir);
+        customExportDirPreference = findPreferenceById(R.string.key_custom_export_dir);
         isCustomFormatPreference = (SwitchPreference) findPreferenceById(R.string.key_custom_format);
         customRenameFormatPreference = findPreferenceById(R.string.key_custom_rename_format);
     }
@@ -72,6 +107,10 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
         else
             isAutoCleanPreference.setSummary(R.string.summary_auto_clean_off);
         exportDirPreference.setSummary(getString(R.string.summary_export_dir, JanYoFileUtil.getExportDirPath()));
+        if (Settings.getExportDir() != JanYoFileUtil.EXPORT_DIR_CUSTOM)
+            customExportDirPreference.setEnabled(false);
+        else
+            customExportDirPreference.setEnabled(true);
         isCustomFormatPreference.setChecked(Settings.isCustomFormat());
         if (Settings.isCustomFormat()) {
             InstallAPP test = new InstallAPP();
@@ -136,7 +175,7 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Logs.i(TAG, "onClick: " + which);
-                                if (which != JanYoFileUtil.EXPORT_DIR_SDCARD || ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+                                if ((which != JanYoFileUtil.EXPORT_DIR_SDCARD && which != JanYoFileUtil.EXPORT_DIR_CUSTOM) || ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
                                     Settings.setExportDir(which);
                                 else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
@@ -148,6 +187,12 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
                         })
                         .setPositiveButton(android.R.string.ok, null)
                         .show();
+                return true;
+            }
+        });
+        customExportDirPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
                 return true;
             }
         });

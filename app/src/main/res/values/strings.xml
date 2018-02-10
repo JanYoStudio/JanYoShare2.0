@@ -77,6 +77,7 @@
     <string name="array_export_dir_data">Android internal storage (/data/data/pw.janyo.janyoshare/files/JanYo Share)</string>
     <string name="array_export_dir_sdcard_data">SDCard storage(without permissions) (/sdcard/Android/data/pw.janyo.janyoshare/files/JanYo Share)</string>
     <string name="array_export_dir_sdcard">SDCard storage (/sdcard/JanYo Share/)</string>
+    <string name="array_export_dir_custom">Custom</string>
 
     <string name="array_copy_operation_export_only">Export only</string>
     <string name="array_copy_operation_export_and_share">Export and share</string>

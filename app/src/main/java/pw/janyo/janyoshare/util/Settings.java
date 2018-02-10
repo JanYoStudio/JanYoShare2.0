@@ -1,7 +1,41 @@
+/*
+ * Created by Mystery0 on 18-2-10 下午4:00.
+ * Copyright (c) 2018. All Rights reserved.
+ *
+ *                    =====================================================
+ *                    =                                                   =
+ *                    =                       _oo0oo_                     =
+ *                    =                      o8888888o                    =
+ *                    =                      88" . "88                    =
+ *                    =                      (| -_- |)                    =
+ *                    =                      0\  =  /0                    =
+ *                    =                    ___/`---'\___                  =
+ *                    =                  .' \\|     |# '.                 =
+ *                    =                 / \\|||  :  |||# \                =
+ *                    =                / _||||| -:- |||||- \              =
+ *                    =               |   | \\\  -  #/ |   |              =
+ *                    =               | \_|  ''\---/''  |_/ |             =
+ *                    =               \  .-\__  '-'  ___/-. /             =
+ *                    =             ___'. .'  /--.--\  `. .'___           =
+ *                    =          ."" '<  `.___\_<|>_/___.' >' "".         =
+ *                    =         | | :  `- \`.;`\ _ /`;.`/ - ` : | |       =
+ *                    =         \  \ `_.   \_ __\ /__ _/   .-` /  /       =
+ *                    =     =====`-.____`.___ \_____/___.-`___.-'=====    =
+ *                    =                       `=---='                     =
+ *                    =     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   =
+ *                    =                                                   =
+ *                    =               佛祖保佑         永无BUG              =
+ *                    =                                                   =
+ *                    =====================================================
+ *
+ * Last modified 18-2-10 下午4:00
+ */
+
 package pw.janyo.janyoshare.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 
 import java.util.Locale;
 
@@ -27,6 +61,14 @@ public class Settings {
 
     public static void setExportDir(int tempDir) {
         SHARED_PREFERENCES.edit().putInt(Constant.TEMP_DIR, tempDir).apply();
+    }
+
+    public static String getCustomExportDir() {
+        return SHARED_PREFERENCES.getString(Constant.CUSTOM_TEMP_DIR, Environment.getExternalStorageDirectory().getAbsolutePath());
+    }
+
+    public static void setCustomExportDir(String customExportDir) {
+        SHARED_PREFERENCES.edit().putString(Constant.CUSTOM_TEMP_DIR, customExportDir).apply();
     }
 
     public static boolean isCustomFormat() {
