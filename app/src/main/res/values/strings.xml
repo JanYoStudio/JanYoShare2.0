@@ -12,6 +12,9 @@
     <string name="kiva" translatable="false">Kiva</string>
     <string name="mystery0" translatable="false">Mystery0</string>
     <string name="gsoy" translatable="false">Gsoy</string>
+    <string name="link_zh_lyh" translatable="false">https://zh-lyh.github.io/</string>
+    <string name="link_kiva" translatable="false">https://kernel19.cc/</string>
+    <string name="link_mystery0" translatable="false">https://mystery0.vip/</string>
 
     <string name="title_fragment_user">User</string>
     <string name="title_fragment_system">System</string>

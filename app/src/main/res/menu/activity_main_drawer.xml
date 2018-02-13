@@ -32,16 +32,4 @@
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings"
         android:title="@string/action_settings" />
-
-    <item android:title="@string/janyo_studio">
-        <menu>
-            <item android:title="@string/dick_light" />
-            <item android:title="@string/zh_lyh" />
-            <item android:title="@string/cieyget" />
-            <item android:title="@string/mystery0" />
-            <item android:title="@string/gsoy" />
-            <item android:title="@string/kiva" />
-        </menu>
-    </item>
-
 </menu>

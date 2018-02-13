@@ -21,4 +21,37 @@
         android:key="@string/key_custom_rename_format"
         android:title="@string/title_custom_rename_format" />
 
+    <PreferenceCategory android:title="@string/janyo_studio">
+
+        <Preference android:title="@string/dick_light" />
+
+        <Preference
+            android:summary="@string/link_zh_lyh"
+            android:title="@string/zh_lyh">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/link_zh_lyh" />
+        </Preference>
+
+        <Preference android:title="@string/cieyget" />
+
+        <Preference
+            android:summary="@string/link_mystery0"
+            android:title="@string/mystery0">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/link_mystery0" />
+        </Preference>
+
+        <Preference android:title="@string/gsoy" />
+
+        <Preference
+            android:summary="@string/link_kiva"
+            android:title="@string/kiva">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/link_kiva" />
+        </Preference>
+
+    </PreferenceCategory>
 </PreferenceScreen>
