@@ -75,7 +75,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.github.Mystery00.ToolsDemo:tools:2.4.1'
+    compile 'com.github.Mystery00.ToolsDemo:tools:2.4.4'
     compile 'io.reactivex.rxjava2:rxjava:2.1.8'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'com.zyao89:zloading:1.0.8'
@@ -94,6 +94,6 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.github.Mystery00.ToolsDemo:autoversion:2.4.1'
+        classpath 'com.github.Mystery00.ToolsDemo:autoversion:2.4.4'
     }
 }

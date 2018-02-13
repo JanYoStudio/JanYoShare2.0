@@ -59,7 +59,7 @@
 
         <activity
             android:name=".activity.DirManagerActivity"
-            android:theme="@style/Theme.AppCompat.Dialog.Alert" />
+            android:theme="@style/DirAlertDialog" />
     </application>
 
 </manifest>

@@ -33,8 +33,6 @@
 
 package pw.janyo.janyoshare.activity;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -60,10 +58,14 @@ public class DirManagerActivity extends AppCompatActivity {
 
     private void initialization() {
         setContentView(R.layout.activity_dir_manager);
+        setTitle(" ");
 
         dirManager = findViewById(R.id.dirManager);
         buttonOk = findViewById(R.id.button_ok);
         buttonCancel = findViewById(R.id.button_cancel);
+
+        Logs.i(TAG, "initialization: " + Settings.getCustomExportDir());
+        dirManager.setCurrentPath(Settings.getCustomExportDir());
     }
 
     private void monitor() {
