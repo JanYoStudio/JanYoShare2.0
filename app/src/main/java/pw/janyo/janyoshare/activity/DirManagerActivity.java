@@ -64,7 +64,6 @@ public class DirManagerActivity extends AppCompatActivity {
         buttonOk = findViewById(R.id.button_ok);
         buttonCancel = findViewById(R.id.button_cancel);
 
-        Logs.i(TAG, "initialization: " + Settings.getCustomExportDir());
         dirManager.setCurrentPath(Settings.getCustomExportDir());
     }
 
