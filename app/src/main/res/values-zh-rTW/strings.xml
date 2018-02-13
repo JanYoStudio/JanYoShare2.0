@@ -80,4 +80,11 @@
     <string name="title_activity_settings">設置</string>
     <string name="hint_warning_check_obb_s">文件已導出，找到%1$d個數據包！</string>
     <string name="hint_warning_check_obb_no">文件已導出，沒有找到數據包！</string>
+    <string name="array_export_dir_custom">自定義</string>
+    <string name="array_sort_type_install_time_ascending_order">根據安裝時間升序排列</string>
+    <string name="array_sort_type_install_time_descending_order">根據安裝時間降序排列</string>
+    <string name="title_cache_expiration_time">緩存過期時間</string>
+    <string name="summary_cache_expiration_time">列表緩存將會在%1$.1f天後自動更新。</string>
+    <string name="summary_cache_expiration_time_one">列表緩存將會在1天後自動更新。</string>
+    <string name="summary_cache_expiration_time_no">列表緩存自動更新已禁用。</string>
 </resources>
