@@ -87,4 +87,5 @@
     <string name="summary_cache_expiration_time">列表緩存將會在%1$.1f天後自動更新。</string>
     <string name="summary_cache_expiration_time_one">列表緩存將會在1天後自動更新。</string>
     <string name="summary_cache_expiration_time_no">列表緩存自動更新已禁用。</string>
+    <string name="title_custom_export_dir">自定義導出路徑</string>
 </resources>
