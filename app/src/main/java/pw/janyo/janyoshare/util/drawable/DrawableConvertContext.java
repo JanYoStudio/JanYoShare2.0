@@ -40,20 +40,28 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
 import android.support.graphics.drawable.VectorDrawableCompat;
 
+import vip.mystery0.tools.logs.Logs;
+
 public class DrawableConvertContext {
+    private static final String TAG = "DrawableConvertContext";
     private DrawableConvert drawableConvert;
 
     public Bitmap convert(Drawable drawable) {
-        if (drawable instanceof BitmapDrawable)
-            drawableConvert = new BitmapDrawableConvert();
-        else if (drawable instanceof VectorDrawableCompat)
-            drawableConvert = new VectorDrawableCompatConvert();
-        else if (drawable instanceof VectorDrawable)
-            drawableConvert = new VectorDrawableConvert();
-        else if (drawable instanceof AdaptiveIconDrawable)
-            drawableConvert = new AdaptiveIconDrawableConvert();
-        else
+        try {
+            if (drawable instanceof BitmapDrawable)
+                drawableConvert = new BitmapDrawableConvert();
+            else if (drawable instanceof VectorDrawableCompat)
+                drawableConvert = new VectorDrawableCompatConvert();
+            else if (drawable instanceof VectorDrawable)
+                drawableConvert = new VectorDrawableConvert();
+            else if (drawable instanceof AdaptiveIconDrawable)
+                drawableConvert = new AdaptiveIconDrawableConvert();
+            else
+                return null;
+            return drawableConvert.convert(drawable);
+        } catch (Exception e) {
+            Logs.wtf(TAG, "convert: ", e);
             return null;
-        return drawableConvert.convert(drawable);
+        }
     }
 }
