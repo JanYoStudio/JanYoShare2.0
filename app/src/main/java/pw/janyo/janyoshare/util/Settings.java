@@ -114,4 +114,12 @@ public class Settings {
     public static void setCurrentListSize(int appType, int size) {
         SHARED_PREFERENCES.edit().putInt(String.format(Locale.CHINESE, Constant.CURRENT_LIST_SIZE, appType), size).apply();
     }
+
+    public static long getCacheExpirationTime() {
+        return SHARED_PREFERENCES.getLong(Constant.CACHE_EXPIRATION_TIME, 0);
+    }
+
+    public static void setCacheExpirationTime(long cacheExpirationTime) {
+        SHARED_PREFERENCES.edit().putLong(Constant.CACHE_EXPIRATION_TIME, cacheExpirationTime).apply();
+    }
 }

@@ -39,6 +39,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
@@ -65,6 +66,7 @@ import pw.janyo.janyoshare.activity.SettingsActivity;
 import pw.janyo.janyoshare.classes.InstallAPP;
 import pw.janyo.janyoshare.util.JanYoFileUtil;
 import pw.janyo.janyoshare.util.Settings;
+import vip.mystery0.tools.logs.Logs;
 
 public class SettingsPreferenceFragment extends PreferenceFragment {
     private static final String TAG = "SettingsPreferenceFragment";
@@ -75,6 +77,7 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
     private CoordinatorLayout coordinatorLayout;
 
     private SwitchPreference isAutoCleanPreference;
+    private EditTextPreference cacheExpirationTimePreference;
     private Preference exportDirPreference;
     private Preference customExportDirPreference;
     private SwitchPreference isCustomFormatPreference;
@@ -97,6 +100,7 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
 
     private void bindView() {
         isAutoCleanPreference = (SwitchPreference) findPreferenceById(R.string.key_auto_clean);
+        cacheExpirationTimePreference = (EditTextPreference) findPreferenceById(R.string.key_cache_expiration_time);
         exportDirPreference = findPreferenceById(R.string.key_export_dir);
         customExportDirPreference = findPreferenceById(R.string.key_custom_export_dir);
         isCustomFormatPreference = (SwitchPreference) findPreferenceById(R.string.key_custom_format);
@@ -109,6 +113,13 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
             isAutoCleanPreference.setSummary(R.string.summary_auto_clean_on);
         else
             isAutoCleanPreference.setSummary(R.string.summary_auto_clean_off);
+        int expirationTime = (int) (Settings.getCacheExpirationTime() / 1000 / 60 / 60 / 24);
+        if (expirationTime <= 0)
+            cacheExpirationTimePreference.setSummary(R.string.summary_cache_expiration_time_no);
+        else if (expirationTime == 1)
+            cacheExpirationTimePreference.setSummary(R.string.summary_cache_expiration_time_one);
+        else
+            cacheExpirationTimePreference.setSummary(getString(R.string.summary_cache_expiration_time, expirationTime));
         exportDirPreference.setSummary(getString(R.string.summary_export_dir, JanYoFileUtil.getExportDirPath()));
         if (Settings.getExportDir() != JanYoFileUtil.EXPORT_DIR_CUSTOM)
             customExportDirPreference.setEnabled(false);
@@ -166,6 +177,21 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
                     Settings.setAutoClean(false);
                     isAutoCleanPreference.setSummary(R.string.summary_auto_clean_off);
                 }
+                return true;
+            }
+        });
+        cacheExpirationTimePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                double value = Double.valueOf(newValue.toString());
+                Settings.setCacheExpirationTime((long) (value * 24 * 60 * 60 * 1000));
+                int expirationTime = (int) (Settings.getCacheExpirationTime() / 1000 / 60 / 60 / 24);
+                if (expirationTime <= 0)
+                    cacheExpirationTimePreference.setSummary(R.string.summary_cache_expiration_time_no);
+                else if (expirationTime == 1)
+                    cacheExpirationTimePreference.setSummary(R.string.summary_cache_expiration_time_one);
+                else
+                    cacheExpirationTimePreference.setSummary(getString(R.string.summary_cache_expiration_time, expirationTime));
                 return true;
             }
         });

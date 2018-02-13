@@ -479,20 +479,18 @@ public class JanYoFileUtil {
      * @param context Context
      * @return 结果
      */
-    public static boolean isCacheAvailable(Context context) {
+    public static boolean isCacheAvailable(Context context, String fileName) {
+        if (Settings.getCacheExpirationTime() == 0)
+            return true;
         File dir = context.getExternalCacheDir();
         if (dir == null)
             return false;
-        int temp = 0;
-        for (File file : dir.listFiles()) {
-            long now = Calendar.getInstance().getTimeInMillis();
-            long modified = file.lastModified();
-            if (now - modified >= 3 * 24 * 60 * 60 * 1000) {
-                temp++;
-                file.deleteOnExit();
-            }
-        }
-        return temp == 0;
+        File cacheFile = new File(dir, fileName);
+        if (!cacheFile.exists())
+            return false;
+        long now = Calendar.getInstance().getTimeInMillis();
+        long modified = cacheFile.lastModified();
+        return now - modified <= Settings.getCacheExpirationTime();
     }
 
     /**

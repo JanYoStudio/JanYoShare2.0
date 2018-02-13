@@ -5,6 +5,11 @@
         android:key="@string/key_auto_clean"
         android:title="@string/title_auto_clean" />
 
+    <EditTextPreference
+        android:inputType="number"
+        android:key="@string/key_cache_expiration_time"
+        android:title="@string/title_cache_expiration_time" />
+
     <Preference
         android:key="@string/key_export_dir"
         android:title="@string/title_export_dir" />

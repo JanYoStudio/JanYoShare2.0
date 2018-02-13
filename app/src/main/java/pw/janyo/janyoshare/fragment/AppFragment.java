@@ -34,6 +34,7 @@
 package pw.janyo.janyoshare.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -87,7 +88,7 @@ public class AppFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Logs.i(TAG, "onCreateView: ");
         View view = inflater.inflate(R.layout.fragment_app, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
@@ -223,7 +224,7 @@ public class AppFragment extends Fragment {
                 }
                 File file = new File(getActivity().getExternalCacheDir(), fileName);
                 List<InstallAPP> list = JanYoFileUtil.getListFromFile(file, InstallAPP.class);
-                if (list.size() != Settings.getCurrentListSize(type))
+                if (list.size() != Settings.getCurrentListSize(type) || !JanYoFileUtil.isCacheAvailable(getActivity(), fileName))
                     subscriber.onNext(new ArrayList<InstallAPP>());
                 else
                     subscriber.onNext(list);
