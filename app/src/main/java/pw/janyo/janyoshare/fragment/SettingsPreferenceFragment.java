@@ -113,7 +113,7 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
             isAutoCleanPreference.setSummary(R.string.summary_auto_clean_on);
         else
             isAutoCleanPreference.setSummary(R.string.summary_auto_clean_off);
-        int expirationTime = (int) (Settings.getCacheExpirationTime() / 1000 / 60 / 60 / 24);
+        float expirationTime = Settings.getCacheExpirationTime();
         if (expirationTime <= 0)
             cacheExpirationTimePreference.setSummary(R.string.summary_cache_expiration_time_no);
         else if (expirationTime == 1)
@@ -183,9 +183,9 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
         cacheExpirationTimePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                double value = Double.valueOf(newValue.toString());
-                Settings.setCacheExpirationTime((long) (value * 24 * 60 * 60 * 1000));
-                int expirationTime = (int) (Settings.getCacheExpirationTime() / 1000 / 60 / 60 / 24);
+                float value = Float.valueOf(newValue.toString());
+                Settings.setCacheExpirationTime(value);
+                float expirationTime = Settings.getCacheExpirationTime();
                 if (expirationTime <= 0)
                     cacheExpirationTimePreference.setSummary(R.string.summary_cache_expiration_time_no);
                 else if (expirationTime == 1)

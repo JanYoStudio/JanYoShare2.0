@@ -6,7 +6,7 @@
         android:title="@string/title_auto_clean" />
 
     <EditTextPreference
-        android:inputType="number"
+        android:inputType="numberDecimal"
         android:key="@string/key_cache_expiration_time"
         android:title="@string/title_cache_expiration_time" />
 

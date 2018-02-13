@@ -6,7 +6,7 @@
     <string name="summary_auto_clean_off">Automatic cleanup is turned off.</string>
     <string name="key_cache_expiration_time" translatable="false">key_cache_expiration_time</string>
     <string name="title_cache_expiration_time">Cache Expiration Time</string>
-    <string name="summary_cache_expiration_time">List will be updated automatically after %1$d days.</string>
+    <string name="summary_cache_expiration_time">List will be updated automatically after %1$.1f days.</string>
     <string name="summary_cache_expiration_time_one">List will be updated automatically after one day.</string>
     <string name="summary_cache_expiration_time_no">List automatically update disabled.</string>
     <string name="key_export_dir" translatable="false">key_export_dir</string>

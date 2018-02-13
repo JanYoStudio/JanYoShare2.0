@@ -115,11 +115,14 @@ public class Settings {
         SHARED_PREFERENCES.edit().putInt(String.format(Locale.CHINESE, Constant.CURRENT_LIST_SIZE, appType), size).apply();
     }
 
-    public static long getCacheExpirationTime() {
-        return SHARED_PREFERENCES.getLong(Constant.CACHE_EXPIRATION_TIME, 0);
+    public static float getCacheExpirationTime() {
+        return SHARED_PREFERENCES.getLong(Constant.CACHE_EXPIRATION_TIME, 0) / 1000f / 60f / 60f / 24f;
     }
 
-    public static void setCacheExpirationTime(long cacheExpirationTime) {
-        SHARED_PREFERENCES.edit().putLong(Constant.CACHE_EXPIRATION_TIME, cacheExpirationTime).apply();
+    public static void setCacheExpirationTime(float cacheExpirationTime) {
+        if (cacheExpirationTime <= 0)
+            SHARED_PREFERENCES.edit().putLong(Constant.CACHE_EXPIRATION_TIME, 0).apply();
+        else
+            SHARED_PREFERENCES.edit().putLong(Constant.CACHE_EXPIRATION_TIME, (long) (cacheExpirationTime * 24 * 60 * 60 * 1000)).apply();
     }
 }
