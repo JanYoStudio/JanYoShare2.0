@@ -38,6 +38,7 @@ import android.graphics.drawable.AdaptiveIconDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
+import android.os.Build;
 import android.support.graphics.drawable.VectorDrawableCompat;
 
 import vip.mystery0.tools.logs.Logs;
@@ -54,7 +55,8 @@ public class DrawableConvertContext {
                 drawableConvert = new VectorDrawableCompatConvert();
             else if (drawable instanceof VectorDrawable)
                 drawableConvert = new VectorDrawableConvert();
-            else if (drawable instanceof AdaptiveIconDrawable)
+            else if (Build.VERSION.SDK_INT >= 26)
+                if (drawable instanceof AdaptiveIconDrawable)
                 drawableConvert = new AdaptiveIconDrawableConvert();
             else
                 return null;
