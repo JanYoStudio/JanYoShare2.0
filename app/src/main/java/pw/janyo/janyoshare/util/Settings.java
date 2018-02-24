@@ -56,7 +56,7 @@ public class Settings {
     }
 
     public static int getExportDir() {
-        return SHARED_PREFERENCES.getInt(Constant.TEMP_DIR, 0);
+        return SHARED_PREFERENCES.getInt(Constant.TEMP_DIR, 1);
     }
 
     public static void setExportDir(int tempDir) {
