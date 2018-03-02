@@ -31,5 +31,7 @@
         <item>@string/array_sort_type_package_name_descending_order</item>
         <item>@string/array_sort_type_install_time_ascending_order</item>
         <item>@string/array_sort_type_install_time_descending_order</item>
+        <item>@string/array_sort_type_update_time_ascending_order</item>
+        <item>@string/array_sort_type_update_time_descending_order</item>
     </string-array>
 </resources>

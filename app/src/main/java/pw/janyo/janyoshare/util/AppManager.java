@@ -62,6 +62,8 @@ public class AppManager {
     public final static int SORT_TYPE_PACKAGE_DOWN = 6;
     public final static int SORT_TYPE_INSTALL_TIME_UP = 7;
     public final static int SORT_TYPE_INSTALL_TIME_DOWN = 8;
+    public final static int SORT_TYPE_UPDATE_TIME_UP = 9;
+    public final static int SORT_TYPE_UPDATE_TIME_DOWN = 10;
 
     public static List<InstallAPP> getInstallAPPList(Context context, int appType) {
         DrawableFactory drawableFactory = new DrawableFactory();
@@ -189,6 +191,14 @@ public class AppManager {
                     while (left < right && n[right].getInstallTime() <= pivot.getInstallTime())
                         right--;
                     break;
+                case SORT_TYPE_UPDATE_TIME_UP:
+                    while (left < right && n[right].getUpdateTime() >= pivot.getUpdateTime())
+                        right--;
+                    break;
+                case SORT_TYPE_UPDATE_TIME_DOWN:
+                    while (left < right && n[right].getUpdateTime() <= pivot.getUpdateTime())
+                        right--;
+                    break;
             }
             if (left < right)
                 n[left++] = n[right];
@@ -223,6 +233,14 @@ public class AppManager {
                     break;
                 case SORT_TYPE_INSTALL_TIME_DOWN:
                     while (left < right && n[left].getInstallTime() >= pivot.getInstallTime())
+                        left++;
+                    break;
+                case SORT_TYPE_UPDATE_TIME_UP:
+                    while (left < right && n[left].getUpdateTime() <= pivot.getUpdateTime())
+                        left++;
+                    break;
+                case SORT_TYPE_UPDATE_TIME_DOWN:
+                    while (left < right && n[left].getUpdateTime() >= pivot.getUpdateTime())
                         left++;
                     break;
             }

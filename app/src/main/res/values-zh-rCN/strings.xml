@@ -88,4 +88,6 @@
     <string name="summary_cache_expiration_time_one">列表缓存将会在1天后自动更新。</string>
     <string name="summary_cache_expiration_time_no">列表缓存自动更新已禁用。</string>
     <string name="title_custom_export_dir">自定义导出路径</string>
+    <string name="array_sort_type_update_time_ascending_order">根据更新时间升序排列</string>
+    <string name="array_sort_type_update_time_descending_order">根据更新时间降序排列</string>
 </resources>
