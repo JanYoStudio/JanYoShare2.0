@@ -68,10 +68,9 @@ public class JanYoFileUtil {
     public static final String USER_LIST_FILE = "user.list";//用户软件列表存储文件名
     public static final String SYSTEM_LIST_FILE = "system.list";//系统软件列表存储文件名
 
-    public static final int EXPORT_DIR_DATA = 0;//导出到data分区
-    public static final int EXPORT_DIR_SDCARD_DATA = 1;//导出到sdcard的data
-    public static final int EXPORT_DIR_SDCARD = 2;//导出到sdcard根目录
-    public static final int EXPORT_DIR_CUSTOM = 3;//导出到自定义目录
+    public static final int EXPORT_DIR_SDCARD_DATA = 0;//导出到sdcard的data
+    public static final int EXPORT_DIR_SDCARD = 1;//导出到sdcard根目录
+    public static final int EXPORT_DIR_CUSTOM = 2;//导出到自定义目录
 
     public static final int DONE = 100;//完成
     public static final int ERROR = 101;//失败
@@ -93,9 +92,6 @@ public class JanYoFileUtil {
      */
     private static void initExportDir() {
         switch (Settings.getExportDir()) {
-            case EXPORT_DIR_DATA:
-                EXPORT_APK_DIR = new File(APP.getContext().getFilesDir(), JANYO_SHARE);
-                break;
             case EXPORT_DIR_SDCARD_DATA:
                 EXPORT_APK_DIR = new File(APP.getContext().getExternalFilesDir(null), JANYO_SHARE);
                 break;

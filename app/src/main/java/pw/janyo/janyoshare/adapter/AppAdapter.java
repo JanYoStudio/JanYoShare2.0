@@ -73,7 +73,7 @@ import pw.janyo.janyoshare.R;
 import pw.janyo.janyoshare.classes.InstallAPP;
 import pw.janyo.janyoshare.util.JanYoFileUtil;
 import pw.janyo.janyoshare.util.Settings;
-import vip.mystery0.tools.fileUtil.FileUtil;
+import vip.mystery0.tools.utils.Mystery0FileUtil;
 import vip.mystery0.tools.logs.Logs;
 
 public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
@@ -110,7 +110,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
         holder.textViewName.setText(installAPP.getName());
         holder.textViewPackageName.setText(installAPP.getPackageName());
         holder.textViewVersionName.setText(installAPP.getVersionName());
-        holder.textViewSize.setText(FileUtil.INSTANCE.formatFileSize(installAPP.getSize()));
+        holder.textViewSize.setText(Mystery0FileUtil.INSTANCE.formatFileSize(installAPP.getSize()));
         if (installAPP.getIconPath() != null)
             Glide.with(context).load(installAPP.getIconPath()).apply(options).into(holder.imageView);
         else
