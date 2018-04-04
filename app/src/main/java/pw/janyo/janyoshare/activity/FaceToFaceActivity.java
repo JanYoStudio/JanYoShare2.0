@@ -334,7 +334,7 @@ public class FaceToFaceActivity extends AppCompatActivity {
                     }
                 };
                 registerWiFiReceiver(wiFiBroadcastReceiver);
-                if (!wifiUtil.connectWiFi(SSID)) {
+                if (!wifiUtil.connectWiFi(SSID,SSID)) {
                     subscriber.onNext(false);
                     subscriber.onComplete();
                 }

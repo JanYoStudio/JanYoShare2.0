@@ -14,6 +14,7 @@
         <item>@string/array_copy_operation_export_and_share_with_data</item>
         <item>@string/array_copy_operation_face_to_face_share</item>
         <item>@string/array_copy_operation_copy_info</item>
+        <item>@string/array_operation_uninstall</item>
     </string-array>
     <string-array name="copyInfo">
         <item>@string/array_copy_info_name</item>
