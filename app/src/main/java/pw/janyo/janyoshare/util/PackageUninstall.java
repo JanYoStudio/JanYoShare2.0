@@ -36,6 +36,8 @@ package pw.janyo.janyoshare.util;
 import android.content.pm.IPackageDeleteObserver;
 import android.os.RemoteException;
 
+import vip.mystery0.tools.logs.Logs;
+
 public class PackageUninstall extends IPackageDeleteObserver.Stub
 {
     @Override
@@ -43,11 +45,11 @@ public class PackageUninstall extends IPackageDeleteObserver.Stub
     {
         if(returnCode == 1)
         {
-
+            Logs.i("packageDeleted","Succses");
         }
         else
         {
-            
+            Logs.i("packageDeleted","Error");
         }
     }
 }
