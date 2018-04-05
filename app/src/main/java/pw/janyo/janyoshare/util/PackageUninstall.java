@@ -41,6 +41,13 @@ public class PackageUninstall extends IPackageDeleteObserver.Stub
     @Override
     public void packageDeleted(String packageName, int returnCode) throws RemoteException
     {
+        if(returnCode == 1)
+        {
 
+        }
+        else
+        {
+            
+        }
     }
 }
