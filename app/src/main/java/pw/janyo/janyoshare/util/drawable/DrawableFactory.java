@@ -40,7 +40,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import vip.mystery0.tools.logs.Logs;
+import vip.mystery0.logs.Logs;
 
 public class DrawableFactory {
     private static final String TAG = "DrawableFactory";

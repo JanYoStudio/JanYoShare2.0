@@ -62,7 +62,7 @@ import pw.janyo.janyoshare.classes.InstallAPP;
 import pw.janyo.janyoshare.util.AppManager;
 import pw.janyo.janyoshare.util.JanYoFileUtil;
 import pw.janyo.janyoshare.util.Settings;
-import vip.mystery0.tools.logs.Logs;
+import vip.mystery0.logs.Logs;
 
 public class AppFragment extends Fragment {
     public static AppFragment newInstance(int type) {

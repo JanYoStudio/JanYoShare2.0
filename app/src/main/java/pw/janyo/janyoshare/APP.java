@@ -38,13 +38,12 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.support.v7.app.AppCompatDelegate;
 import android.util.DisplayMetrics;
 
 import java.util.Locale;
 
-import vip.mystery0.tools.crashHandler.CrashHandler;
-import vip.mystery0.tools.logs.Logs;
+import vip.mystery0.crashhandler.CrashHandler;
+import vip.mystery0.logs.Logs;
 
 public class APP extends Application {
     @SuppressLint("StaticFieldLeak")
@@ -63,7 +62,7 @@ public class APP extends Application {
         Configuration config = resources.getConfiguration();
         config.locale = Locale.getDefault();
         resources.updateConfiguration(config, dm);
-        Logs.setLevel(Logs.INSTANCE.getDebug());
+        Logs.setLevel(Logs.Level.DEBUG);
         CrashHandler.getInstance(this)
                 .init();
     }

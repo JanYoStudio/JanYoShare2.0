@@ -36,7 +36,7 @@ package pw.janyo.janyoshare.util;
 import android.content.pm.IPackageDeleteObserver;
 import android.os.RemoteException;
 
-import vip.mystery0.tools.logs.Logs;
+import vip.mystery0.logs.Logs;
 
 public class PackageUninstall extends IPackageDeleteObserver.Stub
 {

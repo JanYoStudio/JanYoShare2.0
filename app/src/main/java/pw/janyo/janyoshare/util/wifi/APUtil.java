@@ -45,7 +45,7 @@ import android.text.TextUtils;
 
 import java.lang.reflect.Method;
 
-import vip.mystery0.tools.logs.Logs;
+import vip.mystery0.logs.Logs;
 
 /**
  * Created by AA on 2017/3/22.

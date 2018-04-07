@@ -46,7 +46,7 @@ import java.util.List;
 
 import pw.janyo.janyoshare.classes.InstallAPP;
 import pw.janyo.janyoshare.util.drawable.DrawableFactory;
-import vip.mystery0.tools.logs.Logs;
+import vip.mystery0.logs.Logs;
 
 public class AppManager {
     private static final String TAG = "AppManager";

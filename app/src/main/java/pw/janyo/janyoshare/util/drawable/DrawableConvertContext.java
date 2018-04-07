@@ -41,7 +41,7 @@ import android.graphics.drawable.VectorDrawable;
 import android.os.Build;
 import android.support.graphics.drawable.VectorDrawableCompat;
 
-import vip.mystery0.tools.logs.Logs;
+import vip.mystery0.logs.Logs;
 
 public class DrawableConvertContext {
     private static final String TAG = "DrawableConvertContext";

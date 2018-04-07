@@ -40,8 +40,8 @@ import android.widget.Button;
 
 import pw.janyo.janyoshare.R;
 import pw.janyo.janyoshare.util.Settings;
-import vip.mystery0.tools.dirManager.DirManager;
-import vip.mystery0.tools.logs.Logs;
+import vip.mystery0.dirManager.DirManager;
+import vip.mystery0.logs.Logs;
 
 public class DirManagerActivity extends AppCompatActivity {
     private static final String TAG = "DirManagerActivity";
@@ -64,7 +64,7 @@ public class DirManagerActivity extends AppCompatActivity {
         buttonOk = findViewById(R.id.button_ok);
         buttonCancel = findViewById(R.id.button_cancel);
 
-        dirManager.setCurrentPath(Settings.getCustomExportDir());
+//        dirManager.setCurrentPath(Settings.getCustomExportDir());
     }
 
     private void monitor() {

@@ -66,7 +66,7 @@ import pw.janyo.janyoshare.activity.SettingsActivity;
 import pw.janyo.janyoshare.classes.InstallAPP;
 import pw.janyo.janyoshare.util.JanYoFileUtil;
 import pw.janyo.janyoshare.util.Settings;
-import vip.mystery0.tools.logs.Logs;
+import vip.mystery0.logs.Logs;
 
 public class SettingsPreferenceFragment extends PreferenceFragment {
     private static final String TAG = "SettingsPreferenceFragment";

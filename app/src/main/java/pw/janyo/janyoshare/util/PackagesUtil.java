@@ -36,12 +36,10 @@ package pw.janyo.janyoshare.util;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
-public class PackagesUtil
-{
-    public static void uninstall(Context context,String packageName)
-    {
-        PackageManager packageManager = context.getPackageManager();
-        PackageUninstall packageUninstall = new PackageUninstall();
-        packageManager.deletePackage(packageName,packageUninstall,0);
-    }
+public class PackagesUtil {
+	public static void uninstall(Context context, String packageName) {
+		PackageManager packageManager = context.getPackageManager();
+		PackageUninstall packageUninstall = new PackageUninstall();
+		packageManager.deletePackage(packageName, packageUninstall, 0);
+	}
 }

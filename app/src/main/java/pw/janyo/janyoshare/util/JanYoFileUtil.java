@@ -60,7 +60,7 @@ import java.util.List;
 import pw.janyo.janyoshare.APP;
 import pw.janyo.janyoshare.R;
 import pw.janyo.janyoshare.classes.InstallAPP;
-import vip.mystery0.tools.logs.Logs;
+import vip.mystery0.logs.Logs;
 
 public class JanYoFileUtil {
     private static final String TAG = "JanYoFileUtil";

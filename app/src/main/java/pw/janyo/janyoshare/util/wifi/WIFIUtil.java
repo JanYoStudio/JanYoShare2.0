@@ -52,7 +52,7 @@ import java.util.List;
 
 import pw.janyo.janyoshare.APP;
 import pw.janyo.janyoshare.util.Constant;
-import vip.mystery0.tools.logs.Logs;
+import vip.mystery0.logs.Logs;
 
 public class WIFIUtil {
 	private static final String TAG = "WIFIUtil";

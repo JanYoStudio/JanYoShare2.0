@@ -35,7 +35,6 @@ package pw.janyo.janyoshare.util.wifi;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import com.zyao89.view.zloading.ZLoadingDialog;
 import com.zyao89.view.zloading.Z_TYPE;
@@ -68,7 +67,7 @@ import io.reactivex.schedulers.Schedulers;
 import pw.janyo.janyoshare.R;
 import pw.janyo.janyoshare.classes.ConnectedSocket;
 import pw.janyo.janyoshare.util.socket.SocketUtil;
-import vip.mystery0.tools.logs.Logs;
+import vip.mystery0.logs.Logs;
 
 /**
  * Created by kalshen on 2017/7/5 0005.

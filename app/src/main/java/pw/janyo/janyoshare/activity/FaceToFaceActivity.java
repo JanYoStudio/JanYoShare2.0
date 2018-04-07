@@ -77,7 +77,7 @@ import pw.janyo.janyoshare.util.wifi.APUtil;
 import pw.janyo.janyoshare.util.wifi.IPScanner;
 import pw.janyo.janyoshare.util.wifi.WIFIUtil;
 import pw.janyo.janyoshare.util.wifi.WiFiBroadcastReceiver;
-import vip.mystery0.tools.logs.Logs;
+import vip.mystery0.logs.Logs;
 
 public class FaceToFaceActivity extends AppCompatActivity {
     private static final String TAG = "FaceToFaceActivity";
