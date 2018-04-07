@@ -75,10 +75,13 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.github.Mystery00.ToolsDemo:tools:2.4.5'
-    compile 'io.reactivex.rxjava2:rxjava:2.1.10'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.2'
-    compile 'com.zyao89:zloading:1.0.8'
+	implementation 'com.github.Mystery0Tools:Tools:1.0.2'
+	implementation 'com.github.Mystery0Tools:CrashHandler:1.0.0'
+	implementation 'com.github.Mystery0Tools:DirManager:1.0.0'
+	implementation 'com.github.Mystery0Tools:Logs:1.0.0'
+	implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+	implementation 'io.reactivex.rxjava2:rxjava:2.1.12'
+	implementation'com.zyao89:zloading:1.1.1'
     implementation 'com.github.bumptech.glide:glide:4.6.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
     implementation 'com.android.support:appcompat-v7:27.1.0'
@@ -88,12 +91,4 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-}
-buildscript {
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
-    dependencies {
-        classpath 'com.github.Mystery00.ToolsDemo:autoversion:2.4.5'
-    }
 }
