@@ -70,8 +70,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import pw.janyo.janyoshare.R;
+import pw.janyo.janyoshare.activity.MainActivity;
 import pw.janyo.janyoshare.classes.InstallAPP;
 import pw.janyo.janyoshare.util.JanYoFileUtil;
+import pw.janyo.janyoshare.util.PackagesUtil;
 import pw.janyo.janyoshare.util.Settings;
 import vip.mystery0.tools.utils.Mystery0FileUtil;
 import vip.mystery0.tools.logs.Logs;
@@ -357,6 +359,8 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
                 Snackbar.make(coordinatorLayout, R.string.hint_service_unavailable, Snackbar.LENGTH_LONG)
                         .show();
                 break;
+            case 7://静默卸载
+                PackagesUtil.uninstall(context,installAPP.getPackageName());
         }
     }
 
