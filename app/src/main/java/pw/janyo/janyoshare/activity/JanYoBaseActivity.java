@@ -1,5 +1,5 @@
 /*
- * Created by Mystery0 on 18-3-17 上午10:37.
+ * Created by Mystery0 on 4/7/18 3:58 PM.
  * Copyright (c) 2018. All Rights reserved.
  *
  *                    =====================================================
@@ -28,22 +28,13 @@
  *                    =                                                   =
  *                    =====================================================
  *
- * Last modified 18-3-17 上午10:37
+ * Last modified 4/7/18 3:58 PM
  */
 
 package pw.janyo.janyoshare.activity;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import vip.mystery0.tools.base.BaseActivity;
 
-public class SplashActivity extends JanYoBaseActivity {
-
-	@Override
-	protected void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		startActivity(new Intent(SplashActivity.this, MainActivity.class));
-		finish();
-	}
+public abstract class JanYoBaseActivity extends BaseActivity {
+	public final String TAG = getTAG();
 }

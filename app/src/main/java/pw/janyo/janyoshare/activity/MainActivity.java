@@ -79,8 +79,7 @@ import pw.janyo.janyoshare.util.JanYoFileUtil;
 import pw.janyo.janyoshare.util.Settings;
 import vip.mystery0.logs.Logs;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
+public class MainActivity extends JanYoBaseActivity {
     private final static int PERMISSION_AUTO_CLEAN = 233;
     private long lastPressTime = 0;
     private AppFragment currentFragment;
@@ -170,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_license:
                         Observable.create(new ObservableOnSubscribe<View>() {
                             @Override
-                            public void subscribe(ObservableEmitter<View> subscriber) throws Exception {
+                            public void subscribe(ObservableEmitter<View> subscriber) {
                                 View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_license, new NestedScrollView(MainActivity.this), false);
                                 TextView licensePoint1 = view.findViewById(R.id.license_point1);
                                 TextView licensePoint2 = view.findViewById(R.id.license_point2);

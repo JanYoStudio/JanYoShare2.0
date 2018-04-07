@@ -77,7 +77,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 	implementation 'com.github.Mystery0Tools:Tools:1.0.2'
 	implementation 'com.github.Mystery0Tools:CrashHandler:1.0.0'
-	implementation 'com.github.Mystery0Tools:DirManager:1.0.0'
+	implementation 'com.github.Mystery0Tools:DirManager:1.1.0'
 	implementation 'com.github.Mystery0Tools:Logs:1.0.0'
 	implementation 'com.google.code.gson:gson:2.8.2'
 	implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'

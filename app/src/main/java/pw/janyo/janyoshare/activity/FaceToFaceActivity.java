@@ -79,8 +79,7 @@ import pw.janyo.janyoshare.util.wifi.WIFIUtil;
 import pw.janyo.janyoshare.util.wifi.WiFiBroadcastReceiver;
 import vip.mystery0.logs.Logs;
 
-public class FaceToFaceActivity extends AppCompatActivity {
-    private static final String TAG = "FaceToFaceActivity";
+public class FaceToFaceActivity extends JanYoBaseActivity {
     private static final int WRITE_SETTINGS_PERMISSION_CODE = 233;
     private static final int SCAN_WIFI_PERMISSION_CODE = 244;
     private ZLoadingDialog receiveDialog;
