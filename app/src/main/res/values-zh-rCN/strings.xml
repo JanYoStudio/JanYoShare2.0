@@ -60,7 +60,6 @@
     <string name="array_copy_operation_rename_extension_and_share">修改扩展名后分享</string>
     <string name="array_copy_operation_export_and_share_with_data">提取数据包一起分享</string>
     <string name="array_copy_operation_face_to_face_share">面对面分享</string>
-    <string name="array_operation_uninstall">静默卸载</string>
     <string name="array_copy_operation_copy_info">复制应用信息</string>
     <string name="array_copy_info_name">应用名称</string>
     <string name="array_copy_info_package_name">应用包名</string>

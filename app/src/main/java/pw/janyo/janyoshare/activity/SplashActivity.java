@@ -38,11 +38,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-public class SplashActivity extends JanYoBaseActivity {
+import vip.mystery0.tools.base.BaseActivity;
+
+public class SplashActivity extends BaseActivity {
+
+	public SplashActivity() {
+		super(null);
+	}
 
 	@Override
-	protected void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void initData() {
+		super.initData();
 		startActivity(new Intent(SplashActivity.this, MainActivity.class));
 		finish();
 	}

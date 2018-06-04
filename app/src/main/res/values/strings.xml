@@ -1,114 +1,119 @@
 <resources>
-    <string name="app_name" translatable="false">JanYo Share</string>
-    <string name="authorities" translatable="false">@string/app_package_name</string>
+	<string name="app_name" translatable="false">JanYo Share</string>
+	<string name="authorities" translatable="false">@string/app_package_name</string>
 
-    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
-    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+	<string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+	<string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
-    <string name="janyo_studio" translatable="false">JanYo Studio</string>
-    <string name="dick_light" translatable="false">Dick Light</string>
-    <string name="zh_lyh" translatable="false">ZH_LYH</string>
-    <string name="cieyget" translatable="false">CieyGet</string>
-    <string name="kiva" translatable="false">Kiva</string>
-    <string name="mystery0" translatable="false">Mystery0</string>
-    <string name="gsoy" translatable="false">Gsoy</string>
-    <string name="link_zh_lyh" translatable="false">https://zh-lyh.github.io/</string>
-    <string name="link_kiva" translatable="false">https://kernel19.cc/</string>
-    <string name="link_mystery0" translatable="false">https://mystery0.vip/</string>
+	<string name="janyo_studio" translatable="false">JanYo Studio</string>
+	<string name="dick_light" translatable="false">Dick Light</string>
+	<string name="zh_lyh" translatable="false">ZH_LYH</string>
+	<string name="cieyget" translatable="false">CieyGet</string>
+	<string name="kiva" translatable="false">Kiva</string>
+	<string name="mystery0" translatable="false">Mystery0</string>
+	<string name="gsoy" translatable="false">Gsoy</string>
+	<string name="link_zh_lyh" translatable="false">https://zh-lyh.github.io/</string>
+	<string name="link_kiva" translatable="false">https://kernel19.cc/</string>
+	<string name="link_mystery0" translatable="false">https://mystery0.vip/</string>
 
-    <string name="title_fragment_user">User</string>
-    <string name="title_fragment_system">System</string>
+	<string name="title_fragment_user">User</string>
+	<string name="title_fragment_system">System</string>
 
-    <string name="hint_service_unavailable">Service is temporarily unavailable! </string>
+	<string name="hint_service_unavailable">Service is temporarily unavailable! </string>
 
-    <string name="action_settings">Settings</string>
-    <string name="action_grant_permission">Authorized</string>
-    <string name="action_face_to_face_share">Share face to face</string>
-    <string name="action_clear_temp_dir">Clear export dir</string>
-    <string name="action_night_mode">Night mode</string>
-    <string name="action_license">License</string>
-    <string name="action_support_us">Support us</string>
-    <string name="action_open">Open</string>
-    <string name="action_search">Search</string>
-    <string name="action_sort">Sort</string>
-    <string name="action_insert">Insert \'%\'</string>\
-    <string name="action_redo">Redo</string>
-    <string name="action_refresh">Refresh</string>
-    <string name="action_go">Go</string>
-    <string name="action_direct_wifi">Direct WiFi</string>
-    <string name="action_reconnect">Reconnect</string>
-    <string name="action_new_hotspot">New Hotspot</string>
+	<string name="action_settings">Settings</string>
+	<string name="action_grant_permission">Authorized</string>
+	<string name="action_face_to_face_share">Share face to face</string>
+	<string name="action_clear_temp_dir">Clear export dir</string>
+	<string name="action_night_mode">Night mode</string>
+	<string name="action_license">License</string>
+	<string name="action_support_us">Support us</string>
+	<string name="action_open">Open</string>
+	<string name="action_search">Search</string>
+	<string name="action_sort">Sort</string>
+	<string name="action_insert">Insert \'%\'</string>\
+	<string name="action_redo">Redo</string>
+	<string name="action_refresh">Refresh</string>
+	<string name="action_go">Go</string>
+	<string name="action_direct_wifi">Direct WiFi</string>
+	<string name="action_reconnect">Reconnect</string>
+	<string name="action_new_hotspot">New Hotspot</string>
 
-    <string name="license_title" translatable="false">“JanYo Studio” 授权解决方案</string>
-    <string name="license_subtitle" translatable="false">为避免在其它非“JanYo Studio”通过书面授权认可的平台引发的授权 风险/争议，特拟此案。</string>
-    <string name="license_text1" translatable="false">“JanYo Studio”(以下简称“工作室”)发布的产品缺省使用“GPL（GNU General Public License）”授权协议。工作室将在产品内部标识产品源程序及其附属品，使得任何人可以自由获取、阅读、传播，以及基于源代码重新构建它的二进制版本并发行该副本。</string>
-    <string name="license_text2" translatable="false">工作室希望使用者在自由使用我们的产品时，尊重工作室的劳动成果，承认工作室的知识产权。</string>
-    <string name="license_text3" translatable="false">工作室保证产品的自由使用、传播、阅读不受限，使用者应保障工作室的合法权益：</string>
-    <string name="license_text4" translatable="false">针对开源资料，禁止删改原作者注明的版权、授权方式 等信息。</string>
-    <string name="license_text5" translatable="false">源代码允许自由使用、添加至自己的项目，但必须注明来源，以及源的授权协议。</string>
-    <string name="license_text6" translatable="false">在从事盈利、商用活动中，针对产品的传播复制需注明来源，以及源的授权协议。</string>
-    <string name="license_text7" translatable="false">针对产品授权、答疑可电邮至工作室官方电子邮箱 : mystery0dyl520@gmail.com</string>
+	<string name="license_title" translatable="false">“JanYo Studio” 授权解决方案</string>
+	<string name="license_subtitle" translatable="false">为避免在其它非“JanYo Studio”通过书面授权认可的平台引发的授权 风险/争议，特拟此案。</string>
+	<string name="license_text1" translatable="false">“JanYo Studio”(以下简称“工作室”)发布的产品缺省使用“GPL（GNU General Public License）”授权协议。工作室将在产品内部标识产品源程序及其附属品，使得任何人可以自由获取、阅读、传播，以及基于源代码重新构建它的二进制版本并发行该副本。</string>
+	<string name="license_text2" translatable="false">工作室希望使用者在自由使用我们的产品时，尊重工作室的劳动成果，承认工作室的知识产权。</string>
+	<string name="license_text3" translatable="false">工作室保证产品的自由使用、传播、阅读不受限，使用者应保障工作室的合法权益：</string>
+	<string name="license_text4" translatable="false">针对开源资料，禁止删改原作者注明的版权、授权方式 等信息。</string>
+	<string name="license_text5" translatable="false">源代码允许自由使用、添加至自己的项目，但必须注明来源，以及源的授权协议。</string>
+	<string name="license_text6" translatable="false">在从事盈利、商用活动中，针对产品的传播复制需注明来源，以及源的授权协议。</string>
+	<string name="license_text7" translatable="false">针对产品授权、答疑可电邮至工作室官方电子邮箱 : mystery0dyl520@gmail.com</string>
 
-    <string name="hint_permission_write_external">Please grant permission to copy apk file to SD card! </string>
-    <string name="hint_permission_location">Please grant permission to open WiFi! </string>
-    <string name="hint_permission_modify_settings">Please grant permissions to create hotspots! </string>
-    <string name="hint_permission_denied">Some of the permissions were rejected, this will cause some problems…</string>
-    <string name="hint_clean_dir_done">Temporary directory cleanup completed! </string>
-    <string name="hint_clean_dir_error">Temporary directory cleanup failed! </string>
-    <string name="hint_twice_press_exit">Press again to exit! </string>
-    <string name="hint_copy_info_done">Copied! </string>
-    <string name="hint_export_done">File extraction Successful! The storage path is %1$s.</string>
-    <string name="hint_export_failed">Export failed! </string>
-    <string name="hint_rename_failed">Rename failed! </string>
-    <string name="hint_export_dir_create_failed">Export directory create failed. Please check permission! </string>
-    <string name="hint_source_file_not_exist">The source file is not exist! </string>
-    <string name="hint_file_exist">File already exists! </string>
+	<string name="hint_permission_write_external">Please grant permission to copy apk file to SD card! </string>
+	<string name="hint_permission_location">Please grant permission to open WiFi! </string>
+	<string name="hint_permission_modify_settings">Please grant permissions to create hotspots! </string>
+	<string name="hint_permission_denied">Some of the permissions were rejected, this will cause some problems…</string>
+	<string name="hint_clean_dir_done">Temporary directory cleanup completed! </string>
+	<string name="hint_clean_dir_error">Temporary directory cleanup failed! </string>
+	<string name="hint_twice_press_exit">Press again to exit! </string>
+	<string name="hint_copy_info_done">Copied! </string>
+	<string name="hint_export_done">File extraction Successful! The storage path is %1$s.</string>
+	<string name="hint_export_failed">Export failed! </string>
+	<string name="hint_rename_failed">Rename failed! </string>
+	<string name="hint_export_dir_create_failed">Export directory create failed. Please check permission! </string>
+	<string name="hint_source_file_not_exist">The source file is not exist! </string>
+	<string name="hint_file_exist">File already exists! </string>
 
-    <string name="hint_face_create_hotspot">Creating Service Side……</string>
-    <string name="hint_face_scan_hotspot">Scanning……</string>
-    <string name="hint_face_connect_hotspot">Connecting……</string>
-    <string name="hint_face_wait_connect">Waiting……</string>
+	<string name="hint_face_create_hotspot">Creating Service Side……</string>
+	<string name="hint_face_scan_hotspot">Scanning……</string>
+	<string name="hint_face_connect_hotspot">Connecting……</string>
+	<string name="hint_face_wait_connect">Waiting……</string>
 
-    <string name="hint_warning_auto_clean">Please note that after you use JanYo Share to extract your desired app to TEMP directory, if you need to perform additional operations on the extracted application install package, make sure that you moved packages from the TEMP directory before the next time you start JanYo Share, otherwise it will be cleaned automatically.</string>
-    <string name="hint_custom_rename_format">%N represents the application name, \n%V represents the version name of the application, \n%W represents the version number of the application, and \n%P represents the package name of the application.</string>
-    <string name="hint_custom_rename_format_empty">Format can not be empty! </string>
-    <string name="hint_warning_check_obb">The file was exported and %1$d packet was found! </string>
-    <string name="hint_warning_check_obb_s">The file was exported and %1$d packets was found! </string>
-    <string name="hint_warning_check_obb_no">The file was exported and no packets was found! </string>
-    <string name="hint_direct_wifi">Detect that you are using a WiFi network, do you want to share files directly? </string>
+	<string name="hint_warning_auto_clean">Please note that after you use JanYo Share to extract your desired app to TEMP directory, if you need to perform additional operations on the extracted application install package, make sure that you moved packages from the TEMP directory before the next time you start JanYo Share, otherwise it will be cleaned automatically.</string>
+	<string name="hint_custom_rename_format">%N represents the application name, \n%V represents the version name of the application, \n%W represents the version number of the application, and \n%P represents the package name of the application.</string>
+	<string name="hint_custom_rename_format_empty">Format can not be empty! </string>
+	<string name="hint_warning_check_obb">The file was exported and %1$d packet was found! </string>
+	<string name="hint_warning_check_obb_s">The file was exported and %1$d packets was found! </string>
+	<string name="hint_warning_check_obb_no">The file was exported and no packets was found! </string>
+	<string name="hint_direct_wifi">Detect that you are using a WiFi network, do you want to share files directly? </string>
 
-    <string name="array_export_dir_data">Android internal storage (/data/data/pw.janyo.janyoshare/files/JanYo Share)</string>
-    <string name="array_export_dir_sdcard_data">SDCard storage(without permissions) (/sdcard/Android/data/pw.janyo.janyoshare/files/JanYo Share)</string>
-    <string name="array_export_dir_sdcard">SDCard storage (/sdcard/JanYo Share/)</string>
-    <string name="array_export_dir_custom">Custom</string>
+	<string name="array_export_dir_data">Android internal storage (/data/data/pw.janyo.janyoshare/files/JanYo Share)</string>
+	<string name="array_export_dir_sdcard_data">SDCard storage(without permissions) (/sdcard/Android/data/pw.janyo.janyoshare/files/JanYo Share)</string>
+	<string name="array_export_dir_sdcard">SDCard storage (/sdcard/JanYo Share/)</string>
+	<string name="array_export_dir_custom">Custom</string>
 
-    <string name="array_copy_operation_export_only">Export only</string>
-    <string name="array_copy_operation_export_and_share">Export and share</string>
-    <string name="array_copy_operation_rename_and_share">Rename and share</string>
-    <string name="array_copy_operation_rename_extension_and_share">Rename extension name and share</string>
-    <string name="array_copy_operation_export_and_share_with_data">Export and share with data</string>
-    <string name="array_copy_operation_face_to_face_share">Share face to face</string>
-    <string name="array_copy_operation_copy_info">Copy info</string>
+	<string name="array_copy_operation_export_only">Export only</string>
+	<string name="array_copy_operation_export_and_share">Export and share</string>
+	<string name="array_copy_operation_rename_and_share">Rename and share</string>
+	<string name="array_copy_operation_rename_extension_and_share">Rename extension name and share</string>
+	<string name="array_copy_operation_export_and_share_with_data">Export and share with data</string>
+	<string name="array_copy_operation_face_to_face_share">Share face to face</string>
+	<string name="array_copy_operation_copy_info">Copy info</string>
+	<string name="array_copy_operation_uninstall">Uninstall</string>
 
-    <string name="array_copy_info_name">Name</string>
-    <string name="array_copy_info_package_name">Package name</string>
-    <string name="array_copy_info_version_name">Version name</string>
-    <string name="array_copy_info_version_code">Version code</string>
+	<string name="array_copy_info_name">Name</string>
+	<string name="array_copy_info_package_name">Package name</string>
+	<string name="array_copy_info_version_name">Version name</string>
+	<string name="array_copy_info_version_code">Version code</string>
 
-    <string name="array_sort_type_none">None</string>
-    <string name="array_sort_type_name_ascending_order">By application name in ascending order</string>
-    <string name="array_sort_type_name_descending_order">By application name in descending order</string>
-    <string name="array_sort_type_size_ascending_order">By application size in ascending order</string>
-    <string name="array_sort_type_size_descending_order">By application size in descending order</string>
-    <string name="array_sort_type_package_name_ascending_order">By package name in ascending order</string>
-    <string name="array_sort_type_package_name_descending_order">By package name in descending order</string>
-    <string name="array_sort_type_install_time_ascending_order">By install time in ascending order</string>
-    <string name="array_sort_type_install_time_descending_order">By install time in descending order</string>
+	<string name="array_sort_type_none">None</string>
+	<string name="array_sort_type_name_ascending_order">By application name in ascending order</string>
+	<string name="array_sort_type_name_descending_order">By application name in descending order</string>
+	<string name="array_sort_type_size_ascending_order">By application size in ascending order</string>
+	<string name="array_sort_type_size_descending_order">By application size in descending order</string>
+	<string name="array_sort_type_package_name_ascending_order">By package name in ascending order</string>
+	<string name="array_sort_type_package_name_descending_order">By package name in descending order</string>
+	<string name="array_sort_type_install_time_ascending_order">By install time in ascending order</string>
+	<string name="array_sort_type_install_time_descending_order">By install time in descending order</string>
 
-    <string name="title_dialog_select_operation">Please select operation</string>
-    <string name="title_dialog_select_copy_info">Please select info which you want to copy</string>
-    <string name="title_dialog_select_sort_type">Please select method which you want to sort</string>
-    <string name="title_dialog_select_wifi">Which user do you want to connect? </string>
-    <string name="title_activity_share">Share to</string>
-    <string name="title_activity_settings">Settings</string>
+	<string name="array_uninstall_type_normal">Normal</string>
+	<string name="array_uninstall_type_root">Root</string>
+
+	<string name="title_dialog_select_operation">Please select operation</string>
+	<string name="title_dialog_select_copy_info">Please select info which you want to copy</string>
+	<string name="title_dialog_select_sort_type">Please select method which you want to sort</string>
+	<string name="title_dialog_select_wifi">Which user do you want to connect? </string>
+
+	<string name="title_activity_share">Share to</string>
+	<string name="title_activity_settings">Settings</string>
 </resources>

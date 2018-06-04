@@ -26,6 +26,10 @@
         android:key="@string/key_custom_rename_format"
         android:title="@string/title_custom_rename_format" />
 
+	<ListPreference
+		android:key="@string/key_uninstall_type"
+		android:title="@string/title_uninstall_type"/>
+
     <PreferenceCategory android:title="@string/janyo_studio">
 
         <Preference android:title="@string/dick_light" />

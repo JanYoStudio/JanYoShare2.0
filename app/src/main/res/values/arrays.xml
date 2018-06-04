@@ -1,38 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="exportDir">
-        <item>@string/array_export_dir_data</item>
-        <item>@string/array_export_dir_sdcard_data</item>
-        <item>@string/array_export_dir_sdcard</item>
-        <item>@string/array_export_dir_custom</item>
-    </string-array>
-    <string-array name="copyOperation">
-        <item>@string/array_copy_operation_export_only</item>
-        <item>@string/array_copy_operation_export_and_share</item>
-        <item>@string/array_copy_operation_rename_and_share</item>
-        <item>@string/array_copy_operation_rename_extension_and_share</item>
-        <item>@string/array_copy_operation_export_and_share_with_data</item>
-        <item>@string/array_copy_operation_face_to_face_share</item>
-        <item>@string/array_copy_operation_copy_info</item>
-        <item>@string/array_operation_uninstall</item>
-    </string-array>
-    <string-array name="copyInfo">
-        <item>@string/array_copy_info_name</item>
-        <item>@string/array_copy_info_package_name</item>
-        <item>@string/array_copy_info_version_name</item>
-        <item>@string/array_copy_info_version_code</item>
-    </string-array>
-    <string-array name="sortType">
-        <item>@string/array_sort_type_none</item>
-        <item>@string/array_sort_type_name_ascending_order</item>
-        <item>@string/array_sort_type_name_descending_order</item>
-        <item>@string/array_sort_type_size_ascending_order</item>
-        <item>@string/array_sort_type_size_descending_order</item>
-        <item>@string/array_sort_type_package_name_ascending_order</item>
-        <item>@string/array_sort_type_package_name_descending_order</item>
-        <item>@string/array_sort_type_install_time_ascending_order</item>
-        <item>@string/array_sort_type_install_time_descending_order</item>
-        <item>@string/array_sort_type_update_time_ascending_order</item>
-        <item>@string/array_sort_type_update_time_descending_order</item>
-    </string-array>
+	<string-array name="exportDir">
+		<item>@string/array_export_dir_data</item>
+		<item>@string/array_export_dir_sdcard_data</item>
+		<item>@string/array_export_dir_sdcard</item>
+		<item>@string/array_export_dir_custom</item>
+	</string-array>
+	<string-array name="copyOperation">
+		<item>@string/array_copy_operation_export_only</item>
+		<item>@string/array_copy_operation_export_and_share</item>
+		<item>@string/array_copy_operation_rename_and_share</item>
+		<item>@string/array_copy_operation_rename_extension_and_share</item>
+		<item>@string/array_copy_operation_export_and_share_with_data</item>
+		<item>@string/array_copy_operation_face_to_face_share</item>
+		<item>@string/array_copy_operation_copy_info</item>
+		<item>@string/array_copy_operation_uninstall</item>
+	</string-array>
+	<string-array name="copyInfo">
+		<item>@string/array_copy_info_name</item>
+		<item>@string/array_copy_info_package_name</item>
+		<item>@string/array_copy_info_version_name</item>
+		<item>@string/array_copy_info_version_code</item>
+	</string-array>
+	<string-array name="sortType">
+		<item>@string/array_sort_type_none</item>
+		<item>@string/array_sort_type_name_ascending_order</item>
+		<item>@string/array_sort_type_name_descending_order</item>
+		<item>@string/array_sort_type_size_ascending_order</item>
+		<item>@string/array_sort_type_size_descending_order</item>
+		<item>@string/array_sort_type_package_name_ascending_order</item>
+		<item>@string/array_sort_type_package_name_descending_order</item>
+		<item>@string/array_sort_type_install_time_ascending_order</item>
+		<item>@string/array_sort_type_install_time_descending_order</item>
+		<item>@string/array_sort_type_update_time_ascending_order</item>
+		<item>@string/array_sort_type_update_time_descending_order</item>
+	</string-array>
+	<string-array name="uninstall_type">
+		<item>@string/array_uninstall_type_normal</item>
+		<item>@string/array_uninstall_type_root</item>
+	</string-array>
 </resources>

@@ -40,43 +40,47 @@ import android.widget.Button;
 import pw.janyo.janyoshare.R;
 import pw.janyo.janyoshare.util.Settings;
 import vip.mystery0.dirManager.DirManager;
+import vip.mystery0.tools.base.BaseActivity;
 
-public class DirManagerActivity extends JanYoBaseActivity {
-    private DirManager dirManager;
-    private Button buttonOk;
-    private Button buttonCancel;
+public class DirManagerActivity extends BaseActivity {
+	private DirManager dirManager;
+	private Button buttonOk;
+	private Button buttonCancel;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initialization();
-        monitor();
-    }
+	public DirManagerActivity() {
+		super(R.layout.activity_dir_manager);
+	}
 
-    private void initialization() {
-        setContentView(R.layout.activity_dir_manager);
-        setTitle(" ");
+	@Override
+	public void bindView() {
+		super.bindView();
+		dirManager = findViewById(R.id.dirManager);
+		buttonOk = findViewById(R.id.button_ok);
+		buttonCancel = findViewById(R.id.button_cancel);
+	}
 
-        dirManager = findViewById(R.id.dirManager);
-        buttonOk = findViewById(R.id.button_ok);
-        buttonCancel = findViewById(R.id.button_cancel);
+	@Override
+	public void initData() {
+		super.initData();
+		setTitle(" ");
 
-        dirManager.setCurrentPath(Settings.getCustomExportDir());
-    }
+		dirManager.setCurrentPath(Settings.getCustomExportDir());
+	}
 
-    private void monitor() {
-        buttonOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Settings.setCustomExportDir(dirManager.getCurrentPath());
-                finish();
-            }
-        });
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-    }
+	@Override
+	public void monitor() {
+		buttonOk.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Settings.setCustomExportDir(dirManager.getCurrentPath());
+				finish();
+			}
+		});
+		buttonCancel.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+	}
 }

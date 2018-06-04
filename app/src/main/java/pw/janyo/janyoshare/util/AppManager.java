@@ -34,13 +34,16 @@
 package pw.janyo.janyoshare.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -49,205 +52,188 @@ import pw.janyo.janyoshare.util.drawable.DrawableFactory;
 import vip.mystery0.logs.Logs;
 
 public class AppManager {
-    private static final String TAG = "AppManager";
-    public final static int USER = 1;
-    public final static int SYSTEM = 2;
+	private static final String TAG = "AppManager";
+	public final static int USER = 1;
+	public final static int SYSTEM = 2;
 
-    public final static int SORT_TYPE_NONE = 0;
-    public final static int SORT_TYPE_NAME_UP = 1;
-    public final static int SORT_TYPE_NAME_DOWN = 2;
-    public final static int SORT_TYPE_SIZE_UP = 3;
-    public final static int SORT_TYPE_SIZE_DOWN = 4;
-    public final static int SORT_TYPE_PACKAGE_UP = 5;
-    public final static int SORT_TYPE_PACKAGE_DOWN = 6;
-    public final static int SORT_TYPE_INSTALL_TIME_UP = 7;
-    public final static int SORT_TYPE_INSTALL_TIME_DOWN = 8;
-    public final static int SORT_TYPE_UPDATE_TIME_UP = 9;
-    public final static int SORT_TYPE_UPDATE_TIME_DOWN = 10;
+	public final static int SORT_TYPE_NONE = 0;
+	public final static int SORT_TYPE_NAME_UP = 1;
+	public final static int SORT_TYPE_NAME_DOWN = 2;
+	public final static int SORT_TYPE_SIZE_UP = 3;
+	public final static int SORT_TYPE_SIZE_DOWN = 4;
+	public final static int SORT_TYPE_PACKAGE_UP = 5;
+	public final static int SORT_TYPE_PACKAGE_DOWN = 6;
+	public final static int SORT_TYPE_INSTALL_TIME_UP = 7;
+	public final static int SORT_TYPE_INSTALL_TIME_DOWN = 8;
+	public final static int SORT_TYPE_UPDATE_TIME_UP = 9;
+	public final static int SORT_TYPE_UPDATE_TIME_DOWN = 10;
 
-    public static List<InstallAPP> getInstallAPPList(Context context, int appType) {
-        DrawableFactory drawableFactory = new DrawableFactory();
-        PackageManager packageManager = context.getPackageManager();
-        List<PackageInfo> packageInfoList = packageManager.getInstalledPackages(0);
-        List<InstallAPP> tempList = new ArrayList<>();
-        List<InstallAPP> installAPPList = new ArrayList<>();
-        switch (appType) {
-            case USER:
-                for (PackageInfo packageInfo : packageInfoList) {
-                    if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) <= 0) {
-                        InstallAPP installAPP = new InstallAPP();
-                        installAPP.setName(packageInfo.applicationInfo.loadLabel(packageManager).toString());
-                        installAPP.setVersionName(packageInfo.versionName);
-                        installAPP.setVersionCode(packageInfo.versionCode);
-                        installAPP.setSourceDir(packageInfo.applicationInfo.sourceDir);
-                        installAPP.setPackageName(packageInfo.applicationInfo.packageName);
-                        String sourceIconPath = context.getCacheDir().getAbsolutePath() + File.separator + "icon" + File.separator + packageInfo.applicationInfo.packageName;
-                        if (drawableFactory.save(packageInfo.applicationInfo.loadIcon(packageManager), sourceIconPath))
-                            installAPP.setIconPath(sourceIconPath);
-                        else
-                            installAPP.setIcon(packageInfo.applicationInfo.loadIcon(packageManager));
-                        installAPP.setSize((new File(packageInfo.applicationInfo.publicSourceDir)).length());
-                        installAPP.setInstallTime(packageInfo.firstInstallTime);
-                        installAPP.setUpdateTime(packageInfo.lastUpdateTime);
-                        tempList.add(installAPP);
-                    }
-                }
-                installAPPList.addAll(sort(tempList));
-                boolean saveUserResult = JanYoFileUtil.saveAppList(context, installAPPList, JanYoFileUtil.USER_LIST_FILE + String.valueOf(Settings.getSortType()));
-                Logs.i(TAG, "getInstallAPPList: 存储APP列表结果: " + saveUserResult);
-                break;
-            case SYSTEM:
-                for (PackageInfo packageInfo : packageInfoList) {
-                    if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) > 0) {
-                        InstallAPP installAPP = new InstallAPP();
-                        installAPP.setName(packageInfo.applicationInfo.loadLabel(packageManager).toString());
-                        installAPP.setVersionName(packageInfo.versionName);
-                        installAPP.setVersionCode(packageInfo.versionCode);
-                        installAPP.setSourceDir(packageInfo.applicationInfo.sourceDir);
-                        installAPP.setPackageName(packageInfo.applicationInfo.packageName);
-                        String sourceIconPath = context.getCacheDir().getAbsolutePath() + File.separator + "icon" + File.separator + packageInfo.applicationInfo.packageName;
-                        if (drawableFactory.save(packageInfo.applicationInfo.loadIcon(packageManager), sourceIconPath))
-                            installAPP.setIconPath(sourceIconPath);
-                        else
-                            installAPP.setIcon(packageInfo.applicationInfo.loadIcon(packageManager));
-                        installAPP.setSize((new File(packageInfo.applicationInfo.publicSourceDir)).length());
-                        installAPP.setInstallTime(packageInfo.firstInstallTime);
-                        installAPP.setUpdateTime(packageInfo.lastUpdateTime);
-                        tempList.add(installAPP);
-                    }
-                }
-                installAPPList.addAll(sort(tempList));
-                boolean saveSystemResult = JanYoFileUtil.saveAppList(context, installAPPList, JanYoFileUtil.SYSTEM_LIST_FILE + String.valueOf(Settings.getSortType()));
-                Logs.i(TAG, "getInstallAPPList: 存储APP列表结果: " + saveSystemResult);
-                break;
-        }
-        return installAPPList;
-    }
+	/**
+	 * 获取安装的APP列表
+	 *
+	 * @param context 上下文
+	 * @param appType 获取列表的类型
+	 * @return 列表
+	 */
+	public static List<InstallAPP> getInstallAPPList(Context context, int appType) {
+		DrawableFactory drawableFactory = new DrawableFactory();
+		PackageManager packageManager = context.getPackageManager();
+		List<PackageInfo> packageInfoList = packageManager.getInstalledPackages(0);
+		List<InstallAPP> tempList = new ArrayList<>();
+		List<InstallAPP> installAPPList = new ArrayList<>();
+		switch (appType) {
+			case USER:
+				for (PackageInfo packageInfo : packageInfoList) {
+					if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) <= 0) {
+						InstallAPP installAPP = new InstallAPP();
+						installAPP.setName(packageInfo.applicationInfo.loadLabel(packageManager).toString());
+						installAPP.setVersionName(packageInfo.versionName);
+						installAPP.setVersionCode(packageInfo.versionCode);
+						installAPP.setSourceDir(packageInfo.applicationInfo.sourceDir);
+						installAPP.setPackageName(packageInfo.applicationInfo.packageName);
+						String sourceIconPath = context.getCacheDir().getAbsolutePath() + File.separator + "icon" + File.separator + packageInfo.applicationInfo.packageName;
+						if (drawableFactory.save(packageInfo.applicationInfo.loadIcon(packageManager), sourceIconPath))
+							installAPP.setIconPath(sourceIconPath);
+						else
+							installAPP.setIcon(packageInfo.applicationInfo.loadIcon(packageManager));
+						installAPP.setSize((new File(packageInfo.applicationInfo.publicSourceDir)).length());
+						installAPP.setInstallTime(packageInfo.firstInstallTime);
+						installAPP.setUpdateTime(packageInfo.lastUpdateTime);
+						tempList.add(installAPP);
+					}
+				}
+				installAPPList.addAll(sort(tempList));
+				boolean saveUserResult = JanYoFileUtil.saveAppList(context, installAPPList, JanYoFileUtil.USER_LIST_FILE + String.valueOf(Settings.getSortType()));
+				Logs.i(TAG, "getInstallAPPList: 存储APP列表结果: " + saveUserResult);
+				break;
+			case SYSTEM:
+				for (PackageInfo packageInfo : packageInfoList) {
+					if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) > 0) {
+						InstallAPP installAPP = new InstallAPP();
+						installAPP.setName(packageInfo.applicationInfo.loadLabel(packageManager).toString());
+						installAPP.setVersionName(packageInfo.versionName);
+						installAPP.setVersionCode(packageInfo.versionCode);
+						installAPP.setSourceDir(packageInfo.applicationInfo.sourceDir);
+						installAPP.setPackageName(packageInfo.applicationInfo.packageName);
+						String sourceIconPath = context.getCacheDir().getAbsolutePath() + File.separator + "icon" + File.separator + packageInfo.applicationInfo.packageName;
+						if (drawableFactory.save(packageInfo.applicationInfo.loadIcon(packageManager), sourceIconPath))
+							installAPP.setIconPath(sourceIconPath);
+						else
+							installAPP.setIcon(packageInfo.applicationInfo.loadIcon(packageManager));
+						installAPP.setSize((new File(packageInfo.applicationInfo.publicSourceDir)).length());
+						installAPP.setInstallTime(packageInfo.firstInstallTime);
+						installAPP.setUpdateTime(packageInfo.lastUpdateTime);
+						tempList.add(installAPP);
+					}
+				}
+				installAPPList.addAll(sort(tempList));
+				boolean saveSystemResult = JanYoFileUtil.saveAppList(context, installAPPList, JanYoFileUtil.SYSTEM_LIST_FILE + String.valueOf(Settings.getSortType()));
+				Logs.i(TAG, "getInstallAPPList: 存储APP列表结果: " + saveSystemResult);
+				break;
+		}
+		return installAPPList;
+	}
 
-    public static void search(List<InstallAPP> originList, String query) {
-        Iterator<InstallAPP> iterator = originList.iterator();
-        while (iterator.hasNext()) {
-            InstallAPP installAPP = iterator.next();
-            if (!installAPP.getName().toLowerCase().contains(query.toLowerCase()) && !installAPP.getPackageName().toLowerCase().contains(query.toLowerCase()))
-                iterator.remove();
-        }
-    }
+	/**
+	 * 从指定列表中搜索APP
+	 *
+	 * @param originList 指定列表
+	 * @param query      查询关键词
+	 */
+	public static void search(List<InstallAPP> originList, String query) {
+		Iterator<InstallAPP> iterator = originList.iterator();
+		while (iterator.hasNext()) {
+			InstallAPP installAPP = iterator.next();
+			if (!installAPP.getName().toLowerCase().contains(query.toLowerCase()) && !installAPP.getPackageName().toLowerCase().contains(query.toLowerCase()))
+				iterator.remove();
+		}
+	}
 
-    private static List<InstallAPP> sort(List<InstallAPP> originList) {
-        int sortType = Settings.getSortType();
-        if (sortType == 0)
-            return originList;
-        InstallAPP array[] = new InstallAPP[originList.size()];
-        for (int i = 0; i < originList.size(); i++)
-            array[i] = originList.get(i);
-        quickSort(array, 0, array.length - 1, sortType);
-        List<InstallAPP> sortList = new ArrayList<>();
-        sortList.addAll(Arrays.asList(array));
-        return sortList;
-    }
+	/**
+	 * 排序指定列表
+	 *
+	 * @param originList 指定列表
+	 * @return 排序之后的列表
+	 */
+	private static List<InstallAPP> sort(List<InstallAPP> originList) {
+		final int sortType = Settings.getSortType();
+		if (sortType == 0)
+			return originList;
+		InstallAPP array[] = (InstallAPP[]) originList.toArray();
+		Arrays.sort(array, new Comparator<InstallAPP>() {
+			@Override
+			public int compare(InstallAPP app1, InstallAPP app2) {
+				return compareInstallAPP(app1, app2, sortType);
+			}
+		});
+		return new ArrayList<>(Arrays.asList(array));
+	}
 
-    private static void quickSort(InstallAPP n[], int left, int right, int sortType) {
-        int dp;
-        if (left < right) {
-            dp = partition(n, left, right, sortType);
-            quickSort(n, left, dp - 1, sortType);
-            quickSort(n, dp + 1, right, sortType);
-        }
-    }
+	/**
+	 * 比对两个 {@link InstallAPP} 的指定类型大小
+	 *
+	 * @param app1     第一个
+	 * @param app2     第二个
+	 * @param sortType 排序的类型
+	 * @return 比对结果
+	 */
+	private static int compareInstallAPP(InstallAPP app1, InstallAPP app2, int sortType) {
+		switch (sortType) {
+			case SORT_TYPE_NAME_UP:
+				return app1.getName().compareTo(app2.getName());
+			case SORT_TYPE_NAME_DOWN:
+				return -app1.getName().compareTo(app2.getName());
+			case SORT_TYPE_SIZE_UP:
+				if (app1.getSize() > app2.getSize())
+					return 1;
+				else if (app1.getSize() < app2.getSize())
+					return -1;
+				return 0;
+			case SORT_TYPE_SIZE_DOWN:
+				if (app1.getSize() > app2.getSize())
+					return -1;
+				else if (app1.getSize() < app2.getSize())
+					return 1;
+				return 0;
+			case SORT_TYPE_PACKAGE_UP:
+				return app1.getPackageName().compareTo(app2.getPackageName());
+			case SORT_TYPE_PACKAGE_DOWN:
+				return -app1.getPackageName().compareTo(app2.getPackageName());
+			case SORT_TYPE_INSTALL_TIME_UP:
+				if (app1.getInstallTime() > app2.getInstallTime())
+					return 1;
+				else if (app1.getInstallTime() < app2.getInstallTime())
+					return -1;
+				return 0;
+			case SORT_TYPE_INSTALL_TIME_DOWN:
+				if (app1.getInstallTime() > app2.getInstallTime())
+					return -1;
+				else if (app1.getInstallTime() < app2.getInstallTime())
+					return 1;
+				return 0;
+			case SORT_TYPE_UPDATE_TIME_UP:
+				if (app1.getUpdateTime() > app2.getUpdateTime())
+					return 1;
+				else if (app1.getUpdateTime() < app2.getUpdateTime())
+					return -1;
+				return 0;
+			case SORT_TYPE_UPDATE_TIME_DOWN:
+				if (app1.getUpdateTime() > app2.getUpdateTime())
+					return -1;
+				else if (app1.getUpdateTime() < app2.getUpdateTime())
+					return 1;
+				return 0;
+		}
+		return 0;
+	}
 
-    private static int partition(InstallAPP n[], int left, int right, int sortType) {
-        InstallAPP pivot = n[left];
-        while (left < right) {
-            switch (sortType) {
-                case SORT_TYPE_NAME_UP:
-                    while (left < right && n[right].getName().compareToIgnoreCase(pivot.getName()) >= 0)
-                        right--;
-                    break;
-                case SORT_TYPE_NAME_DOWN:
-                    while (left < right && n[right].getName().compareToIgnoreCase(pivot.getName()) <= 0)
-                        right--;
-                    break;
-                case SORT_TYPE_SIZE_UP:
-                    while (left < right && n[right].getSize() >= pivot.getSize())
-                        right--;
-                    break;
-                case SORT_TYPE_SIZE_DOWN:
-                    while (left < right && n[right].getSize() <= pivot.getSize())
-                        right--;
-                    break;
-                case SORT_TYPE_PACKAGE_UP:
-                    while (left < right && n[right].getPackageName().compareToIgnoreCase(pivot.getPackageName()) >= 0)
-                        right--;
-                    break;
-                case SORT_TYPE_PACKAGE_DOWN:
-                    while (left < right && n[right].getPackageName().compareToIgnoreCase(pivot.getPackageName()) <= 0)
-                        right--;
-                    break;
-                case SORT_TYPE_INSTALL_TIME_UP:
-                    while (left < right && n[right].getInstallTime() >= pivot.getInstallTime())
-                        right--;
-                    break;
-                case SORT_TYPE_INSTALL_TIME_DOWN:
-                    while (left < right && n[right].getInstallTime() <= pivot.getInstallTime())
-                        right--;
-                    break;
-                case SORT_TYPE_UPDATE_TIME_UP:
-                    while (left < right && n[right].getUpdateTime() >= pivot.getUpdateTime())
-                        right--;
-                    break;
-                case SORT_TYPE_UPDATE_TIME_DOWN:
-                    while (left < right && n[right].getUpdateTime() <= pivot.getUpdateTime())
-                        right--;
-                    break;
-            }
-            if (left < right)
-                n[left++] = n[right];
-            switch (sortType) {
-                case SORT_TYPE_NAME_UP:
-                    while (left < right && n[left].getName().compareToIgnoreCase(pivot.getName()) <= 0)
-                        left++;
-                    break;
-                case SORT_TYPE_NAME_DOWN:
-                    while (left < right && n[left].getName().compareToIgnoreCase(pivot.getName()) >= 0)
-                        left++;
-                    break;
-                case SORT_TYPE_SIZE_UP:
-                    while (left < right && n[left].getSize() <= pivot.getSize())
-                        left++;
-                    break;
-                case SORT_TYPE_SIZE_DOWN:
-                    while (left < right && n[left].getSize() >= pivot.getSize())
-                        left++;
-                    break;
-                case SORT_TYPE_PACKAGE_UP:
-                    while (left < right && n[left].getPackageName().compareToIgnoreCase(pivot.getPackageName()) <= 0)
-                        left++;
-                    break;
-                case SORT_TYPE_PACKAGE_DOWN:
-                    while (left < right && n[left].getPackageName().compareToIgnoreCase(pivot.getPackageName()) >= 0)
-                        left++;
-                    break;
-                case SORT_TYPE_INSTALL_TIME_UP:
-                    while (left < right && n[left].getInstallTime() <= pivot.getInstallTime())
-                        left++;
-                    break;
-                case SORT_TYPE_INSTALL_TIME_DOWN:
-                    while (left < right && n[left].getInstallTime() >= pivot.getInstallTime())
-                        left++;
-                    break;
-                case SORT_TYPE_UPDATE_TIME_UP:
-                    while (left < right && n[left].getUpdateTime() <= pivot.getUpdateTime())
-                        left++;
-                    break;
-                case SORT_TYPE_UPDATE_TIME_DOWN:
-                    while (left < right && n[left].getUpdateTime() >= pivot.getUpdateTime())
-                        left++;
-                    break;
-            }
-            if (left < right)
-                n[right--] = n[left];
-        }
-        n[left] = pivot;
-        return left;
-    }
+	public static void uninstallAPP(Context context, String packageName) {
+		Uri packageURI = Uri.parse("package:" + packageName);
+		Intent intent = new Intent(Intent.ACTION_DELETE, packageURI);
+		context.startActivity(intent);
+	}
+
+	public static boolean uninstallAPPByRoot(){
+
+	}
 }

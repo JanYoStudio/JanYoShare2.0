@@ -38,6 +38,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -70,27 +71,25 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import pw.janyo.janyoshare.R;
-import pw.janyo.janyoshare.activity.MainActivity;
 import pw.janyo.janyoshare.classes.InstallAPP;
 import pw.janyo.janyoshare.util.JanYoFileUtil;
-import pw.janyo.janyoshare.util.PackagesUtil;
 import pw.janyo.janyoshare.util.Settings;
 import vip.mystery0.logs.Logs;
+import vip.mystery0.tools.base.BaseRecyclerViewAdapter;
 import vip.mystery0.tools.utils.FileTools;
 
-public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
+public class AppAdapter extends BaseRecyclerViewAdapter<AppAdapter.ViewHolder, InstallAPP> {
 	private static final String TAG = "AppAdapter";
 	private Context context;
 	private CoordinatorLayout coordinatorLayout;
-	private List<InstallAPP> installAPPList;
 	private RequestOptions options = new RequestOptions()
 			.diskCacheStrategy(DiskCacheStrategy.NONE);
 	private ZLoadingDialog exportDialog;
 
-	public AppAdapter(Context context, List<InstallAPP> installAPPList) {
+	public AppAdapter(Context context, ArrayList<InstallAPP> list) {
+		super(context, R.layout.item_app, list);
 		this.context = context;
 		this.coordinatorLayout = ((Activity) context).findViewById(R.id.coordinatorLayout);
-		this.installAPPList = installAPPList;
 		exportDialog = new ZLoadingDialog(context)
 				.setLoadingBuilder(Z_TYPE.DOUBLE_CIRCLE)
 				.setHintTextSize(16)
@@ -100,30 +99,29 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
 				.setHintTextColor(ContextCompat.getColor(context, R.color.colorAccent));
 	}
 
+	@NonNull
 	@Override
-	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(context).inflate(R.layout.item_app, parent, false);
-		return new ViewHolder(view);
+	public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+		return new ViewHolder(createView(parent));
 	}
 
 	@Override
-	public void onBindViewHolder(final ViewHolder holder, int position) {
-		final InstallAPP installAPP = installAPPList.get(position);
-		holder.textViewName.setText(installAPP.getName());
-		holder.textViewPackageName.setText(installAPP.getPackageName());
-		holder.textViewVersionName.setText(installAPP.getVersionName());
-		holder.textViewSize.setText(FileTools.formatFileSize(installAPP.getSize(), 2));
+	public void setItemView(final ViewHolder viewHolder, int position, final InstallAPP installAPP) {
+		viewHolder.textViewName.setText(installAPP.getName());
+		viewHolder.textViewPackageName.setText(installAPP.getPackageName());
+		viewHolder.textViewVersionName.setText(installAPP.getVersionName());
+		viewHolder.textViewSize.setText(FileTools.INSTANCE.formatFileSize(installAPP.getSize(), 2));
 		if (installAPP.getIconPath() != null)
-			Glide.with(context).load(installAPP.getIconPath()).apply(options).into(holder.imageView);
+			Glide.with(context).load(installAPP.getIconPath()).apply(options).into(viewHolder.imageView);
 		else
-			holder.imageView.setImageDrawable(installAPP.getIcon());
+			viewHolder.imageView.setImageDrawable(installAPP.getIcon());
 
-		holder.imageView.setOnClickListener(new View.OnClickListener() {
+		viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				holder.imageView.setVisibility(View.GONE);
-				holder.checkBox.setVisibility(View.VISIBLE);
-				holder.checkBox.setChecked(true);
+				viewHolder.imageView.setVisibility(View.GONE);
+				viewHolder.checkBox.setVisibility(View.VISIBLE);
+				viewHolder.checkBox.setChecked(true);
 			}
 		});
 //        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -132,7 +130,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
 //
 //            }
 //        });
-		holder.itemView.setOnClickListener(new View.OnClickListener() {
+		viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				new AlertDialog.Builder(context)
@@ -155,7 +153,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
 		}
 		Observable.create(new ObservableOnSubscribe<Integer>() {
 			@Override
-			public void subscribe(ObservableEmitter<Integer> subscriber) throws Exception {
+			public void subscribe(ObservableEmitter<Integer> subscriber) {
 				subscriber.onNext(JanYoFileUtil.exportAPK(installAPP));
 				subscriber.onComplete();
 			}
@@ -360,7 +358,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
 						.show();
 				break;
 			case 7://静默卸载
-				PackagesUtil.uninstall(context, installAPP.getPackageName());
+//				PackagesUtil.uninstall(context, installAPP.getPackageName());
 		}
 	}
 
@@ -398,12 +396,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
 		}
 	}
 
-	@Override
-	public int getItemCount() {
-		return installAPPList.size();
-	}
-
-	static class ViewHolder extends RecyclerView.ViewHolder {
+	class ViewHolder extends RecyclerView.ViewHolder {
 		View itemView;
 		CheckBox checkBox;
 		ImageView imageView;
