@@ -1,5 +1,5 @@
 /*
- * Created by Mystery0 on 18-2-10 下午4:44.
+ * Created by Mystery0 on 6/14/18 10:19 PM.
  * Copyright (c) 2018. All Rights reserved.
  *
  *                    =====================================================
@@ -28,37 +28,34 @@
  *                    =                                                   =
  *                    =====================================================
  *
- * Last modified 18-2-10 下午4:44
+ * Last modified 6/14/18 10:19 PM
  */
 
-package pw.janyo.janyoshare.activity
+package pw.janyo.janyoshare.util
 
-import android.databinding.DataBindingUtil
+import android.databinding.BindingAdapter
+import android.databinding.BindingConversion
+import android.graphics.drawable.Drawable
+import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import vip.mystery0.tools.utils.FileTools
 
-import pw.janyo.janyoshare.R
-import pw.janyo.janyoshare.databinding.ActivityDirManagerBinding
-import pw.janyo.janyoshare.util.Settings
-import vip.mystery0.tools.base.BaseActivity
+object DataBindingUtil {
+	private val options = RequestOptions()
+			.diskCacheStrategy(DiskCacheStrategy.NONE)
 
-class DirManagerActivity : BaseActivity(R.layout.activity_dir_manager) {
-	private lateinit var binding: ActivityDirManagerBinding
-
-	override fun inflateView(layoutId: Int) {
-		binding = DataBindingUtil.setContentView(this, layoutId)
+	@JvmStatic
+	@BindingAdapter("bind:icon", "bind:path")
+	fun iconLoader(imageView: ImageView, icon: Drawable?, path: String?) {
+		if (path != null)
+			Glide.with(imageView.context).load(path).apply(options).into(imageView)
+		else
+			imageView.setImageDrawable(icon)
 	}
 
-	override fun initData() {
-		super.initData()
-		title = " "
-
-		binding.dirManager.setCurrentPath(Settings.customExportDir)
-	}
-
-	override fun monitor() {
-		binding.buttonOk.setOnClickListener {
-			Settings.customExportDir = binding.dirManager.getCurrentPath()
-			finish()
-		}
-		binding.buttonCancel.setOnClickListener { finish() }
-	}
+	@JvmStatic
+	@BindingConversion
+	fun convertAppSize(size: Long): String = FileTools.formatFileSize(size, 2)
 }

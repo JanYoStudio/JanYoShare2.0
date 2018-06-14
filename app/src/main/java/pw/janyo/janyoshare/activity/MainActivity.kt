@@ -37,22 +37,19 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.databinding.DataBindingUtil
 import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
-import android.support.v4.widget.DrawerLayout
 import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.SearchView
-import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -62,12 +59,13 @@ import android.widget.TextView
 import java.util.Calendar
 
 import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 import pw.janyo.janyoshare.R
 import pw.janyo.janyoshare.adapter.ViewPagerAdapter
+import pw.janyo.janyoshare.databinding.ActivityMainBinding
+import pw.janyo.janyoshare.databinding.AppBarMainBinding
 import pw.janyo.janyoshare.fragment.AppFragment
 import pw.janyo.janyoshare.util.AppManager
 import pw.janyo.janyoshare.util.JanYoFileUtil
@@ -76,23 +74,16 @@ import vip.mystery0.logs.Logs
 import vip.mystery0.tools.base.BaseActivity
 
 class MainActivity : BaseActivity(R.layout.activity_main) {
+	private lateinit var mainBinding: ActivityMainBinding
+	private lateinit var binding: AppBarMainBinding
 	private var lastPressTime: Long = 0
-	private var currentFragment: AppFragment? = null
-	private var toolbar: Toolbar? = null
-	private var coordinatorLayout: CoordinatorLayout? = null
-	private var drawer: DrawerLayout? = null
-	private var navigationView: NavigationView? = null
-	private var tabLayout: TabLayout? = null
-	private var viewPager: ViewPager? = null
+	private lateinit var currentFragment: AppFragment
+	val coordinatorLayout: CoordinatorLayout
+		get() = binding.coordinatorLayout
 
-	override fun bindView() {
-		super.bindView()
-		toolbar = findViewById(R.id.toolbar)
-		coordinatorLayout = findViewById(R.id.coordinatorLayout)
-		drawer = findViewById(R.id.drawer_layout)
-		navigationView = findViewById(R.id.nav_view)
-		tabLayout = findViewById(R.id.title_tabs)
-		viewPager = findViewById(R.id.viewpager)
+	override fun inflateView(layoutId: Int) {
+		mainBinding = DataBindingUtil.setContentView(this, layoutId)
+		binding = mainBinding.include!!
 	}
 
 	override fun initData() {
@@ -102,10 +93,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 		viewPagerAdapter.addFragment(userFragment, getString(R.string.title_fragment_user))
 		viewPagerAdapter.addFragment(systemFragment, getString(R.string.title_fragment_system))
 		currentFragment = userFragment
-		currentFragment!!.loadCacheList()
-		viewPager!!.adapter = viewPagerAdapter
-		tabLayout!!.setupWithViewPager(viewPager)
-		viewPager!!.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+		currentFragment.loadCacheList()
+		binding.viewPager.adapter = viewPagerAdapter
+		binding.titleTabs.setupWithViewPager(binding.viewPager)
+		binding.viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 			override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
 			override fun onPageSelected(position: Int) {
@@ -118,10 +109,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 			override fun onPageScrollStateChanged(state: Int) {}
 		})
 
-		setSupportActionBar(toolbar)
+		setSupportActionBar(binding.toolbar)
 		val toggle = ActionBarDrawerToggle(
-				this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-		drawer!!.addDrawerListener(toggle)
+				this, mainBinding.drawerLayout, binding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+		mainBinding.drawerLayout.addDrawerListener(toggle)
 		toggle.syncState()
 
 		if (Settings.isAutoClean)
@@ -133,12 +124,13 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 	}
 
 	override fun monitor() {
-		navigationView!!.setNavigationItemSelectedListener { item ->
+		mainBinding.navView.setNavigationItemSelectedListener { item ->
 			when (item.itemId) {
 				R.id.action_face_to_face_share ->
-					Snackbar.make(coordinatorLayout!!, R.string.hint_service_unavailable, Snackbar.LENGTH_LONG)
+					Snackbar.make(binding.coordinatorLayout, R.string.hint_service_unavailable, Snackbar.LENGTH_LONG)
 							.show()
-				R.id.action_clear_temp_dir -> clearFiles()
+				R.id.action_clear_temp_dir ->
+					clearFiles()
 				R.id.action_night_mode -> {
 					val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
 					delegate.setLocalNightMode(if (currentNightMode == Configuration.UI_MODE_NIGHT_NO)
@@ -147,73 +139,74 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 						AppCompatDelegate.MODE_NIGHT_NO)
 					reStartActivity()
 				}
-				R.id.action_license -> Observable.create(ObservableOnSubscribe<View> { subscriber ->
-					val view = LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_license, NestedScrollView(this@MainActivity), false)
-					val licensePoint1 = view.findViewById<TextView>(R.id.license_point1)
-					val licensePoint2 = view.findViewById<TextView>(R.id.license_point2)
-					val licensePoint3 = view.findViewById<TextView>(R.id.license_point3)
-					val point = VectorDrawableCompat.create(resources, R.drawable.ic_point, null)
-					point?.setBounds(0, 0, point.minimumWidth, point.minimumHeight)
-					licensePoint1.setCompoundDrawables(point, null, null, null)
-					licensePoint2.setCompoundDrawables(point, null, null, null)
-					licensePoint3.setCompoundDrawables(point, null, null, null)
-					subscriber.onNext(view)
-					subscriber.onComplete()
-				})
-						.subscribeOn(Schedulers.newThread())
-						.unsubscribeOn(Schedulers.newThread())
-						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(object : DisposableObserver<View>() {
-							private var view: View? = null
+				R.id.action_license ->
+					Observable.create<View> { subscriber ->
+						val view = LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_license, NestedScrollView(this@MainActivity), false)
+						val licensePoint1 = view.findViewById<TextView>(R.id.license_point1)
+						val licensePoint2 = view.findViewById<TextView>(R.id.license_point2)
+						val licensePoint3 = view.findViewById<TextView>(R.id.license_point3)
+						val point = VectorDrawableCompat.create(resources, R.drawable.ic_point, null)
+						point?.setBounds(0, 0, point.minimumWidth, point.minimumHeight)
+						licensePoint1.setCompoundDrawables(point, null, null, null)
+						licensePoint2.setCompoundDrawables(point, null, null, null)
+						licensePoint3.setCompoundDrawables(point, null, null, null)
+						subscriber.onNext(view)
+						subscriber.onComplete()
+					}
+							.subscribeOn(Schedulers.newThread())
+							.unsubscribeOn(Schedulers.newThread())
+							.observeOn(AndroidSchedulers.mainThread())
+							.subscribe(object : DisposableObserver<View>() {
+								private var view: View? = null
 
-							override fun onNext(view: View) {
-								this.view = view
-							}
+								override fun onNext(view: View) {
+									this.view = view
+								}
 
-							override fun onError(e: Throwable) {
-								Logs.wtf("onError: ", e)
-							}
+								override fun onError(e: Throwable) {
+									Logs.wtf("onError: ", e)
+								}
 
-							override fun onComplete() {
-								AlertDialog.Builder(this@MainActivity)
-										.setTitle(" ")
-										.setView(view)
-										.setPositiveButton(android.R.string.ok) { _, _ -> Logs.i("onClick: ") }
-										.show()
-							}
-						})
-				R.id.action_support_us -> Snackbar.make(coordinatorLayout!!, R.string.hint_service_unavailable, Snackbar.LENGTH_LONG)
+								override fun onComplete() {
+									AlertDialog.Builder(this@MainActivity)
+											.setTitle(" ")
+											.setView(view)
+											.setPositiveButton(android.R.string.ok) { _, _ -> Logs.i("onClick: ") }
+											.show()
+								}
+							})
+				R.id.action_support_us -> Snackbar.make(binding.coordinatorLayout, R.string.hint_service_unavailable, Snackbar.LENGTH_LONG)
 						.show()
 				R.id.action_settings -> startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
 			}
-			drawer!!.closeDrawer(GravityCompat.START)
+			mainBinding.drawerLayout.closeDrawer(GravityCompat.START)
 			true
 		}
 	}
 
 	private fun reStartActivity() {
-		val intent = intent
 		finish()
 		startActivity(intent)
 	}
 
 	private fun clearFiles() {
 		when (JanYoFileUtil.cleanFileDir()) {
-			JanYoFileUtil.Code.MAKE_DIR_ERROR -> Snackbar.make(coordinatorLayout!!, R.string.hint_export_dir_create_failed, Snackbar.LENGTH_LONG)
+			JanYoFileUtil.Code.MAKE_DIR_ERROR -> Snackbar.make(binding.coordinatorLayout, R.string.hint_export_dir_create_failed, Snackbar.LENGTH_LONG)
 					.show()
-			JanYoFileUtil.Code.DONE -> Snackbar.make(coordinatorLayout!!, R.string.hint_clean_dir_done, Snackbar.LENGTH_LONG)
+			JanYoFileUtil.Code.DONE -> Snackbar.make(binding.coordinatorLayout, R.string.hint_clean_dir_done, Snackbar.LENGTH_LONG)
 					.show()
-			JanYoFileUtil.Code.ERROR -> Snackbar.make(coordinatorLayout!!, R.string.hint_clean_dir_error, Snackbar.LENGTH_LONG)
+			JanYoFileUtil.Code.ERROR -> Snackbar.make(binding.coordinatorLayout, R.string.hint_clean_dir_error, Snackbar.LENGTH_LONG)
 					.show()
 		}
 	}
 
 	override fun onBackPressed() {
 		when {
-			drawer!!.isDrawerOpen(GravityCompat.START) -> drawer!!.closeDrawer(GravityCompat.START)
+			mainBinding.drawerLayout.isDrawerOpen(GravityCompat.START) ->
+				mainBinding.drawerLayout.closeDrawer(GravityCompat.START)
 			Calendar.getInstance().timeInMillis - lastPressTime >= 3000 -> {
 				lastPressTime = Calendar.getInstance().timeInMillis
-				Snackbar.make(coordinatorLayout!!, R.string.hint_twice_press_exit, Snackbar.LENGTH_LONG)
+				Snackbar.make(binding.coordinatorLayout, R.string.hint_twice_press_exit, Snackbar.LENGTH_LONG)
 						.show()
 			}
 			else -> finish()
@@ -237,12 +230,12 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 		})
 		searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 			override fun onQueryTextSubmit(query: String): Boolean {
-				currentFragment!!.search(query)
+				currentFragment.search(query)
 				return true
 			}
 
 			override fun onQueryTextChange(newText: String): Boolean {
-				currentFragment!!.search(newText)
+				currentFragment.search(newText)
 				return false
 			}
 		})
@@ -263,7 +256,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 							val selected = temp[0]
 							Settings.sortType = selected
 							if (current != selected)
-								currentFragment!!.loadCacheList()
+								currentFragment.loadCacheList()
 						}
 						.show()
 			}
@@ -277,12 +270,12 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 			for (temp in grantResults)
 				result = result and (temp == PackageManager.PERMISSION_GRANTED)
 			if (!result) {
-				Snackbar.make(coordinatorLayout!!, R.string.hint_permission_write_external, Snackbar.LENGTH_LONG)
+				Snackbar.make(binding.coordinatorLayout, R.string.hint_permission_write_external, Snackbar.LENGTH_LONG)
 						.setAction(R.string.action_grant_permission) { ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSION_AUTO_CLEAN) }
 						.addCallback(object : Snackbar.Callback() {
 							override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
 								if (event != Snackbar.Callback.DISMISS_EVENT_ACTION)
-									Snackbar.make(coordinatorLayout!!, R.string.hint_permission_denied, Snackbar.LENGTH_LONG)
+									Snackbar.make(binding.coordinatorLayout, R.string.hint_permission_denied, Snackbar.LENGTH_LONG)
 											.show()
 							}
 						})

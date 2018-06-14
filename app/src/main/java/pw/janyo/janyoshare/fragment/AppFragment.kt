@@ -34,16 +34,16 @@
 package pw.janyo.janyoshare.fragment
 
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 
 import java.io.File
 import java.util.ArrayList
 
 import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -51,6 +51,7 @@ import io.reactivex.schedulers.Schedulers
 import pw.janyo.janyoshare.R
 import pw.janyo.janyoshare.adapter.AppAdapter
 import pw.janyo.janyoshare.classes.InstallAPP
+import pw.janyo.janyoshare.databinding.FragmentAppBinding
 import pw.janyo.janyoshare.util.AppManager
 import pw.janyo.janyoshare.util.JanYoFileUtil
 import pw.janyo.janyoshare.util.Settings
@@ -58,9 +59,9 @@ import vip.mystery0.logs.Logs
 import vip.mystery0.tools.base.BaseFragment
 
 class AppFragment : BaseFragment(R.layout.fragment_app) {
+	private lateinit var binding: FragmentAppBinding
 	private var type = 0
 	private var sortType = Settings.sortType
-	private var swipeRefreshLayout: SwipeRefreshLayout? = null
 	private val list = ArrayList<InstallAPP>()
 	private val originList = ArrayList<InstallAPP>()
 	private var appAdapter: AppAdapter? = null
@@ -70,19 +71,22 @@ class AppFragment : BaseFragment(R.layout.fragment_app) {
 		type = arguments!!.getInt("type")
 	}
 
+	override fun inflateView(layoutId: Int, inflater: LayoutInflater, container: ViewGroup?): View {
+		binding = FragmentAppBinding.inflate(inflater, container, false)
+		return binding.root
+	}
+
 	override fun initView() {
-		val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
-		swipeRefreshLayout = findViewById(R.id.swipe_refresh)
-		swipeRefreshLayout!!.setColorSchemeResources(
+		binding.swipeRefreshLayout.setColorSchemeResources(
 				android.R.color.holo_blue_light,
 				android.R.color.holo_green_light,
 				android.R.color.holo_orange_light,
 				android.R.color.holo_red_light)
-		recyclerView.layoutManager = LinearLayoutManager(activity)
+		binding.recyclerView.layoutManager = LinearLayoutManager(activity)
 		appAdapter = AppAdapter(activity!!, list)
-		recyclerView.adapter = appAdapter
-		recyclerView.addItemDecoration(DividerItemDecoration(activity!!, DividerItemDecoration.VERTICAL))
-		swipeRefreshLayout!!.setOnRefreshListener { refreshList() }
+		binding.recyclerView.adapter = appAdapter
+		binding.recyclerView.addItemDecoration(DividerItemDecoration(activity!!, DividerItemDecoration.VERTICAL))
+		binding.swipeRefreshLayout.setOnRefreshListener { refreshList() }
 	}
 
 	fun shouldRefresh(): Boolean {
@@ -91,7 +95,7 @@ class AppFragment : BaseFragment(R.layout.fragment_app) {
 
 	fun search(query: String) {
 		Logs.i("search: $query")
-		Observable.create(ObservableOnSubscribe<List<InstallAPP>> { subscriber ->
+		Observable.create<List<InstallAPP>> { subscriber ->
 			while (true) {
 				if (appAdapter != null)
 					break
@@ -102,7 +106,7 @@ class AppFragment : BaseFragment(R.layout.fragment_app) {
 			if (query.isNotEmpty())
 				AppManager.search(list, query)
 			subscriber.onComplete()
-		})
+		}
 				.subscribeOn(Schedulers.newThread())
 				.unsubscribeOn(Schedulers.newThread())
 				.observeOn(AndroidSchedulers.mainThread())
@@ -126,7 +130,7 @@ class AppFragment : BaseFragment(R.layout.fragment_app) {
 	}
 
 	private fun refreshList() {
-		Observable.create(ObservableOnSubscribe<Boolean> { subscriber ->
+		Observable.create<Boolean> { subscriber ->
 			val appList = AppManager.getInstallAPPList(activity!!, type)
 			list.clear()
 			list.addAll(appList)
@@ -134,32 +138,32 @@ class AppFragment : BaseFragment(R.layout.fragment_app) {
 			originList.addAll(appList)
 			Settings.setCurrentListSize(type, list.size)
 			subscriber.onComplete()
-		})
+		}
 				.subscribeOn(Schedulers.newThread())
 				.unsubscribeOn(Schedulers.newThread())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(object : Observer<Boolean> {
 					override fun onSubscribe(d: Disposable) {
-						swipeRefreshLayout!!.isRefreshing = true
+						binding.swipeRefreshLayout.isRefreshing = true
 					}
 
 					override fun onNext(aBoolean: Boolean) {}
 
 					override fun onError(e: Throwable) {
 						Logs.wtf("onError: ", e)
-						swipeRefreshLayout!!.isRefreshing = false
+						binding.swipeRefreshLayout.isRefreshing = false
 					}
 
 					override fun onComplete() {
 						Logs.i("onComplete: " + list.size)
 						appAdapter!!.notifyDataSetChanged()
-						swipeRefreshLayout!!.isRefreshing = false
+						binding.swipeRefreshLayout.isRefreshing = false
 					}
 				})
 	}
 
 	fun loadCacheList() {
-		Observable.create(ObservableOnSubscribe<List<InstallAPP>> { subscriber ->
+		Observable.create<List<InstallAPP>> { subscriber ->
 			while (true) {
 				if (appAdapter != null)
 					break
@@ -181,7 +185,7 @@ class AppFragment : BaseFragment(R.layout.fragment_app) {
 			else
 				subscriber.onNext(list)
 			subscriber.onComplete()
-		})
+		}
 				.subscribeOn(Schedulers.newThread())
 				.unsubscribeOn(Schedulers.newThread())
 				.observeOn(AndroidSchedulers.mainThread())
@@ -208,7 +212,7 @@ class AppFragment : BaseFragment(R.layout.fragment_app) {
 							originList.clear()
 							originList.addAll(installAPPList)
 							appAdapter!!.notifyDataSetChanged()
-							swipeRefreshLayout!!.isRefreshing = false
+							binding.swipeRefreshLayout.isRefreshing = false
 						} else
 							refreshList()
 					}

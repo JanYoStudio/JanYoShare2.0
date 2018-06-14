@@ -41,7 +41,7 @@ class SplashActivity : BaseActivity(null) {
 
 	override fun initData() {
 		super.initData()
-		startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+		startActivity(Intent(this, MainActivity::class.java))
 		finish()
 	}
 }

@@ -41,22 +41,15 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
-
-import java.util.ArrayList
-
 import pw.janyo.janyoshare.R
+import pw.janyo.janyoshare.activity.MainActivity
 import pw.janyo.janyoshare.classes.InstallAPP
 import pw.janyo.janyoshare.databinding.ItemAppBinding
 import pw.janyo.janyoshare.handler.ItemAppClickHandler
 import vip.mystery0.tools.base.BaseRecyclerViewAdapter
 
 class AppAdapter(private val context: Context, list: ArrayList<InstallAPP>) : BaseRecyclerViewAdapter<AppAdapter.ViewHolder, InstallAPP>(context, R.layout.item_app, list) {
-	private val coordinatorLayout: CoordinatorLayout = (context as Activity).findViewById(R.id.coordinatorLayout)
-	private val options = RequestOptions()
-			.diskCacheStrategy(DiskCacheStrategy.NONE)
+	private val coordinatorLayout: CoordinatorLayout = (context as MainActivity).coordinatorLayout
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 		return ViewHolder(createView(parent))
@@ -66,10 +59,10 @@ class AppAdapter(private val context: Context, list: ArrayList<InstallAPP>) : Ba
 		val handler = ItemAppClickHandler(coordinatorLayout, context)
 		holder.binding.handler = handler
 		holder.binding.installAPP = data
-		if (data.iconPath != null)
-			Glide.with(context).load(data.iconPath).apply(options).into(holder.binding.appIcon)
-		else
-			holder.binding.appIcon.setImageDrawable(data.icon)
+//		if (data.iconPath != null)
+//			Glide.with(context).load(data.iconPath).apply(options).into(holder.binding.appIcon)
+//		else
+//			holder.binding.appIcon.setImageDrawable(data.icon)
 //		holder.imageView.setOnClickListener {
 //			holder.imageView.visibility = View.GONE
 //			holder.checkBox.visibility = View.VISIBLE

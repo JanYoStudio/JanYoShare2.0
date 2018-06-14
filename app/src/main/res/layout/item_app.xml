@@ -3,8 +3,6 @@
 
 	<data>
 
-		<import type="vip.mystery0.tools.utils.FileTools" />
-
 		<variable
 			name="handler"
 			type="pw.janyo.janyoshare.handler.ItemAppClickHandler" />
@@ -35,7 +33,9 @@
 				android:id="@+id/app_icon"
 				android:layout_width="@dimen/item_app_img_height"
 				android:layout_height="@dimen/item_app_img_height"
-				android:contentDescription="@string/app_name" />
+				android:contentDescription="@string/app_name"
+				app:icon="@{installAPP.icon}"
+				app:path="@{installAPP.iconPath}" />
 
 			<CheckBox
 				android:id="@+id/checkBox"
@@ -100,7 +100,7 @@
 			android:layout_height="0dp"
 			android:layout_marginEnd="@dimen/constraintLayout_margin1"
 			android:gravity="center_vertical"
-			android:text="@{FileTools.INSTANCE.formatFileSize(installAPP.size, 2)}"
+			android:text="@{installAPP.size}"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent" />

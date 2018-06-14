@@ -37,8 +37,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 
-import java.util.ArrayList
-
 class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 	private val fragmentList = ArrayList<Fragment>()
 	private val titleList = ArrayList<String>()

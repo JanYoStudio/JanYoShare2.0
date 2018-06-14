@@ -36,9 +36,6 @@ package pw.janyo.janyoshare
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import android.content.res.Configuration
-import android.content.res.Resources
-import android.util.DisplayMetrics
 
 import java.util.Locale
 
