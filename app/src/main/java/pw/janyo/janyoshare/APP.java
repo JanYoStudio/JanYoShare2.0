@@ -43,7 +43,6 @@ import android.util.DisplayMetrics;
 import java.util.Locale;
 
 import vip.mystery0.crashhandler.CrashHandler;
-import vip.mystery0.logs.Logs;
 
 public class APP extends Application {
     @SuppressLint("StaticFieldLeak")
@@ -62,7 +61,6 @@ public class APP extends Application {
         Configuration config = resources.getConfiguration();
         config.locale = Locale.getDefault();
         resources.updateConfiguration(config, dm);
-        Logs.setLevel(Logs.Level.DEBUG);
         CrashHandler.getInstance(this)
                 .init();
     }
