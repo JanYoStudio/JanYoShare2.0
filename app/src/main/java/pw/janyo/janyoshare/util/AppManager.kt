@@ -38,12 +38,10 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.net.Uri
 
-import java.io.File
 import java.util.ArrayList
 import java.util.Arrays
 
 import pw.janyo.janyoshare.classes.InstallAPP
-import pw.janyo.janyoshare.util.drawable.DrawableFactory
 import vip.mystery0.logs.Logs
 
 object AppManager {
@@ -74,7 +72,6 @@ object AppManager {
 	 * @return 列表
 	 */
 	fun getInstallAPPList(context: Context, appType: Int): List<InstallAPP> {
-		val drawableFactory = DrawableFactory()
 		val packageManager = context.packageManager
 		val packageInfoList = packageManager.getInstalledPackages(0)
 		val tempList = ArrayList<InstallAPP>()
