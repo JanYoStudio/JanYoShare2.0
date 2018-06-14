@@ -49,10 +49,6 @@
 			android:label="@string/title_activity_settings"
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme.Preference" />
-		<activity
-			android:name=".activity.FaceToFaceActivity"
-			android:screenOrientation="portrait"
-			android:theme="@style/AppTheme.NoActionBar.FullScreen" />
 
 		<provider
 			android:name="android.support.v4.content.FileProvider"

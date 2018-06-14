@@ -77,7 +77,6 @@
 	<string name="hint_warning_check_obb_no">The file was exported and no packets was found! </string>
 	<string name="hint_direct_wifi">Detect that you are using a WiFi network, do you want to share files directly? </string>
 
-	<string name="array_export_dir_data">Android internal storage (/data/data/pw.janyo.janyoshare/files/JanYo Share)</string>
 	<string name="array_export_dir_sdcard_data">SDCard storage(without permissions) (/sdcard/Android/data/pw.janyo.janyoshare/files/JanYo Share)</string>
 	<string name="array_export_dir_sdcard">SDCard storage (/sdcard/JanYo Share/)</string>
 	<string name="array_export_dir_custom">Custom</string>

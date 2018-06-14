@@ -31,11 +31,39 @@
  * Last modified 18-2-10 下午4:00
  */
 
-package pw.janyo.janyoshare.util.drawable;
+package pw.janyo.janyoshare.util.drawable
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap
+import android.graphics.drawable.AdaptiveIconDrawable
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.VectorDrawable
+import android.os.Build
+import android.support.graphics.drawable.VectorDrawableCompat
 
-abstract class DrawableConvert {
-    protected abstract Bitmap convert(Drawable drawable);
+import vip.mystery0.logs.Logs
+
+class DrawableConvertContext {
+	private var drawableConvert: DrawableConvert? = null
+
+	fun convert(drawable: Drawable): Bitmap? {
+		try {
+			if (drawable is BitmapDrawable)
+				drawableConvert = BitmapDrawableConvert()
+			else if (drawable is VectorDrawableCompat)
+				drawableConvert = VectorDrawableCompatConvert()
+			else if (drawable is VectorDrawable)
+				drawableConvert = VectorDrawableConvert()
+			else if (Build.VERSION.SDK_INT >= 26)
+				if (drawable is AdaptiveIconDrawable)
+					drawableConvert = AdaptiveIconDrawableConvert()
+				else
+					return null
+			return drawableConvert!!.convert(drawable)
+		} catch (e: Exception) {
+			Logs.wtf("convert: ", e)
+			return null
+		}
+
+	}
 }

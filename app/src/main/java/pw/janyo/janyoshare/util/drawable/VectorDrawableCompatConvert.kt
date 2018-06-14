@@ -31,49 +31,20 @@
  * Last modified 18-2-10 下午4:00
  */
 
-package pw.janyo.janyoshare.util.drawable;
+package pw.janyo.janyoshare.util.drawable
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
+import android.support.graphics.drawable.VectorDrawableCompat
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import vip.mystery0.logs.Logs;
-
-public class DrawableFactory {
-    private static final String TAG = "DrawableFactory";
-    private DrawableConvertContext drawableConvertContext = new DrawableConvertContext();
-
-    public boolean save(Drawable drawable, String path) {
-        File file = new File(path);
-        if (!file.getParentFile().exists()) {
-            boolean mkdirs = file.getParentFile().mkdirs();
-            if (!mkdirs) {
-                Logs.e(TAG, "save: 创建文件夹失败");
-                return false;
-            }
-        }
-        FileOutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = new FileOutputStream(file);
-            Bitmap bitmap = drawableConvertContext.convert(drawable);
-            if (bitmap == null)
-                return false;
-            //图片裁剪在这里调用
-            bitmap.compress(Bitmap.CompressFormat.PNG, 1, fileOutputStream);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            if (fileOutputStream != null)
-                try {
-                    fileOutputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-        }
-        return true;
-    }
+class VectorDrawableCompatConvert : DrawableConvert() {
+	override fun convert(drawable: Drawable): Bitmap {
+		val vectorDrawableCompat = drawable as VectorDrawableCompat
+		val bitmap = Bitmap.createBitmap(vectorDrawableCompat.intrinsicWidth, vectorDrawableCompat.intrinsicHeight, Bitmap.Config.ARGB_8888)
+		val canvas = Canvas(bitmap)
+		vectorDrawableCompat.setBounds(0, 0, canvas.width, canvas.height)
+		vectorDrawableCompat.draw(canvas)
+		return bitmap
+	}
 }

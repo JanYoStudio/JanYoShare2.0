@@ -1,5 +1,5 @@
 /*
- * Created by Mystery0 on 18-3-17 上午10:37.
+ * Created by Mystery0 on 18-2-10 下午4:00.
  * Copyright (c) 2018. All Rights reserved.
  *
  *                    =====================================================
@@ -28,28 +28,50 @@
  *                    =                                                   =
  *                    =====================================================
  *
- * Last modified 18-3-17 上午10:37
+ * Last modified 18-2-10 下午4:00
  */
 
-package pw.janyo.janyoshare.activity;
+package pw.janyo.janyoshare.util.drawable
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 
-import vip.mystery0.tools.base.BaseActivity;
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
-public class SplashActivity extends BaseActivity {
+import vip.mystery0.logs.Logs
 
-	public SplashActivity() {
-		super(null);
-	}
+class DrawableFactory {
+	private val drawableConvertContext = DrawableConvertContext()
 
-	@Override
-	public void initData() {
-		super.initData();
-		startActivity(new Intent(SplashActivity.this, MainActivity.class));
-		finish();
+	fun save(drawable: Drawable, path: String): Boolean {
+		val file = File(path)
+		if (!file.parentFile.exists()) {
+			val mkdirs = file.parentFile.mkdirs()
+			if (!mkdirs) {
+				Logs.e("save: 创建文件夹失败")
+				return false
+			}
+		}
+		var fileOutputStream: FileOutputStream? = null
+		try {
+			fileOutputStream = FileOutputStream(file)
+			val bitmap = drawableConvertContext.convert(drawable) ?: return false
+//图片裁剪在这里调用
+			bitmap.compress(Bitmap.CompressFormat.PNG, 1, fileOutputStream)
+		} catch (e: Exception) {
+			e.printStackTrace()
+			return false
+		} finally {
+			if (fileOutputStream != null)
+				try {
+					fileOutputStream.close()
+				} catch (e: IOException) {
+					e.printStackTrace()
+				}
+
+		}
+		return true
 	}
 }

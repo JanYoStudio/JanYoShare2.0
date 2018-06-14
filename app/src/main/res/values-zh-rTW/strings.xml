@@ -51,7 +51,6 @@
     <string name="hint_custom_rename_format_empty">格式不能為空！</string>
     <string name="hint_warning_check_obb">文件已導出，找到%1$d個數據包！</string>
     <string name="hint_direct_wifi">檢測到正在使用WiFi網絡，是否想直接進行分享？</string>
-    <string name="array_export_dir_data">Android內置存儲（/data/data/pw.janyo.janyoshare/files/JanYo Share）</string>
     <string name="array_export_dir_sdcard_data">SD卡（不需要存儲權限）（/sdcard/Android/data/pw.janyo.janyoshare/files/JanYo Share）</string>
     <string name="array_export_dir_sdcard">SD卡（/sdcard/JanYo Share/）</string>
     <string name="array_copy_operation_export_only">僅提取</string>

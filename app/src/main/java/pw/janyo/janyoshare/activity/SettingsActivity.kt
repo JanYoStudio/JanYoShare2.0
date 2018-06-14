@@ -31,22 +31,36 @@
  * Last modified 18-2-10 下午4:00
  */
 
-package pw.janyo.janyoshare.util;
+package pw.janyo.janyoshare.activity
 
-public class Constant {
-	private Constant() {
+import android.os.Bundle
+import android.preference.PreferenceActivity
+import android.support.design.widget.CoordinatorLayout
+import android.support.v7.widget.Toolbar
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.LinearLayout
+
+import pw.janyo.janyoshare.R
+import pw.janyo.janyoshare.fragment.SettingsPreferenceFragment
+
+class SettingsActivity : PreferenceActivity() {
+	private var toolbar: Toolbar? = null
+	var coordinatorLayout: CoordinatorLayout? = null
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		fragmentManager.beginTransaction().replace(R.id.content_wrapper, SettingsPreferenceFragment()).commit()
+		toolbar!!.title = title
 	}
 
-	public static final String WIFI_SSID = "JanYo_Share";
-
-	static final String IS_AUTO_CLEAN = "isAutoClean";
-	static final String TEMP_DIR = "tempDir";
-	static final String CUSTOM_TEMP_DIR = "customTempDir";
-	static final String IS_CUSTOM_FORMAT = "isCustomFormat";
-	static final String RENAME_FORMAT = "renameFormat";
-	static final String NICK_NAME = "nickName";
-	static final String SORT_TYPE = "sortType";
-	static final String CURRENT_LIST_SIZE = "currentListSize_%d";
-	static final String CACHE_EXPIRATION_TIME = "cacheExpirationTime";
-	static final String UNINSTALL_TYPE = "uninstallType";
+	override fun setContentView(layoutResID: Int) {
+		val contentView = LayoutInflater.from(this).inflate(R.layout.activity_settings, LinearLayout(this), false) as ViewGroup
+		toolbar = contentView.findViewById(R.id.toolbar)
+		toolbar!!.setNavigationOnClickListener { finish() }
+		coordinatorLayout = contentView.findViewById(R.id.coordinatorLayout)
+		val contentWrapper = contentView.findViewById<ViewGroup>(R.id.content_wrapper)
+		LayoutInflater.from(this).inflate(layoutResID, contentWrapper, true)
+		window.setContentView(contentView)
+	}
 }

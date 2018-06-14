@@ -31,40 +31,11 @@
  * Last modified 18-2-10 下午4:00
  */
 
-package pw.janyo.janyoshare.adapter;
+package pw.janyo.janyoshare.util.drawable
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ViewPagerAdapter extends FragmentPagerAdapter {
-    private List<Fragment> fragmentList = new ArrayList<>();
-    private List<String> titleList = new ArrayList<>();
-
-    public ViewPagerAdapter(FragmentManager fm) {
-        super(fm);
-    }
-
-    public void addFragment(Fragment fragment, String title) {
-        fragmentList.add(fragment);
-        titleList.add(title);
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return titleList.get(position);
-    }
-
-    @Override
-    public Fragment getItem(int position) {
-        return fragmentList.get(position);
-    }
-
-    @Override
-    public int getCount() {
-        return fragmentList.size();
-    }
+abstract class DrawableConvert {
+	abstract fun convert(drawable: Drawable): Bitmap?
 }

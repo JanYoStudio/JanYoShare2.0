@@ -31,97 +31,17 @@
  * Last modified 18-2-10 下午4:00
  */
 
-package pw.janyo.janyoshare.classes;
+package pw.janyo.janyoshare.util
 
-import android.graphics.drawable.Drawable;
-
-public class InstallAPP {
-    private String name;
-    private String versionName;
-    private int versionCode;
-    private String sourceDir;
-    private String packageName;
-    private String iconPath;
-    private transient Drawable icon;
-    private long size;
-    private long installTime;
-    private long updateTime;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getVersionName() {
-        return versionName;
-    }
-
-    public void setVersionName(String versionName) {
-        this.versionName = versionName;
-    }
-
-    public int getVersionCode() {
-        return versionCode;
-    }
-
-    public void setVersionCode(int versionCode) {
-        this.versionCode = versionCode;
-    }
-
-    public String getSourceDir() {
-        return sourceDir;
-    }
-
-    public void setSourceDir(String sourceDir) {
-        this.sourceDir = sourceDir;
-    }
-
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-
-    public String getIconPath() {
-        return iconPath;
-    }
-
-    public void setIconPath(String iconPath) {
-        this.iconPath = iconPath;
-    }
-
-    public Drawable getIcon() {
-        return icon;
-    }
-
-    public void setIcon(Drawable icon) {
-        this.icon = icon;
-    }
-
-    public long getSize() {
-        return size;
-    }
-
-    public void setSize(long size) {
-        this.size = size;
-    }
-
-    public long getInstallTime() {
-        return installTime;
-    }
-
-    public void setInstallTime(long installTime) {
-        this.installTime = installTime;
-    }
-
-    public long getUpdateTime() { return updateTime; }
-
-    public void setUpdateTime(long updateTime) {
-        this.updateTime = updateTime;
-    }
+object Constant {
+	const val IS_AUTO_CLEAN = "isAutoClean"
+	const val TEMP_DIR = "tempDir"
+	const val CUSTOM_TEMP_DIR = "customTempDir"
+	const val IS_CUSTOM_FORMAT = "isCustomFormat"
+	const val RENAME_FORMAT = "renameFormat"
+	const val NICK_NAME = "nickName"
+	const val SORT_TYPE = "sortType"
+	const val CURRENT_LIST_SIZE = "currentListSize_%d"
+	const val CACHE_EXPIRATION_TIME = "cacheExpirationTime"
+	const val UNINSTALL_TYPE = "uninstallType"
 }

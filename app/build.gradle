@@ -33,6 +33,9 @@
 
 apply plugin: 'com.android.application'
 apply plugin: 'vip.mystery0.autoversion'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 autoVersion {
     major 2
@@ -74,10 +77,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+	kapt {
+		generateStubs = true
+	}
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+	kapt "com.android.databinding:compiler:3.1.3"
 	implementation 'com.github.Mystery0Tools:Tools:1.2.0'
 	implementation 'com.github.Mystery0Tools:CrashHandler:1.0.0'
 	implementation 'com.github.Mystery0Tools:DirManager:1.1.0'

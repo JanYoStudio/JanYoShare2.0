@@ -31,15 +31,36 @@
  * Last modified 18-2-10 下午4:00
  */
 
-package pw.janyo.janyoshare.util.drawable;
+package pw.janyo.janyoshare
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.annotation.SuppressLint
+import android.app.Application
+import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Resources
+import android.util.DisplayMetrics
 
-public class BitmapDrawableConvert extends DrawableConvert {
-    @Override
-    protected Bitmap convert(Drawable drawable) {
-        return ((BitmapDrawable) drawable).getBitmap();
-    }
+import java.util.Locale
+
+import vip.mystery0.crashhandler.CrashHandler
+
+class APP : Application() {
+
+	override fun onCreate() {
+		super.onCreate()
+		context = applicationContext
+		val resources = context.resources
+		val dm = resources.displayMetrics
+		val config = resources.configuration
+		config.locale = Locale.getDefault()
+		resources.updateConfiguration(config, dm)
+		CrashHandler.getInstance(this)
+				.init()
+	}
+
+	companion object {
+		@SuppressLint("StaticFieldLeak")
+		lateinit var context: Context
+			private set
+	}
 }

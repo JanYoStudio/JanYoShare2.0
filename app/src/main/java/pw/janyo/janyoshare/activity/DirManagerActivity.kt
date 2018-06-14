@@ -1,5 +1,5 @@
 /*
- * Created by Mystery0 on 18-2-10 下午4:00.
+ * Created by Mystery0 on 18-2-10 下午4:44.
  * Copyright (c) 2018. All Rights reserved.
  *
  *                    =====================================================
@@ -28,24 +28,42 @@
  *                    =                                                   =
  *                    =====================================================
  *
- * Last modified 18-2-10 下午4:00
+ * Last modified 18-2-10 下午4:44
  */
 
-package pw.janyo.janyoshare.util.drawable;
+package pw.janyo.janyoshare.activity
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.VectorDrawable;
+import android.widget.Button
 
-public class VectorDrawableConvert extends DrawableConvert {
-    @Override
-    protected Bitmap convert(Drawable drawable) {
-        VectorDrawable vectorDrawable = (VectorDrawable) drawable;
-        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        vectorDrawable.draw(canvas);
-        return bitmap;
-    }
+import pw.janyo.janyoshare.R
+import pw.janyo.janyoshare.util.Settings
+import vip.mystery0.dirManager.DirManager
+import vip.mystery0.tools.base.BaseActivity
+
+class DirManagerActivity : BaseActivity(R.layout.activity_dir_manager) {
+	private var dirManager: DirManager? = null
+	private var buttonOk: Button? = null
+	private var buttonCancel: Button? = null
+
+	override fun bindView() {
+		super.bindView()
+		dirManager = findViewById(R.id.dirManager)
+		buttonOk = findViewById(R.id.button_ok)
+		buttonCancel = findViewById(R.id.button_cancel)
+	}
+
+	override fun initData() {
+		super.initData()
+		title = " "
+
+		dirManager!!.setCurrentPath(Settings.customExportDir)
+	}
+
+	override fun monitor() {
+		buttonOk!!.setOnClickListener {
+			Settings.customExportDir = dirManager!!.getCurrentPath()
+			finish()
+		}
+		buttonCancel!!.setOnClickListener { finish() }
+	}
 }

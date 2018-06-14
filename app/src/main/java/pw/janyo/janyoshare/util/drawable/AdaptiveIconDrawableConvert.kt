@@ -31,21 +31,27 @@
  * Last modified 18-2-10 下午4:00
  */
 
-package pw.janyo.janyoshare.util.drawable;
+package pw.janyo.janyoshare.util.drawable
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.support.graphics.drawable.VectorDrawableCompat;
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.AdaptiveIconDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
+import android.os.Build
+import android.support.annotation.RequiresApi
 
-public class VectorDrawableCompatConvert extends DrawableConvert {
-    @Override
-    protected Bitmap convert(Drawable drawable) {
-        VectorDrawableCompat vectorDrawableCompat = (VectorDrawableCompat) drawable;
-        Bitmap bitmap = Bitmap.createBitmap(vectorDrawableCompat.getIntrinsicWidth(), vectorDrawableCompat.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        vectorDrawableCompat.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        vectorDrawableCompat.draw(canvas);
-        return bitmap;
-    }
+class AdaptiveIconDrawableConvert : DrawableConvert() {
+	@RequiresApi(Build.VERSION_CODES.O)
+	override fun convert(drawable: Drawable): Bitmap? {
+		val adaptiveIconDrawable = drawable as AdaptiveIconDrawable
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+			return null
+		val layerDrawable = LayerDrawable(arrayOf(adaptiveIconDrawable.background, adaptiveIconDrawable.foreground))
+		val bitmap = Bitmap.createBitmap(layerDrawable.intrinsicWidth, layerDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+		val canvas = Canvas(bitmap)
+		layerDrawable.setBounds(0, 0, canvas.width, canvas.height)
+		layerDrawable.draw(canvas)
+		return bitmap
+	}
 }

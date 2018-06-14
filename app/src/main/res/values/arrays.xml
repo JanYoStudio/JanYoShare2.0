@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string-array name="exportDir">
-		<item>@string/array_export_dir_data</item>
 		<item>@string/array_export_dir_sdcard_data</item>
 		<item>@string/array_export_dir_sdcard</item>
 		<item>@string/array_export_dir_custom</item>

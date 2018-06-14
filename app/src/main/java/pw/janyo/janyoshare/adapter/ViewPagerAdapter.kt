@@ -31,37 +31,32 @@
  * Last modified 18-2-10 下午4:00
  */
 
-package pw.janyo.janyoshare;
+package pw.janyo.janyoshare.adapter
 
-import android.annotation.SuppressLint;
-import android.app.Application;
-import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.util.DisplayMetrics;
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentPagerAdapter
 
-import java.util.Locale;
+import java.util.ArrayList
 
-import vip.mystery0.crashhandler.CrashHandler;
+class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+	private val fragmentList = ArrayList<Fragment>()
+	private val titleList = ArrayList<String>()
 
-public class APP extends Application {
-    @SuppressLint("StaticFieldLeak")
-    private static Context context;
+	fun addFragment(fragment: Fragment, title: String) {
+		fragmentList.add(fragment)
+		titleList.add(title)
+	}
 
-    public static Context getContext() {
-        return context;
-    }
+	override fun getPageTitle(position: Int): CharSequence? {
+		return titleList[position]
+	}
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        context = getApplicationContext();
-        Resources resources = getContext().getResources();
-        DisplayMetrics dm = resources.getDisplayMetrics();
-        Configuration config = resources.getConfiguration();
-        config.locale = Locale.getDefault();
-        resources.updateConfiguration(config, dm);
-        CrashHandler.getInstance(this)
-                .init();
-    }
+	override fun getItem(position: Int): Fragment {
+		return fragmentList[position]
+	}
+
+	override fun getCount(): Int {
+		return fragmentList.size
+	}
 }
