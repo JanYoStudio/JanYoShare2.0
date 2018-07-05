@@ -53,13 +53,13 @@
     <string name="hint_direct_wifi">檢測到正在使用WiFi網絡，是否想直接進行分享？</string>
     <string name="array_export_dir_sdcard_data">SD卡（不需要存儲權限）（/sdcard/Android/data/pw.janyo.janyoshare/files/JanYo Share）</string>
     <string name="array_export_dir_sdcard">SD卡（/sdcard/JanYo Share/）</string>
-    <string name="array_copy_operation_export_only">僅提取</string>
+    <string name="array_do_operation_export_only">僅提取</string>
     <string name="array_copy_operation_export_and_share">提取並分享</string>
     <string name="array_copy_operation_rename_and_share">重命名並分享</string>
     <string name="array_copy_operation_rename_extension_and_share">修改擴展名後分享</string>
     <string name="array_copy_operation_export_and_share_with_data">提取數據包一起分享</string>
     <string name="array_copy_operation_face_to_face_share">面對面分享</string>
-    <string name="array_copy_operation_copy_info">復制應用信息</string>
+    <string name="array_do_operation_copy_info">復制應用信息</string>
     <string name="array_copy_info_name">應用名稱</string>
     <string name="array_copy_info_package_name">應用包名</string>
     <string name="array_copy_info_version_name">版本名稱</string>

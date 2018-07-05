@@ -43,7 +43,6 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import com.zyao89.view.zloading.ZLoadingDialog
 import com.zyao89.view.zloading.Z_TYPE
 import io.reactivex.Observable
@@ -54,6 +53,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import pw.janyo.janyoshare.R
 import pw.janyo.janyoshare.classes.InstallAPP
+import pw.janyo.janyoshare.util.AppManager
 import pw.janyo.janyoshare.util.JanYoFileUtil
 import pw.janyo.janyoshare.util.Settings
 import vip.mystery0.logs.Logs
@@ -73,17 +73,18 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 	fun click(data: InstallAPP) {
 		AlertDialog.Builder(context)
 				.setTitle(R.string.title_dialog_select_operation)
-				.setItems(R.array.copyOperation) { _, which ->
-					exportThen(data, which)
+				.setItems(R.array.doOperation) { _, which ->
+					when (which) {
+						0, 1 -> export(data, which)
+						2 -> copyInfoToClipboard(data)
+						3 -> AppManager.disableAPP(data.packageName)
+						4 -> selectUninstallType(data)
+					}
 				}
 				.show()
 	}
 
-	private fun exportThen(installAPP: InstallAPP, choose: Int) {
-		if (choose == 6) {
-			copyInfoToClipboard(installAPP)
-			return
-		}
+	private fun export(installAPP: InstallAPP, choose: Int) {
 		Observable.create(ObservableOnSubscribe<Int> { subscriber ->
 			subscriber.onNext(JanYoFileUtil.exportAPK(installAPP))
 			subscriber.onComplete()
@@ -105,7 +106,7 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 
 					override fun onError(e: Throwable) {
 						exportDialog.dismiss()
-						Log.wtf("exportThen: onError: ", e)
+						Log.wtf("doOperation: onError: ", e)
 					}
 
 					override fun onComplete() {
@@ -117,7 +118,17 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 									.show()
 							JanYoFileUtil.Code.ERROR -> Snackbar.make(coordinatorLayout, R.string.hint_export_failed, Snackbar.LENGTH_LONG)
 									.show()
-							JanYoFileUtil.Code.DONE -> doSomething(installAPP, choose)
+							JanYoFileUtil.Code.DONE ->
+								if (choose == 0)
+									Snackbar.make(coordinatorLayout, context.getString(R.string.hint_export_done, JanYoFileUtil.exportDirPath), Snackbar.LENGTH_SHORT)
+											.show()
+								else
+									AlertDialog.Builder(context)
+											.setTitle(R.string.title_dialog_select_share_method)
+											.setItems(R.array.shareMethod) { _, which ->
+												doSomething(installAPP, which)
+											}
+											.show()
 						}
 					}
 				})
@@ -125,12 +136,9 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 
 	private fun doSomething(installAPP: InstallAPP, whatToDo: Int) {
 		when (whatToDo) {
-			0//仅提取
-			-> Snackbar.make(coordinatorLayout, context.getString(R.string.hint_export_done, JanYoFileUtil.exportDirPath), Snackbar.LENGTH_SHORT)
-					.show()
-			1//提取并分享
+			0//提取并分享
 			-> JanYoFileUtil.share(context, JanYoFileUtil.getExportFile(installAPP))
-			2//重命名后分享
+			1//重命名后分享
 			-> {
 				val oldFileName = JanYoFileUtil.formatName(installAPP, Settings.renameFormat)
 				val renameFileNameView = LayoutInflater.from(context).inflate(R.layout.dialog_rename, TextInputLayout(context), false)
@@ -169,13 +177,12 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 						}
 						.show()
 			}
-			3//重命名扩展名
+			2//重命名扩展名
 			-> {
 				val oldExtensionName = JanYoFileUtil.getExtensionFileName(installAPP.sourceDir)
 				val renameExtensionView = LayoutInflater.from(context).inflate(R.layout.dialog_rename, TextInputLayout(context), false)
 				val renameExtensionTextInputLayout = renameExtensionView.findViewById<TextInputLayout>(R.id.layout)
 				renameExtensionTextInputLayout.hint = oldExtensionName
-
 				renameExtensionTextInputLayout.editText!!.setText(oldExtensionName)
 				AlertDialog.Builder(context)
 						.setTitle(" ")
@@ -208,7 +215,7 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 						}
 						.show()
 			}
-			4//和数据包一起提取分享
+			3//和数据包一起提取分享
 			-> {
 				val shareList = ArrayList<File>()
 				shareList.add(JanYoFileUtil.getExportFile(installAPP))
@@ -238,11 +245,22 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 							.show()
 				}
 			}
-			5//面对面分享
+			4//面对面分享
 			-> Snackbar.make(coordinatorLayout, R.string.hint_service_unavailable, Snackbar.LENGTH_LONG)
 					.show()
-		}//静默卸载
-		//				PackagesUtil.uninstall(context, installAPP.getPackageName());
+		}
+	}
+
+	private fun selectUninstallType(installAPP: InstallAPP) {
+		AlertDialog.Builder(context)
+				.setTitle(R.string.title_dialog_select_uninstall_type)
+				.setItems(R.array.uninstallType) { _, which ->
+					when (which) {
+						0 -> AppManager.uninstallAPP(context, installAPP.packageName)
+						1 -> AppManager.uninstallAPPByRoot(installAPP.packageName)
+					}
+				}
+				.show()
 	}
 
 	private fun copyInfoToClipboard(installAPP: InstallAPP) {

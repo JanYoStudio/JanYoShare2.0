@@ -33,7 +33,6 @@
 
 package pw.janyo.janyoshare.adapter
 
-import android.app.Activity
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.design.widget.CoordinatorLayout
@@ -59,21 +58,6 @@ class AppAdapter(private val context: Context, list: ArrayList<InstallAPP>) : Ba
 		val handler = ItemAppClickHandler(coordinatorLayout, context)
 		holder.binding.handler = handler
 		holder.binding.installAPP = data
-//		if (data.iconPath != null)
-//			Glide.with(context).load(data.iconPath).apply(options).into(holder.binding.appIcon)
-//		else
-//			holder.binding.appIcon.setImageDrawable(data.icon)
-//		holder.imageView.setOnClickListener {
-//			holder.imageView.visibility = View.GONE
-//			holder.checkBox.visibility = View.VISIBLE
-//			holder.checkBox.isChecked = true
-//		}
-		//        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-		//            @Override
-		//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		//
-		//            }
-		//        });
 	}
 
 

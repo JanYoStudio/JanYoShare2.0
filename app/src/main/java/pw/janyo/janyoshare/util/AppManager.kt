@@ -39,10 +39,10 @@ import android.content.pm.ApplicationInfo
 import android.net.Uri
 
 import java.util.ArrayList
-import java.util.Arrays
 
 import pw.janyo.janyoshare.classes.InstallAPP
 import vip.mystery0.logs.Logs
+import vip.mystery0.tools.utils.CommandTools
 
 object AppManager {
 	object AppType {
@@ -69,6 +69,7 @@ object AppManager {
 	 *
 	 * @param context 上下文
 	 * @param appType 获取列表的类型
+	 *
 	 * @return 列表
 	 */
 	fun getInstallAPPList(context: Context, appType: Int): List<InstallAPP> {
@@ -116,84 +117,58 @@ object AppManager {
 	 * 排序指定列表
 	 *
 	 * @param originList 指定列表
+	 *
 	 * @return 排序之后的列表
 	 */
 	private fun sort(originList: List<InstallAPP>): List<InstallAPP> {
-		val sortType = Settings.sortType
-		if (sortType == 0)
-			return originList
-		val array = originList.toTypedArray()
-		Arrays.sort(array) { app1, app2 -> compareInstallAPP(app1, app2, sortType) }
-		return ArrayList(Arrays.asList(*array))
+		return when (Settings.sortType) {
+			SortType.SORT_TYPE_NAME_UP -> originList.sortedBy { it.name }
+			SortType.SORT_TYPE_NAME_DOWN -> originList.sortedByDescending { it.name }
+			SortType.SORT_TYPE_SIZE_UP -> originList.sortedBy { it.size }
+			SortType.SORT_TYPE_SIZE_DOWN -> originList.sortedByDescending { it.size }
+			SortType.SORT_TYPE_PACKAGE_UP -> originList.sortedBy { it.packageName }
+			SortType.SORT_TYPE_PACKAGE_DOWN -> originList.sortedByDescending { it.packageName }
+			SortType.SORT_TYPE_INSTALL_TIME_UP -> originList.sortedBy { it.installTime }
+			SortType.SORT_TYPE_INSTALL_TIME_DOWN -> originList.sortedByDescending { it.installTime }
+			SortType.SORT_TYPE_UPDATE_TIME_UP -> originList.sortedBy { it.updateTime }
+			SortType.SORT_TYPE_UPDATE_TIME_DOWN -> originList.sortedByDescending { it.updateTime }
+			else -> originList
+		}
 	}
 
 	/**
-	 * 比对两个 [InstallAPP] 的指定类型大小
+	 * 冻结指定APP
 	 *
-	 * @param app1     第一个
-	 * @param app2     第二个
-	 * @param sortType 排序的类型
-	 * @return 比对结果
+	 * @param packageName 要冻结的APP的包名
+	 *
+	 * @return 命令执行结果
 	 */
-	private fun compareInstallAPP(app1: InstallAPP, app2: InstallAPP, sortType: Int): Int {
-		when (sortType) {
-			SortType.SORT_TYPE_NAME_UP -> return app1.name.compareTo(app2.name)
-			SortType.SORT_TYPE_NAME_DOWN -> return -app1.name.compareTo(app2.name)
-			SortType.SORT_TYPE_SIZE_UP -> {
-				if (app1.size > app2.size)
-					return 1
-				else if (app1.size < app2.size)
-					return -1
-				return 0
-			}
-			SortType.SORT_TYPE_SIZE_DOWN -> {
-				if (app1.size > app2.size)
-					return -1
-				else if (app1.size < app2.size)
-					return 1
-				return 0
-			}
-			SortType.SORT_TYPE_PACKAGE_UP -> return app1.packageName.compareTo(app2.packageName)
-			SortType.SORT_TYPE_PACKAGE_DOWN -> return -app1.packageName.compareTo(app2.packageName)
-			SortType.SORT_TYPE_INSTALL_TIME_UP -> {
-				if (app1.installTime > app2.installTime)
-					return 1
-				else if (app1.installTime < app2.installTime)
-					return -1
-				return 0
-			}
-			SortType.SORT_TYPE_INSTALL_TIME_DOWN -> {
-				if (app1.installTime > app2.installTime)
-					return -1
-				else if (app1.installTime < app2.installTime)
-					return 1
-				return 0
-			}
-			SortType.SORT_TYPE_UPDATE_TIME_UP -> {
-				if (app1.updateTime > app2.updateTime)
-					return 1
-				else if (app1.updateTime < app2.updateTime)
-					return -1
-				return 0
-			}
-			SortType.SORT_TYPE_UPDATE_TIME_DOWN -> {
-				if (app1.updateTime > app2.updateTime)
-					return -1
-				else if (app1.updateTime < app2.updateTime)
-					return 1
-				return 0
-			}
-		}
-		return 0
+	fun disableAPP(packageName: String): Boolean {
+		val result = CommandTools.execRootCommand("pm disable $packageName")
+		return result.isSuccess()
 	}
 
+	/**
+	 * 通过Intent请求卸载APP
+	 *
+	 * @param context 上下文
+	 * @param packageName 卸载APP的包名
+	 */
 	fun uninstallAPP(context: Context, packageName: String) {
 		val packageURI = Uri.parse("package:$packageName")
 		val intent = Intent(Intent.ACTION_DELETE, packageURI)
 		context.startActivity(intent)
 	}
 
-//	fun uninstallAPPByRoot(): Boolean {
-//
-//	}
+	/**
+	 * 通过Root的方式卸载应用（静默卸载）
+	 *
+	 * @param packageName 要卸载的APP的包名
+	 *
+	 * @return 执行结果
+	 */
+	fun uninstallAPPByRoot(packageName: String): Boolean {
+		val result = CommandTools.execRootCommand("pm uninstall $packageName")
+		return result.isSuccess()
+	}
 }

@@ -5,8 +5,7 @@
         android:key="@string/key_auto_clean"
         android:title="@string/title_auto_clean" />
 
-    <EditTextPreference
-        android:inputType="numberDecimal"
+    <Preference
         android:key="@string/key_cache_expiration_time"
         android:title="@string/title_cache_expiration_time" />
 
@@ -25,10 +24,6 @@
     <Preference
         android:key="@string/key_custom_rename_format"
         android:title="@string/title_custom_rename_format" />
-
-	<ListPreference
-		android:key="@string/key_uninstall_type"
-		android:title="@string/title_uninstall_type"/>
 
     <PreferenceCategory android:title="@string/janyo_studio">
 

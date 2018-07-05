@@ -38,7 +38,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.preference.EditTextPreference
 import android.preference.Preference
 import android.preference.PreferenceFragment
 import android.preference.SwitchPreference
@@ -48,10 +47,12 @@ import android.support.design.widget.TextInputLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -60,6 +61,7 @@ import pw.janyo.janyoshare.R
 import pw.janyo.janyoshare.activity.DirManagerActivity
 import pw.janyo.janyoshare.activity.SettingsActivity
 import pw.janyo.janyoshare.classes.InstallAPP
+import pw.janyo.janyoshare.util.DecimalInputTextWatcher
 import pw.janyo.janyoshare.util.JanYoFileUtil
 import pw.janyo.janyoshare.util.Settings
 
@@ -68,12 +70,12 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 
 	private var coordinatorLayout: CoordinatorLayout? = null
 
-	private var isAutoCleanPreference: SwitchPreference? = null
-	private var cacheExpirationTimePreference: EditTextPreference? = null
-	private var exportDirPreference: Preference? = null
-	private var customExportDirPreference: Preference? = null
-	private var isCustomFormatPreference: SwitchPreference? = null
-	private var customRenameFormatPreference: Preference? = null
+	private lateinit var isAutoCleanPreference: SwitchPreference
+	private lateinit var cacheExpirationTimePreference: Preference
+	private lateinit var exportDirPreference: Preference
+	private lateinit var customExportDirPreference: Preference
+	private lateinit var isCustomFormatPreference: SwitchPreference
+	private lateinit var customRenameFormatPreference: Preference
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -89,87 +91,111 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 	}
 
 	private fun bindView() {
-		isAutoCleanPreference = findPreferenceById(R.string.key_auto_clean) as SwitchPreference
-		cacheExpirationTimePreference = findPreferenceById(R.string.key_cache_expiration_time) as EditTextPreference
+		isAutoCleanPreference = findPreferenceById(R.string.key_auto_clean)
+		cacheExpirationTimePreference = findPreferenceById(R.string.key_cache_expiration_time)
 		exportDirPreference = findPreferenceById(R.string.key_export_dir)
 		customExportDirPreference = findPreferenceById(R.string.key_custom_export_dir)
-		isCustomFormatPreference = findPreferenceById(R.string.key_custom_format) as SwitchPreference
+		isCustomFormatPreference = findPreferenceById(R.string.key_custom_format)
 		customRenameFormatPreference = findPreferenceById(R.string.key_custom_rename_format)
 	}
 
 	private fun initialization() {
-		isAutoCleanPreference!!.isChecked = Settings.isAutoClean
+		isAutoCleanPreference.isChecked = Settings.isAutoClean
 		if (Settings.isAutoClean)
-			isAutoCleanPreference!!.setSummary(R.string.summary_auto_clean_on)
+			isAutoCleanPreference.setSummary(R.string.summary_auto_clean_on)
 		else
-			isAutoCleanPreference!!.setSummary(R.string.summary_auto_clean_off)
+			isAutoCleanPreference.setSummary(R.string.summary_auto_clean_off)
 		val expirationTime = Settings.cacheExpirationTime
-		if (expirationTime <= 0)
-			cacheExpirationTimePreference!!.setSummary(R.string.summary_cache_expiration_time_no)
-		else if (expirationTime == 1f)
-			cacheExpirationTimePreference!!.setSummary(R.string.summary_cache_expiration_time_one)
-		else
-			cacheExpirationTimePreference!!.summary = getString(R.string.summary_cache_expiration_time, expirationTime)
-		exportDirPreference!!.summary = getString(R.string.summary_export_dir, JanYoFileUtil.exportDirPath)
-		customExportDirPreference!!.isEnabled = Settings.exportDir == JanYoFileUtil.Export.EXPORT_DIR_CUSTOM
-		isCustomFormatPreference!!.isChecked = Settings.isCustomFormat
+		when {
+			expirationTime <= 0 -> cacheExpirationTimePreference.setSummary(R.string.summary_cache_expiration_time_no)
+			expirationTime == 1f -> cacheExpirationTimePreference.setSummary(R.string.summary_cache_expiration_time_one)
+			else -> cacheExpirationTimePreference.summary = getString(R.string.summary_cache_expiration_time, expirationTime)
+		}
+		exportDirPreference.summary = getString(R.string.summary_export_dir, JanYoFileUtil.exportDirPath)
+		customExportDirPreference.isEnabled = Settings.exportDir == JanYoFileUtil.Export.EXPORT_DIR_CUSTOM
+		isCustomFormatPreference.isChecked = Settings.isCustomFormat
 		if (Settings.isCustomFormat) {
 			val test = InstallAPP()
 			test.name = getString(R.string.app_name)
 			test.versionName = getString(R.string.app_version_name)
 			test.versionCode = Integer.parseInt(getString(R.string.app_version_code))
 			test.packageName = getString(R.string.app_package_name)
-			customRenameFormatPreference!!.summary = getString(R.string.summary_custom_format, JanYoFileUtil.formatName(test, Settings.renameFormat))
-			customRenameFormatPreference!!.isEnabled = true
+			customRenameFormatPreference.summary = getString(R.string.summary_custom_format, JanYoFileUtil.formatName(test, Settings.renameFormat))
+			customRenameFormatPreference.isEnabled = true
 		} else {
-			customRenameFormatPreference!!.summary = null
-			customRenameFormatPreference!!.isEnabled = false
+			customRenameFormatPreference.summary = null
+			customRenameFormatPreference.isEnabled = false
 		}
 	}
 
 	private fun monitor() {
-		isAutoCleanPreference!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference, newValue ->
-			val isAutoClean = !isAutoCleanPreference!!.isChecked
+		isAutoCleanPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, _ ->
+			val isAutoClean = !isAutoCleanPreference.isChecked
 			if (isAutoClean)
 				AlertDialog.Builder(activity)
 						.setTitle(" ")
 						.setMessage(R.string.hint_warning_auto_clean)
-						.setPositiveButton(R.string.action_open) { dialog, which -> Settings.isAutoClean = true }
-						.setNegativeButton(android.R.string.cancel) { dialog, which ->
-							isAutoCleanPreference!!.isChecked = false
+						.setPositiveButton(R.string.action_open) { _, _ -> Settings.isAutoClean = true }
+						.setNegativeButton(android.R.string.cancel) { _, _ ->
+							isAutoCleanPreference.isChecked = false
 							Settings.isAutoClean = false
 						}
 						.setOnDismissListener {
-							isAutoCleanPreference!!.isChecked = Settings.isAutoClean
+							isAutoCleanPreference.isChecked = Settings.isAutoClean
 							if (Settings.isAutoClean)
-								isAutoCleanPreference!!.setSummary(R.string.summary_auto_clean_on)
+								isAutoCleanPreference.setSummary(R.string.summary_auto_clean_on)
 							else
-								isAutoCleanPreference!!.setSummary(R.string.summary_auto_clean_off)
+								isAutoCleanPreference.setSummary(R.string.summary_auto_clean_off)
 						}
 						.show()
 			else {
 				Settings.isAutoClean = false
-				isAutoCleanPreference!!.setSummary(R.string.summary_auto_clean_off)
+				isAutoCleanPreference.setSummary(R.string.summary_auto_clean_off)
 			}
 			true
 		}
-		cacheExpirationTimePreference!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference, newValue ->
-			val value = java.lang.Float.valueOf(newValue.toString())!!
-			Settings.cacheExpirationTime = value
-			val expirationTime = Settings.cacheExpirationTime
-			if (expirationTime <= 0)
-				cacheExpirationTimePreference!!.setSummary(R.string.summary_cache_expiration_time_no)
-			else if (expirationTime == 1f)
-				cacheExpirationTimePreference!!.setSummary(R.string.summary_cache_expiration_time_one)
-			else
-				cacheExpirationTimePreference!!.summary = getString(R.string.summary_cache_expiration_time, expirationTime)
+		cacheExpirationTimePreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+			AlertDialog.Builder(activity)
+					.setTitle(R.string.title_dialog_set_cache_expiration_time)
+					.setItems(R.array.cacheExpirationTime) { _, which ->
+						when (which) {
+							0 -> Settings.cacheExpirationTime = 0.5f
+							1 -> Settings.cacheExpirationTime = 1f
+							2 -> Settings.cacheExpirationTime = 3f
+							3 -> Settings.cacheExpirationTime = 7f
+							4 -> Settings.cacheExpirationTime = 30f
+							5 -> {
+								val editText = EditText(activity)
+								editText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+								editText.setText(Settings.cacheExpirationTime.toString())
+								editText.addTextChangedListener(DecimalInputTextWatcher(editText))
+								AlertDialog.Builder(activity)
+										.setTitle(R.string.title_dialog_set_cache_expiration_time_custom)
+										.setView(editText)
+										.setPositiveButton(android.R.string.ok) { _, _ ->
+											Settings.cacheExpirationTime = editText.text.toString().toFloat()
+										}
+										.setNegativeButton(android.R.string.cancel, null)
+										.setOnDismissListener {
+											setCacheExpirationTimeSummary()
+										}
+										.show()
+							}
+						}
+						setCacheExpirationTimeSummary()
+					}
+					.show()
 			true
 		}
-		exportDirPreference!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+		cacheExpirationTimePreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
+			Settings.cacheExpirationTime = newValue.toString().toFloat()
+			true
+		}
+		exportDirPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
 			tempExportDir = Settings.exportDir
 			val dialog = AlertDialog.Builder(activity)
 					.setTitle(R.string.title_export_dir)
-					.setSingleChoiceItems(R.array.exportDir, tempExportDir) { dialog, which -> tempExportDir = which }
+					.setSingleChoiceItems(R.array.exportDir, tempExportDir) { _, which -> tempExportDir = which }
 					.setPositiveButton(android.R.string.ok, null)
 					.create()
 			dialog.show()
@@ -180,34 +206,34 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 						return@OnClickListener
 					}
 				Settings.exportDir = tempExportDir
-				customExportDirPreference!!.isEnabled = tempExportDir == JanYoFileUtil.Export.EXPORT_DIR_CUSTOM
-				exportDirPreference!!.summary = getString(R.string.summary_export_dir, JanYoFileUtil.exportDirPath)
+				customExportDirPreference.isEnabled = tempExportDir == JanYoFileUtil.Export.EXPORT_DIR_CUSTOM
+				exportDirPreference.summary = getString(R.string.summary_export_dir, JanYoFileUtil.exportDirPath)
 				dialog.dismiss()
 			})
 			true
 		}
-		customExportDirPreference!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+		customExportDirPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
 			startActivityForResult(Intent(activity, DirManagerActivity::class.java), CODE_SET_EXPORT_DIR)
 			true
 		}
-		isCustomFormatPreference!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, _ ->
-			val isCustomFormat = !isCustomFormatPreference!!.isChecked
+		isCustomFormatPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, _ ->
+			val isCustomFormat = !isCustomFormatPreference.isChecked
 			if (isCustomFormat) {
 				val test = InstallAPP()
 				test.name = getString(R.string.app_name)
 				test.versionName = getString(R.string.app_version_name)
 				test.versionCode = Integer.parseInt(getString(R.string.app_version_code))
 				test.packageName = getString(R.string.app_package_name)
-				customRenameFormatPreference!!.summary = getString(R.string.summary_custom_format, JanYoFileUtil.formatName(test, Settings.renameFormat))
-				customRenameFormatPreference!!.isEnabled = true
+				customRenameFormatPreference.summary = getString(R.string.summary_custom_format, JanYoFileUtil.formatName(test, Settings.renameFormat))
+				customRenameFormatPreference.isEnabled = true
 			} else {
-				customRenameFormatPreference!!.summary = null
-				customRenameFormatPreference!!.isEnabled = false
+				customRenameFormatPreference.summary = null
+				customRenameFormatPreference.isEnabled = false
 			}
 			Settings.isCustomFormat = isCustomFormat
 			true
 		}
-		customRenameFormatPreference!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+		customRenameFormatPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
 			val view = LayoutInflater.from(activity).inflate(R.layout.dialog_custom_rename_format, LinearLayout(activity), false)
 			val textInputLayout = view.findViewById<TextInputLayout>(R.id.textInputLayout)
 			val showText = view.findViewById<TextView>(R.id.show)
@@ -246,7 +272,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 						return@OnClickListener
 					}
 					Settings.renameFormat = format
-					customRenameFormatPreference!!.summary = getString(R.string.summary_custom_format, JanYoFileUtil.formatName(test, Settings.renameFormat))
+					customRenameFormatPreference.summary = getString(R.string.summary_custom_format, JanYoFileUtil.formatName(test, Settings.renameFormat))
 					dialog.dismiss()
 				})
 			if (dialog.getButton(AlertDialog.BUTTON_NEUTRAL) != null)
@@ -259,8 +285,19 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 		}
 	}
 
-	private fun findPreferenceById(@StringRes id: Int): Preference {
-		return findPreference(getString(id))
+	private fun <T : Preference> findPreferenceById(@StringRes id: Int): T {
+		@Suppress("UNCHECKED_CAST")
+		return findPreference(getString(id)) as T
+	}
+
+	private fun setCacheExpirationTimeSummary() {
+		val expirationTime = Settings.cacheExpirationTime
+		when {
+			expirationTime <= 0 -> cacheExpirationTimePreference.setSummary(R.string.summary_cache_expiration_time_no)
+			expirationTime == 1f -> cacheExpirationTimePreference.setSummary(R.string.summary_cache_expiration_time_one)
+			else -> cacheExpirationTimePreference.summary = getString(R.string.summary_cache_expiration_time, expirationTime)
+		}
+
 	}
 
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -269,13 +306,13 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 			if (grantResults[0] != PackageManager.PERMISSION_GRANTED)
 				Toast.makeText(activity, R.string.hint_permission_write_external, Toast.LENGTH_LONG)
 						.show()
-		exportDirPreference!!.summary = getString(R.string.summary_export_dir, JanYoFileUtil.exportDirPath)
+		exportDirPreference.summary = getString(R.string.summary_export_dir, JanYoFileUtil.exportDirPath)
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
 		super.onActivityResult(requestCode, resultCode, data)
 		if (requestCode == CODE_SET_EXPORT_DIR)
-			exportDirPreference!!.summary = getString(R.string.summary_export_dir, JanYoFileUtil.exportDirPath)
+			exportDirPreference.summary = getString(R.string.summary_export_dir, JanYoFileUtil.exportDirPath)
 	}
 
 	companion object {

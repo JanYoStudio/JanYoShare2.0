@@ -133,10 +133,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 					clearFiles()
 				R.id.action_night_mode -> {
 					val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-					delegate.setLocalNightMode(if (currentNightMode == Configuration.UI_MODE_NIGHT_NO)
-						AppCompatDelegate.MODE_NIGHT_YES
-					else
-						AppCompatDelegate.MODE_NIGHT_NO)
+					delegate.setLocalNightMode(
+							if (currentNightMode == Configuration.UI_MODE_NIGHT_NO)
+								AppCompatDelegate.MODE_NIGHT_YES
+							else
+								AppCompatDelegate.MODE_NIGHT_NO)
 					reStartActivity()
 				}
 				R.id.action_license ->
