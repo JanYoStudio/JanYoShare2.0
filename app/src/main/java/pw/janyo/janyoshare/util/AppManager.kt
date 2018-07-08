@@ -83,16 +83,12 @@ object AppManager {
 					if (packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM <= 0)
 						tempList.add(InstallAPP().convertPackageInfo(packageInfo, packageManager))
 				installAPPList.addAll(sort(tempList))
-				val saveUserResult = JanYoFileUtil.saveAppList(context, installAPPList, "${JanYoFileUtil.USER_LIST_FILE}${Settings.sortType}")
-				Logs.i("getInstallAPPList: 存储APP列表结果: $saveUserResult")
 			}
 			AppType.SYSTEM -> {
 				for (packageInfo in packageInfoList)
 					if (packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM > 0)
 						tempList.add(InstallAPP().convertPackageInfo(packageInfo, packageManager))
 				installAPPList.addAll(sort(tempList))
-				val saveSystemResult = JanYoFileUtil.saveAppList(context, installAPPList, "${JanYoFileUtil.SYSTEM_LIST_FILE}${Settings.sortType}")
-				Logs.i("getInstallAPPList: 存储APP列表结果: $saveSystemResult")
 			}
 		}
 		return installAPPList
@@ -139,36 +135,60 @@ object AppManager {
 	/**
 	 * 冻结指定APP
 	 *
-	 * @param packageName 要冻结的APP的包名
+	 * @param appList 要冻结的APP
 	 *
 	 * @return 命令执行结果
 	 */
-	fun disableAPP(packageName: String): Boolean {
-		val result = CommandTools.execRootCommand("pm disable $packageName")
-		return result.isSuccess()
+	fun disableAPP(appList: ArrayList<InstallAPP>): CommandTools.CommandResult {
+		val iterator = appList.iterator()
+		while (iterator.hasNext()) {
+			val installAPP = iterator.next()
+			if (installAPP.isDisable)
+				iterator.remove()
+		}
+		val commands = Array(appList.size) { i -> "pm disable ${appList[i].packageName}" }
+		return CommandTools.execRootCommands(commands)
+	}
+
+	/**
+	 * 解冻指定APP
+	 *
+	 * @param appList 要解冻的APP
+	 *
+	 * @return 命令执行结果
+	 */
+	fun enableAPP(appList: ArrayList<InstallAPP>): CommandTools.CommandResult {
+		val iterator = appList.iterator()
+		while (iterator.hasNext()) {
+			val installAPP = iterator.next()
+			if (!installAPP.isDisable)
+				iterator.remove()
+		}
+		val commands = Array(appList.size) { i -> "pm enable ${appList[i].packageName}" }
+		return CommandTools.execRootCommands(commands)
 	}
 
 	/**
 	 * 通过Intent请求卸载APP
 	 *
 	 * @param context 上下文
-	 * @param packageName 卸载APP的包名
+	 * @param installAPP 卸载的APP
 	 */
-	fun uninstallAPP(context: Context, packageName: String) {
-		val packageURI = Uri.parse("package:$packageName")
+	fun uninstallAPP(context: Context, installAPP: InstallAPP) {
+		val packageURI = Uri.parse("package:${installAPP.packageName}")
 		val intent = Intent(Intent.ACTION_DELETE, packageURI)
 		context.startActivity(intent)
 	}
 
 	/**
-	 * 通过Root的方式卸载应用（静默卸载）
+	 * 通过Root的方式卸载多个应用（静默卸载）
 	 *
-	 * @param packageName 要卸载的APP的包名
+	 * @param appList 要卸载的APP
 	 *
 	 * @return 执行结果
 	 */
-	fun uninstallAPPByRoot(packageName: String): Boolean {
-		val result = CommandTools.execRootCommand("pm uninstall $packageName")
-		return result.isSuccess()
+	fun uninstallAPPByRoot(appList: ArrayList<InstallAPP>): CommandTools.CommandResult {
+		val commands = Array(appList.size) { i -> "pm uninstall ${appList[i].packageName}" }
+		return CommandTools.execRootCommands(commands)
 	}
 }

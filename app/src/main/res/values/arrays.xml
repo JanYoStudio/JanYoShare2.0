@@ -5,12 +5,19 @@
 		<item>@string/array_export_dir_sdcard</item>
 		<item>@string/array_export_dir_custom</item>
 	</string-array>
-	<string-array name="doOperation">
+	<string-array name="doOperationEnable">
 		<item>@string/array_do_operation_export_only</item>
 		<item>@string/array_do_operation_share</item>
 		<item>@string/array_do_operation_copy_info</item>
-		<item>@string/array_do_operation_disable</item>
 		<item>@string/array_do_operation_uninstall</item>
+		<item>@string/array_do_operation_disable</item>
+	</string-array>
+	<string-array name="doOperationDisable">
+		<item>@string/array_do_operation_export_only</item>
+		<item>@string/array_do_operation_share</item>
+		<item>@string/array_do_operation_copy_info</item>
+		<item>@string/array_do_operation_uninstall</item>
+		<item>@string/array_do_operation_enable</item>
 	</string-array>
 	<string-array name="shareMethod">
 		<item>@string/array_copy_operation_export_and_share</item>

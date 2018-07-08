@@ -52,6 +52,7 @@ class InstallAPP {
 	var iconPath: String? = null
 	@Transient
 	var icon: Drawable? = null
+	var isDisable = false
 
 	fun convertPackageInfo(packageInfo: PackageInfo, packageManager: PackageManager): InstallAPP {
 		name = packageInfo.applicationInfo.loadLabel(packageManager).toString()
@@ -68,6 +69,7 @@ class InstallAPP {
 			iconPath = sourceIconPath
 		else
 			icon = drawable
+		isDisable = !packageInfo.applicationInfo.enabled
 		return this
 	}
 }

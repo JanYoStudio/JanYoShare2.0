@@ -53,15 +53,18 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import pw.janyo.janyoshare.R
 import pw.janyo.janyoshare.classes.InstallAPP
+import pw.janyo.janyoshare.fragment.AppFragment
 import pw.janyo.janyoshare.util.AppManager
 import pw.janyo.janyoshare.util.JanYoFileUtil
 import pw.janyo.janyoshare.util.Settings
 import vip.mystery0.logs.Logs
+import vip.mystery0.tools.utils.CommandTools
 import java.io.File
-import java.util.ArrayList
 
 class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
-						  val context: Context) {
+						  val context: Context,
+						  val fragment: AppFragment,
+						  val list: ArrayList<InstallAPP>) {
 	private val exportDialog: ZLoadingDialog = ZLoadingDialog(context)
 			.setLoadingBuilder(Z_TYPE.DOUBLE_CIRCLE)
 			.setHintTextSize(16f)
@@ -73,12 +76,17 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 	fun click(data: InstallAPP) {
 		AlertDialog.Builder(context)
 				.setTitle(R.string.title_dialog_select_operation)
-				.setItems(R.array.doOperation) { _, which ->
+				.setItems(
+						if (data.isDisable)
+							R.array.doOperationDisable
+						else
+							R.array.doOperationEnable
+				) { _, which ->
 					when (which) {
 						0, 1 -> export(data, which)
 						2 -> copyInfoToClipboard(data)
-						3 -> AppManager.disableAPP(data.packageName)
-						4 -> selectUninstallType(data)
+						3 -> selectUninstallType(data)
+						4 -> showAlert(false, !data.isDisable, arrayListOf(data))
 					}
 				}
 				.show()
@@ -251,18 +259,6 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 		}
 	}
 
-	private fun selectUninstallType(installAPP: InstallAPP) {
-		AlertDialog.Builder(context)
-				.setTitle(R.string.title_dialog_select_uninstall_type)
-				.setItems(R.array.uninstallType) { _, which ->
-					when (which) {
-						0 -> AppManager.uninstallAPP(context, installAPP.packageName)
-						1 -> AppManager.uninstallAPPByRoot(installAPP.packageName)
-					}
-				}
-				.show()
-	}
-
 	private fun copyInfoToClipboard(installAPP: InstallAPP) {
 		AlertDialog.Builder(context)
 				.setTitle(R.string.title_dialog_select_copy_info)
@@ -282,5 +278,195 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 		clipboardManager.primaryClip = ClipData.newPlainText(label, text)
 		Snackbar.make(coordinatorLayout, R.string.hint_copy_info_done, Snackbar.LENGTH_SHORT)
 				.show()
+	}
+
+	private fun selectUninstallType(installAPP: InstallAPP) {
+		AlertDialog.Builder(context)
+				.setTitle(R.string.title_dialog_select_uninstall_type)
+				.setItems(R.array.uninstallType) { _, which ->
+					when (which) {
+						0 -> AppManager.uninstallAPP(context, installAPP)
+						1 -> showAlert(true, false, arrayListOf(installAPP))
+					}
+				}
+				.show()
+	}
+
+	private fun showAlert(isUninstall: Boolean, isDisable: Boolean, appList: ArrayList<InstallAPP>) {
+		Observable.create<Boolean> {
+			val result = CommandTools.execRootCommand("echo test")
+			Logs.i("showAlert: $result")
+			it.onNext(result.isSuccess())
+			it.onComplete()
+		}
+				.subscribeOn(Schedulers.newThread())
+				.unsubscribeOn(Schedulers.newThread())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(object : Observer<Boolean> {
+					private var isRoot = false
+					override fun onComplete() {
+						if (!isRoot) {
+							Snackbar.make(coordinatorLayout, R.string.hint_no_su, Snackbar.LENGTH_LONG)
+									.setAction(R.string.action_request_again) {
+										showAlert(isUninstall, isDisable, appList)
+									}
+									.show()
+							return
+						}
+						val stringBuilder = StringBuilder()
+						appList.forEach {
+							stringBuilder.append(it.name)
+									.append('(')
+									.append(it.packageName)
+									.append(')')
+									.append('\n')
+						}
+						AlertDialog.Builder(context)
+								.setTitle(when {
+									isUninstall -> R.string.title_dialog_uninstall_alert
+									!isUninstall && isDisable -> R.string.title_dialog_disable_alert
+									else -> R.string.title_dialog_enable_alert
+								})
+								.setMessage(stringBuilder.toString())
+								.setPositiveButton(android.R.string.ok) { _, _ ->
+									when {
+										isUninstall -> doUnInstall(appList)
+										!isUninstall && isDisable -> doDisable(appList)
+										else -> doEnable(appList)
+									}
+								}
+								.setNegativeButton(android.R.string.cancel, null)
+								.show()
+					}
+
+					override fun onSubscribe(d: Disposable) {
+					}
+
+					override fun onNext(t: Boolean) {
+						isRoot = t
+					}
+
+					override fun onError(e: Throwable) {
+						Logs.wtf("onError: request root", e)
+					}
+				})
+	}
+
+	private fun doUnInstall(appList: ArrayList<InstallAPP>) {
+		Observable.create<CommandTools.CommandResult> {
+			it.onNext(AppManager.uninstallAPPByRoot(appList))
+			it.onComplete()
+		}
+				.subscribeOn(Schedulers.newThread())
+				.unsubscribeOn(Schedulers.newThread())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(object : Observer<CommandTools.CommandResult> {
+					private lateinit var result: CommandTools.CommandResult
+					override fun onComplete() {
+						if (result.isSuccess()) {
+							list.removeAll(appList)
+							fragment.notifyAdapter()
+							Snackbar.make(coordinatorLayout, R.string.hint_uninstall_finish, Snackbar.LENGTH_SHORT)
+									.show()
+						} else {
+							Logs.wtf("onComplete: uninstall", result.toString())
+							Snackbar.make(coordinatorLayout, R.string.hint_uninstall_error, Snackbar.LENGTH_LONG)
+									.setAction(R.string.action_refresh_list) {
+										fragment.refreshList()
+									}
+									.show()
+						}
+					}
+
+					override fun onSubscribe(d: Disposable) {
+					}
+
+					override fun onNext(t: CommandTools.CommandResult) {
+						result = t
+					}
+
+					override fun onError(e: Throwable) {
+					}
+				})
+	}
+
+	private fun doDisable(appList: ArrayList<InstallAPP>) {
+		Observable.create<CommandTools.CommandResult> {
+			it.onNext(AppManager.disableAPP(appList))
+			it.onComplete()
+		}
+				.subscribeOn(Schedulers.newThread())
+				.unsubscribeOn(Schedulers.newThread())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(object : Observer<CommandTools.CommandResult> {
+					private lateinit var result: CommandTools.CommandResult
+					override fun onComplete() {
+						if (result.isSuccess()) {
+							appList.forEach {
+								it.isDisable = true
+							}
+							fragment.notifyAdapter()
+							Snackbar.make(coordinatorLayout, R.string.hint_disable_finish, Snackbar.LENGTH_SHORT)
+									.show()
+						} else {
+							Logs.wtf("onComplete: disable", result.toString())
+							Snackbar.make(coordinatorLayout, R.string.hint_disable_error, Snackbar.LENGTH_LONG)
+									.setAction(R.string.action_refresh_list) {
+										fragment.refreshList()
+									}
+									.show()
+						}
+					}
+
+					override fun onSubscribe(d: Disposable) {
+					}
+
+					override fun onNext(t: CommandTools.CommandResult) {
+						result = t
+					}
+
+					override fun onError(e: Throwable) {
+					}
+				})
+	}
+
+	private fun doEnable(appList: ArrayList<InstallAPP>) {
+		Observable.create<CommandTools.CommandResult> {
+			it.onNext(AppManager.enableAPP(appList))
+			it.onComplete()
+		}
+				.subscribeOn(Schedulers.newThread())
+				.unsubscribeOn(Schedulers.newThread())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(object : Observer<CommandTools.CommandResult> {
+					private lateinit var result: CommandTools.CommandResult
+					override fun onComplete() {
+						if (result.isSuccess()) {
+							appList.forEach {
+								it.isDisable = false
+							}
+							fragment.notifyAdapter()
+							Snackbar.make(coordinatorLayout, R.string.hint_enable_finish, Snackbar.LENGTH_SHORT)
+									.show()
+						} else {
+							Logs.wtf("onComplete: enable", result.toString())
+							Snackbar.make(coordinatorLayout, R.string.hint_enable_error, Snackbar.LENGTH_LONG)
+									.setAction(R.string.action_refresh_list) {
+										fragment.refreshList()
+									}
+									.show()
+						}
+					}
+
+					override fun onSubscribe(d: Disposable) {
+					}
+
+					override fun onNext(t: CommandTools.CommandResult) {
+						result = t
+					}
+
+					override fun onError(e: Throwable) {
+					}
+				})
 	}
 }

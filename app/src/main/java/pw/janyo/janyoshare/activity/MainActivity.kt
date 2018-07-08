@@ -214,6 +214,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 		}
 	}
 
+	override fun onDestroy() {
+		super.onDestroy()
+
+	}
+
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
 		menuInflater.inflate(R.menu.main, menu)
 		val searchView = menu.findItem(R.id.action_search).actionView as SearchView

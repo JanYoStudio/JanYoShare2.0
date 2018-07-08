@@ -40,7 +40,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import java.io.File
 import java.util.ArrayList
 
 import io.reactivex.Observable
@@ -52,6 +51,7 @@ import pw.janyo.janyoshare.R
 import pw.janyo.janyoshare.adapter.AppAdapter
 import pw.janyo.janyoshare.classes.InstallAPP
 import pw.janyo.janyoshare.databinding.FragmentAppBinding
+import pw.janyo.janyoshare.util.APPCacheUtil
 import pw.janyo.janyoshare.util.AppManager
 import pw.janyo.janyoshare.util.JanYoFileUtil
 import pw.janyo.janyoshare.util.Settings
@@ -83,7 +83,7 @@ class AppFragment : BaseFragment(R.layout.fragment_app) {
 				android.R.color.holo_orange_light,
 				android.R.color.holo_red_light)
 		binding.recyclerView.layoutManager = LinearLayoutManager(activity)
-		appAdapter = AppAdapter(activity!!, list)
+		appAdapter = AppAdapter(activity!!, list, this)
 		binding.recyclerView.adapter = appAdapter
 		binding.recyclerView.addItemDecoration(DividerItemDecoration(activity!!, DividerItemDecoration.VERTICAL))
 		binding.swipeRefreshLayout.setOnRefreshListener { refreshList() }
@@ -129,7 +129,7 @@ class AppFragment : BaseFragment(R.layout.fragment_app) {
 				})
 	}
 
-	private fun refreshList() {
+	fun refreshList() {
 		Observable.create<Boolean> { subscriber ->
 			val appList = AppManager.getInstallAPPList(activity!!, type)
 			list.clear()
@@ -155,7 +155,6 @@ class AppFragment : BaseFragment(R.layout.fragment_app) {
 					}
 
 					override fun onComplete() {
-						Logs.i("onComplete: " + list.size)
 						appAdapter!!.notifyDataSetChanged()
 						binding.swipeRefreshLayout.isRefreshing = false
 					}
@@ -163,60 +162,66 @@ class AppFragment : BaseFragment(R.layout.fragment_app) {
 	}
 
 	fun loadCacheList() {
-		Observable.create<List<InstallAPP>> { subscriber ->
+		APPCacheUtil.loadCacheList(type, {
 			while (true) {
 				if (appAdapter != null)
 					break
 				Thread.sleep(200)
 			}
-			sortType = Settings.sortType
-			val fileName: String = when (type) {
-				AppManager.AppType.USER -> JanYoFileUtil.USER_LIST_FILE + Settings.sortType.toString()
-				AppManager.AppType.SYSTEM -> JanYoFileUtil.SYSTEM_LIST_FILE + Settings.sortType.toString()
-				else -> {
-					Logs.e("subscribe: 应用类型错误")
-					""
-				}
+		}, object : Observer<List<InstallAPP>> {
+			private val installAPPList = ArrayList<InstallAPP>()
+
+			override fun onSubscribe(d: Disposable) {
+				sortType = Settings.sortType
 			}
-			val file = File(activity!!.externalCacheDir, fileName)
-			val list = JanYoFileUtil.getListFromFile(file, InstallAPP::class.java)
-			if (list.size != Settings.getCurrentListSize(type) || !JanYoFileUtil.isCacheAvailable(activity!!, fileName))
-				subscriber.onNext(ArrayList())
-			else
-				subscriber.onNext(list)
-			subscriber.onComplete()
-		}
-				.subscribeOn(Schedulers.newThread())
-				.unsubscribeOn(Schedulers.newThread())
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(object : Observer<List<InstallAPP>> {
-					private val installAPPList = ArrayList<InstallAPP>()
 
-					override fun onSubscribe(d: Disposable) {
-						Logs.i("onSubscribe: ")
-					}
+			override fun onNext(installAPPList: List<InstallAPP>) {
+				this.installAPPList.clear()
+				this.installAPPList.addAll(installAPPList)
+			}
 
-					override fun onNext(installAPPList: List<InstallAPP>) {
-						this.installAPPList.clear()
-						this.installAPPList.addAll(installAPPList)
-					}
+			override fun onError(e: Throwable) {
+				refreshList()
+			}
 
-					override fun onError(e: Throwable) {
-						refreshList()
-					}
+			override fun onComplete() {
+				if (installAPPList.size != 0) {
+					list.clear()
+					list.addAll(installAPPList)
+					originList.clear()
+					originList.addAll(installAPPList)
+					appAdapter!!.notifyDataSetChanged()
+					binding.swipeRefreshLayout.isRefreshing = false
+				} else
+					refreshList()
+			}
+		})
+	}
 
-					override fun onComplete() {
-						if (installAPPList.size != 0) {
-							list.clear()
-							list.addAll(installAPPList)
-							originList.clear()
-							originList.addAll(installAPPList)
-							appAdapter!!.notifyDataSetChanged()
-							binding.swipeRefreshLayout.isRefreshing = false
-						} else
-							refreshList()
-					}
-				})
+	fun notifyAdapter() {
+		appAdapter?.notifyDataSetChanged()
+	}
+
+	override fun onDestroy() {
+		super.onDestroy()
+		APPCacheUtil.saveCacheList(list, when (type) {
+			AppManager.AppType.SYSTEM -> "${JanYoFileUtil.SYSTEM_LIST_FILE}$sortType"
+			AppManager.AppType.USER -> "${JanYoFileUtil.USER_LIST_FILE}$sortType"
+			else -> throw NullPointerException("app type is error!!!")
+		}, object : Observer<Boolean> {
+			override fun onComplete() {
+			}
+
+			override fun onSubscribe(d: Disposable) {
+			}
+
+			override fun onNext(t: Boolean) {
+				Logs.i("onNext: save $t")
+			}
+
+			override fun onError(e: Throwable) {
+			}
+		})
 	}
 
 	companion object {

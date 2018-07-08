@@ -38,6 +38,8 @@
 	<string name="action_direct_wifi">Direct WiFi</string>
 	<string name="action_reconnect">Reconnect</string>
 	<string name="action_new_hotspot">New Hotspot</string>
+	<string name="action_refresh_list">Refresh List</string>
+	<string name="action_request_again">Request again</string>
 
 	<string name="license_title" translatable="false">“JanYo Studio” 授权解决方案</string>
 	<string name="license_subtitle" translatable="false">为避免在其它非“JanYo Studio”通过书面授权认可的平台引发的授权 风险/争议，特拟此案。</string>
@@ -70,6 +72,19 @@
 	<string name="hint_face_connect_hotspot">Connecting……</string>
 	<string name="hint_face_wait_connect">Waiting……</string>
 
+	<string name="hint_uninstall_finish">Uninstall finish!</string>
+	<string name="hint_uninstall_error">Uninstall error!</string>
+
+	<string name="hint_disable_finish">Disable finish!</string>
+	<string name="hint_disable_error">Disable error!</string>
+
+	<string name="hint_enable_finish">Enable finish!</string>
+	<string name="hint_enable_error">Enable error!</string>
+
+	<string name="hint_app_disabled">**Disabled**</string>
+
+	<string name="hint_no_su">Request root permission failed!</string>
+
 	<string name="hint_warning_auto_clean">Please note that after you use JanYo Share to extract your desired app to TEMP directory, if you need to perform additional operations on the extracted application install package, make sure that you moved packages from the TEMP directory before the next time you start JanYo Share, otherwise it will be cleaned automatically.</string>
 	<string name="hint_custom_rename_format">%N represents the application name, \n%V represents the version name of the application, \n%W represents the version number of the application, and \n%P represents the package name of the application.</string>
 	<string name="hint_custom_rename_format_empty">Format can not be empty! </string>
@@ -85,8 +100,9 @@
 	<string name="array_do_operation_export_only">Export only</string>
 	<string name="array_do_operation_share">Share</string>
 	<string name="array_do_operation_copy_info">Copy info</string>
-	<string name="array_do_operation_disable">Disable</string>
 	<string name="array_do_operation_uninstall">Uninstall</string>
+	<string name="array_do_operation_disable">Disable</string>
+	<string name="array_do_operation_enable">Enable</string>
 
 	<string name="array_share_export_and_share">Export and share</string>
 	<string name="array_share_rename_and_share">Rename and share</string>
@@ -127,6 +143,9 @@
 	<string name="title_dialog_select_wifi">Which user do you want to connect? </string>
 	<string name="title_dialog_set_cache_expiration_time">Please enter the cache expiration time you want to set</string>
 	<string name="title_dialog_set_cache_expiration_time_custom">Please enter the cache expiration time you want to set (Days)</string>
+	<string name="title_dialog_disable_alert">Do you want to <b>disable</b> the following applications?</string>
+	<string name="title_dialog_enable_alert">Do you want to <b>enable</b> the following applications?</string>
+	<string name="title_dialog_uninstall_alert">Do you want to <b>uninstall</b> the following applications?</string>
 
 	<string name="title_activity_share">Share to</string>
 	<string name="title_activity_settings">Settings</string>

@@ -44,10 +44,12 @@ import pw.janyo.janyoshare.R
 import pw.janyo.janyoshare.activity.MainActivity
 import pw.janyo.janyoshare.classes.InstallAPP
 import pw.janyo.janyoshare.databinding.ItemAppBinding
+import pw.janyo.janyoshare.fragment.AppFragment
 import pw.janyo.janyoshare.handler.ItemAppClickHandler
 import vip.mystery0.tools.base.BaseRecyclerViewAdapter
 
-class AppAdapter(private val context: Context, list: ArrayList<InstallAPP>) : BaseRecyclerViewAdapter<AppAdapter.ViewHolder, InstallAPP>(context, R.layout.item_app, list) {
+class AppAdapter(private val context: Context,
+				 private val installAPPList: ArrayList<InstallAPP>, private val fragment: AppFragment) : BaseRecyclerViewAdapter<AppAdapter.ViewHolder, InstallAPP>(context, R.layout.item_app, installAPPList) {
 	private val coordinatorLayout: CoordinatorLayout = (context as MainActivity).coordinatorLayout
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -55,7 +57,7 @@ class AppAdapter(private val context: Context, list: ArrayList<InstallAPP>) : Ba
 	}
 
 	override fun setItemView(holder: ViewHolder, position: Int, data: InstallAPP) {
-		val handler = ItemAppClickHandler(coordinatorLayout, context)
+		val handler = ItemAppClickHandler(coordinatorLayout, context, fragment, installAPPList)
 		holder.binding.handler = handler
 		holder.binding.installAPP = data
 	}

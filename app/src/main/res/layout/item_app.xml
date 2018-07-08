@@ -3,6 +3,8 @@
 
 	<data>
 
+		<import type="android.view.View" />
+
 		<variable
 			name="handler"
 			type="pw.janyo.janyoshare.handler.ItemAppClickHandler" />
@@ -57,12 +59,24 @@
 			android:maxLines="1"
 			android:text="@{installAPP.name}"
 			android:textStyle="bold"
-			app:layout_constraintBottom_toTopOf="@+id/app_package_name"
-			app:layout_constraintEnd_toEndOf="@+id/app_size"
-			app:layout_constraintEnd_toStartOf="@id/app_size"
-			app:layout_constraintHorizontal_bias="0.5"
+			app:layout_constraintBottom_toTopOf="@id/app_package_name"
+			app:layout_constraintEnd_toStartOf="@id/app_disable"
 			app:layout_constraintStart_toEndOf="@id/frameLayout"
 			app:layout_constraintTop_toTopOf="parent" />
+
+		<TextView
+			android:id="@+id/app_disable"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="@dimen/constraintLayout_margin1"
+			android:text="@string/hint_app_disabled"
+			android:textColor="@android:color/holo_red_light"
+			android:textStyle="bold"
+			android:visibility="@{installAPP.isDisable? View.VISIBLE : View.GONE}"
+			app:layout_constraintBottom_toBottomOf="@id/app_name"
+			app:layout_constraintEnd_toStartOf="@id/app_size"
+			app:layout_constraintStart_toEndOf="@id/app_name"
+			app:layout_constraintTop_toTopOf="@id/app_name" />
 
 		<TextView
 			android:id="@+id/app_package_name"
@@ -74,7 +88,6 @@
 			android:text="@{installAPP.packageName}"
 			app:layout_constraintBottom_toTopOf="@+id/app_version_name"
 			app:layout_constraintEnd_toStartOf="@id/app_size"
-			app:layout_constraintHorizontal_bias="0.5"
 			app:layout_constraintStart_toEndOf="@id/frameLayout"
 			app:layout_constraintTop_toBottomOf="@+id/app_name" />
 
@@ -89,7 +102,6 @@
 			android:textColor="@color/textColorBlue"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toStartOf="@id/app_size"
-			app:layout_constraintHorizontal_bias="0.5"
 			app:layout_constraintStart_toEndOf="@id/frameLayout"
 			app:layout_constraintTop_toBottomOf="@+id/app_package_name" />
 
