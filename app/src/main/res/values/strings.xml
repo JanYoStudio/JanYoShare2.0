@@ -134,6 +134,8 @@
 	<string name="array_sort_type_package_name_descending_order">By package name in descending order</string>
 	<string name="array_sort_type_install_time_ascending_order">By install time in ascending order</string>
 	<string name="array_sort_type_install_time_descending_order">By install time in descending order</string>
+	<string name="array_sort_type_update_time_ascending_order">By update time in ascending order</string>
+	<string name="array_sort_type_update_time_descending_order">By update time in descending order</string>
 
 	<string name="title_dialog_select_operation">Please select operation</string>
 	<string name="title_dialog_select_share_method">Please select which type you want to share this application</string>
