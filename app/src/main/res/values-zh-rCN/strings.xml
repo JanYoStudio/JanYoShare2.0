@@ -111,9 +111,9 @@
 	<string name="title_dialog_select_uninstall_type">请选择你想卸载的方式</string>
 	<string name="title_dialog_set_cache_expiration_time">请设置缓存过期时间</string>
 	<string name="title_dialog_set_cache_expiration_time_custom">请输入你想设置的缓存过期时间（单位：天）</string>
-	<string name="title_dialog_disable_alert">请确认您是否要冻结以下应用？</string>
-	<string name="title_dialog_enable_alert">请确认您是否要解除冻结以下应用？</string>
-	<string name="title_dialog_uninstall_alert">请确认您是否要卸载以下应用？</string>
+	<string name="title_dialog_disable_alert">请确认您是否要<b>冻结</b>以下应用？</string>
+	<string name="title_dialog_enable_alert">请确认您是否要<b>解除冻结</b>以下应用？</string>
+	<string name="title_dialog_uninstall_alert">请确认您是否要<b>卸载</b>以下应用？</string>
 	<string name="array_share_export_and_share">提取并分享</string>
 	<string name="array_share_rename_and_share">重命名并分享</string>
 	<string name="array_share_rename_extension_and_share">修改扩展名后分享</string>
