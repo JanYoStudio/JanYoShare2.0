@@ -43,7 +43,6 @@ import android.preference.PreferenceFragment
 import android.preference.SwitchPreference
 import android.support.annotation.StringRes
 import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.TextInputLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.text.Editable
@@ -54,14 +53,13 @@ import android.text.style.StrikethroughSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 
 import pw.janyo.janyoshare.R
 import pw.janyo.janyoshare.activity.DirManagerActivity
 import pw.janyo.janyoshare.activity.SettingsActivity
 import pw.janyo.janyoshare.classes.InstallAPP
+import pw.janyo.janyoshare.databinding.DialogCustomRenameFormatBinding
 import pw.janyo.janyoshare.databinding.DialogViewEdittextBinding
 import pw.janyo.janyoshare.util.DecimalInputTextWatcher
 import pw.janyo.janyoshare.util.JanYoFileUtil
@@ -237,30 +235,27 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 			true
 		}
 		customRenameFormatPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-			val view = LayoutInflater.from(activity).inflate(R.layout.dialog_custom_rename_format, LinearLayout(activity), false)
-			val textInputLayout = view.findViewById<TextInputLayout>(R.id.textInputLayout)
-			val showText = view.findViewById<TextView>(R.id.show)
-
-			textInputLayout.editText!!.setText(Settings.renameFormat)
+			val binding = DialogCustomRenameFormatBinding.inflate(LayoutInflater.from(activity))
+			binding.renameFormat = Settings.renameFormat
 			val test = InstallAPP()
 			test.name = getString(R.string.app_name)
 			test.versionName = getString(R.string.app_version_name)
 			test.versionCode = Integer.parseInt(getString(R.string.app_version_code))
 			test.packageName = getString(R.string.app_package_name)
-			showText.text = getString(R.string.summary_custom_format, JanYoFileUtil.formatName(test, Settings.renameFormat))
-			textInputLayout.editText!!.addTextChangedListener(object : TextWatcher {
+			binding.show.text = getString(R.string.summary_custom_format, JanYoFileUtil.formatName(test, Settings.renameFormat))
+			binding.textInputLayout.editText!!.addTextChangedListener(object : TextWatcher {
 				override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
 				override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
 
 				override fun afterTextChanged(s: Editable) {
 					val format = s.toString()
-					showText.text = getString(R.string.summary_custom_format, JanYoFileUtil.formatName(test, format))
+					binding.show.text = getString(R.string.summary_custom_format, JanYoFileUtil.formatName(test, format))
 				}
 			})
 			val dialog = AlertDialog.Builder(activity)
 					.setTitle(R.string.title_custom_rename_format)
-					.setView(view)
+					.setView(binding.root)
 					.setPositiveButton(android.R.string.ok, null)
 					.setNegativeButton(android.R.string.cancel, null)
 					.setNeutralButton(R.string.action_insert, null)
@@ -268,7 +263,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 			dialog.show()
 			if (dialog.getButton(AlertDialog.BUTTON_POSITIVE) != null)
 				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(View.OnClickListener {
-					val format = textInputLayout.editText!!.text.toString()
+					val format = binding.textInputLayout.editText!!.text.toString()
 					if (format.isEmpty()) {
 						Toast.makeText(activity, R.string.hint_custom_rename_format_empty, Toast.LENGTH_SHORT)
 								.show()
@@ -280,9 +275,9 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 				})
 			if (dialog.getButton(AlertDialog.BUTTON_NEUTRAL) != null)
 				dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
-					val temp = textInputLayout.editText!!.text.toString() + '%'
-					textInputLayout.editText!!.setText(temp)
-					textInputLayout.editText!!.setSelection(temp.length)
+					val temp = binding.textInputLayout.editText!!.text.toString() + '%'
+					binding.textInputLayout.editText!!.setText(temp)
+					binding.textInputLayout.editText!!.setSelection(temp.length)
 				}
 			true
 		}
@@ -312,7 +307,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 		exportDirPreference.summary = getString(R.string.summary_export_dir, JanYoFileUtil.exportDirPath)
 	}
 
-	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
 		if (requestCode == CODE_SET_EXPORT_DIR)
 			exportDirPreference.summary = getString(R.string.summary_export_dir, JanYoFileUtil.exportDirPath)
