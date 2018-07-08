@@ -36,6 +36,7 @@ package pw.janyo.janyoshare
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import vip.mystery0.crashhandler.CrashConfig
 
 import java.util.Locale
 
@@ -46,12 +47,9 @@ class APP : Application() {
 	override fun onCreate() {
 		super.onCreate()
 		context = applicationContext
-		val resources = context.resources
-		val dm = resources.displayMetrics
-		val config = resources.configuration
-		config.locale = Locale.getDefault()
-		resources.updateConfiguration(config, dm)
 		CrashHandler.getInstance(this)
+				.setConfig(CrashConfig()
+						.setAutoClean(false))
 				.init()
 	}
 

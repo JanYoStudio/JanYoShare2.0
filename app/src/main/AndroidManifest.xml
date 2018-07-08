@@ -26,7 +26,7 @@
 		<activity
 			android:name=".activity.SplashActivity"
 			android:screenOrientation="portrait"
-			android:theme="@style/AppTheme.NoActionBar.Splash">
+			android:theme="@style/AppTheme.NoActionBar.FullScreen.Splash">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
