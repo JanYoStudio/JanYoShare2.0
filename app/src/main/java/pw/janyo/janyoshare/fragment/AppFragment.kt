@@ -167,6 +167,8 @@ class AppFragment : BaseFragment(R.layout.fragment_app) {
 				.subscribe(object : Observer<Boolean> {
 					override fun onSubscribe(d: Disposable) {
 						binding.swipeRefreshLayout.isRefreshing = true
+						appList.clear()
+						isSelecting = false
 					}
 
 					override fun onNext(aBoolean: Boolean) {}

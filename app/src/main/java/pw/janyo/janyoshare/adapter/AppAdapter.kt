@@ -63,6 +63,7 @@ class AppAdapter(private val context: Context,
 		holder.binding.isChecked = checked
 		holder.binding.handler = handler
 		holder.binding.installAPP = data
+		holder.binding.appDisable.visibility = if (data.isDisable) View.VISIBLE else View.GONE
 		holder.binding.checkBox.isChecked = checked
 		holder.binding.checkBox.alpha = if (checked) 1f else 0f
 		holder.binding.appIcon.alpha = if (checked) 0f else 1f

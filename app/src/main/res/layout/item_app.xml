@@ -64,23 +64,9 @@
 			android:text="@{installAPP.name}"
 			android:textStyle="bold"
 			app:layout_constraintBottom_toTopOf="@id/app_package_name"
-			app:layout_constraintEnd_toStartOf="@id/app_disable"
+			app:layout_constraintEnd_toStartOf="@id/barrier"
 			app:layout_constraintStart_toEndOf="@id/frameLayout"
 			app:layout_constraintTop_toTopOf="parent" />
-
-		<TextView
-			android:id="@+id/app_disable"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginEnd="@dimen/constraintLayout_margin1"
-			android:text="@string/hint_app_disabled"
-			android:textColor="@android:color/holo_red_light"
-			android:textStyle="bold"
-			android:visibility="@{installAPP.isDisable? View.VISIBLE : View.GONE}"
-			app:layout_constraintBottom_toBottomOf="@id/app_name"
-			app:layout_constraintEnd_toStartOf="@id/app_size"
-			app:layout_constraintStart_toEndOf="@id/app_name"
-			app:layout_constraintTop_toTopOf="@id/app_name" />
 
 		<TextView
 			android:id="@+id/app_package_name"
@@ -91,7 +77,7 @@
 			android:maxLines="1"
 			android:text="@{installAPP.packageName}"
 			app:layout_constraintBottom_toTopOf="@+id/app_version_name"
-			app:layout_constraintEnd_toStartOf="@id/app_size"
+			app:layout_constraintEnd_toStartOf="@id/barrier"
 			app:layout_constraintStart_toEndOf="@id/frameLayout"
 			app:layout_constraintTop_toBottomOf="@+id/app_name" />
 
@@ -105,21 +91,45 @@
 			android:text="@{installAPP.versionName}"
 			android:textColor="@color/textColorBlue"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toStartOf="@id/app_size"
+			app:layout_constraintEnd_toStartOf="@id/barrier"
 			app:layout_constraintStart_toEndOf="@id/frameLayout"
 			app:layout_constraintTop_toBottomOf="@+id/app_package_name" />
+
+		<android.support.constraint.Barrier
+			android:id="@+id/barrier"
+			android:layout_width="wrap_content"
+			android:layout_height="0dp"
+			app:barrierDirection="start"
+			app:constraint_referenced_ids="app_disable,app_size"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<TextView
+			android:id="@+id/app_disable"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="@dimen/constraintLayout_margin1"
+			android:layout_marginTop="@dimen/constraintLayout_margin1"
+			android:text="@string/hint_app_disabled"
+			android:textColor="@android:color/holo_red_light"
+			android:textSize="12sp"
+			android:textStyle="bold"
+			android:visibility="gone"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
 
 
 		<TextView
 			android:id="@+id/app_size"
 			android:layout_width="wrap_content"
-			android:layout_height="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/constraintLayout_margin1"
 			android:layout_marginEnd="@dimen/constraintLayout_margin1"
 			android:gravity="center_vertical"
 			android:text="@{installAPP.size}"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
+			app:layout_constraintEnd_toEndOf="parent" />
 
 	</android.support.constraint.ConstraintLayout>
 </layout>

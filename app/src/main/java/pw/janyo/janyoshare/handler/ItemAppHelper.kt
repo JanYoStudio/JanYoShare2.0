@@ -170,11 +170,11 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 							AppManager.uninstallAPP(context, it)
 						}
 						5//使用Root卸载
-						-> doUnInstall(fragment.appList)
+						-> showAlert(true, false, fragment.appList)
 						6//冻结
-						-> doDisable(fragment.appList)
+						-> showAlert(false, true, fragment.appList)
 						7//解除冻结
-						-> doEnable(fragment.appList)
+						-> showAlert(false, false, fragment.appList)
 					}
 				}
 				.show()
