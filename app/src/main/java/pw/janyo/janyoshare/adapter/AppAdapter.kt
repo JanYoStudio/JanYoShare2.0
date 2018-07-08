@@ -60,6 +60,10 @@ class AppAdapter(private val context: Context,
 		val handler = ItemAppClickHandler(coordinatorLayout, context, fragment, installAPPList)
 		holder.binding.handler = handler
 		holder.binding.installAPP = data
+		holder.binding.root.setOnLongClickListener {
+			handler.longClick(data)
+			true
+		}
 	}
 
 

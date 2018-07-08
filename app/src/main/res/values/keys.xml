@@ -19,6 +19,6 @@
     <string name="key_custom_format" translatable="false">key_custom_format</string>
     <string name="title_custom_format">Custom format</string>
     <string name="summary_custom_format">Will rename like: %1$s</string>
-	<string name="key_uninstall_type" translatable="false">key_uninstall_type</string>
-	<string name="title_uninstall_type">Uninstall Type</string>
+	<string name="key_long_press_action">key_long_press_action</string>
+	<string name="title_long_press_action">Long press action</string>
 </resources>

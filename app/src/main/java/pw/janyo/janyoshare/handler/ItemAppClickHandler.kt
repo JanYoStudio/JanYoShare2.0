@@ -65,6 +65,7 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 						  val context: Context,
 						  val fragment: AppFragment,
 						  val list: ArrayList<InstallAPP>) {
+
 	private val exportDialog: ZLoadingDialog = ZLoadingDialog(context)
 			.setLoadingBuilder(Z_TYPE.DOUBLE_CIRCLE)
 			.setHintTextSize(16f)
@@ -73,6 +74,11 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 			.setLoadingColor(ContextCompat.getColor(context, R.color.colorAccent))
 			.setHintTextColor(ContextCompat.getColor(context, R.color.colorAccent))
 
+	/**
+	 * item单击事件
+	 *
+	 * @param data 点击的item对应的InstallAPP对象
+	 */
 	fun click(data: InstallAPP) {
 		AlertDialog.Builder(context)
 				.setTitle(R.string.title_dialog_select_operation)
@@ -92,7 +98,52 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 				.show()
 	}
 
-	private fun export(installAPP: InstallAPP, choose: Int) {
+	/**
+	 * item长按事件
+	 *
+	 * @param data 长按的item对应的InstallAPP对象
+	 */
+	fun longClick(data: InstallAPP) {
+		when (Settings.longPressAction) {
+			0//仅导出
+			-> export(data, 0)
+			1//提取并分享
+			-> export(data, 0, 0)
+			2//重命名并分享
+			-> export(data, 0, 1)
+			3//重命名扩展名
+			-> export(data, 0, 2)
+			4//和数据包一起提取分享
+			-> export(data, 0, 3)
+			5//面对面分享
+			-> export(data, 0, 4)
+			6//拷贝名称
+			-> copyInfoToClipboard(data, 0)
+			7//拷贝包名
+			-> copyInfoToClipboard(data, 1)
+			8//拷贝版本名称
+			-> copyInfoToClipboard(data, 2)
+			9//拷贝版本号
+			-> copyInfoToClipboard(data, 3)
+			10//普通卸载
+			-> AppManager.uninstallAPP(context, data)
+			11//root卸载
+			-> showAlert(true, false, arrayListOf(data))
+			12//冻结
+			-> showAlert(false, true, arrayListOf(data))
+			13//解除冻结
+			-> showAlert(false, false, arrayListOf(data))
+		}
+	}
+
+	/**
+	 * 导出当前应用并执行后续操作
+	 *
+	 * @param installAPP  需要导出的APP
+	 * @param choose      选择的操作
+	 * @param doAction    后续执行的操作
+	 */
+	private fun export(installAPP: InstallAPP, choose: Int, doAction: Int = -1) {
 		Observable.create(ObservableOnSubscribe<Int> { subscriber ->
 			subscriber.onNext(JanYoFileUtil.exportAPK(installAPP))
 			subscriber.onComplete()
@@ -104,7 +155,6 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 					private var code: Int = 0
 
 					override fun onSubscribe(d: Disposable) {
-						Logs.i("onSubscribe: ")
 						exportDialog.show()
 					}
 
@@ -127,21 +177,30 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 							JanYoFileUtil.Code.ERROR -> Snackbar.make(coordinatorLayout, R.string.hint_export_failed, Snackbar.LENGTH_LONG)
 									.show()
 							JanYoFileUtil.Code.DONE ->
-								if (choose == 0)
-									Snackbar.make(coordinatorLayout, context.getString(R.string.hint_export_done, JanYoFileUtil.exportDirPath), Snackbar.LENGTH_SHORT)
-											.show()
-								else
-									AlertDialog.Builder(context)
-											.setTitle(R.string.title_dialog_select_share_method)
-											.setItems(R.array.shareMethod) { _, which ->
-												doSomething(installAPP, which)
-											}
-											.show()
+								when {
+									choose == 0 ->
+										Snackbar.make(coordinatorLayout, context.getString(R.string.hint_export_done, JanYoFileUtil.exportDirPath), Snackbar.LENGTH_SHORT)
+												.show()
+									choose != 0 && doAction == -1 ->
+										AlertDialog.Builder(context)
+												.setTitle(R.string.title_dialog_select_share_method)
+												.setItems(R.array.shareMethod) { _, which ->
+													doSomething(installAPP, which)
+												}
+												.show()
+									choose != 0 && doAction != -1 -> doSomething(installAPP, doAction)
+								}
 						}
 					}
 				})
 	}
 
+	/**
+	 * 导出后执行的后续操作
+	 *
+	 * @param installAPP    导出的APP
+	 * @param whatToDo      执行的操作
+	 */
 	private fun doSomething(installAPP: InstallAPP, whatToDo: Int) {
 		when (whatToDo) {
 			0//提取并分享
@@ -259,20 +318,40 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 		}
 	}
 
-	private fun copyInfoToClipboard(installAPP: InstallAPP) {
-		AlertDialog.Builder(context)
-				.setTitle(R.string.title_dialog_select_copy_info)
-				.setItems(R.array.copyInfo) { _, which ->
-					when (which) {
-						0 -> copyToClipboard(installAPP.name, installAPP.name)
-						1 -> copyToClipboard(installAPP.name, installAPP.packageName)
-						2 -> copyToClipboard(installAPP.name, installAPP.versionName)
-						3 -> copyToClipboard(installAPP.name, installAPP.versionCode.toString())
+	/**
+	 * 拷贝信息到剪切板
+	 *
+	 * @param installAPP    需要拷贝信息的APP
+	 * @param doAction      拷贝的具体操作
+	 */
+	private fun copyInfoToClipboard(installAPP: InstallAPP, doAction: Int = -1) {
+		if (doAction != -1) {
+			when (doAction) {
+				0 -> copyToClipboard(installAPP.name, installAPP.name)
+				1 -> copyToClipboard(installAPP.name, installAPP.packageName)
+				2 -> copyToClipboard(installAPP.name, installAPP.versionName)
+				3 -> copyToClipboard(installAPP.name, installAPP.versionCode.toString())
+			}
+		} else
+			AlertDialog.Builder(context)
+					.setTitle(R.string.title_dialog_select_copy_info)
+					.setItems(R.array.copyInfo) { _, which ->
+						when (which) {
+							0 -> copyToClipboard(installAPP.name, installAPP.name)
+							1 -> copyToClipboard(installAPP.name, installAPP.packageName)
+							2 -> copyToClipboard(installAPP.name, installAPP.versionName)
+							3 -> copyToClipboard(installAPP.name, installAPP.versionCode.toString())
+						}
 					}
-				}
-				.show()
+					.show()
 	}
 
+	/**
+	 * 拷贝具体信息到剪切板
+	 *
+	 * @param label 标记
+	 * @param text  信息
+	 */
 	private fun copyToClipboard(label: String?, text: String?) {
 		val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 		clipboardManager.primaryClip = ClipData.newPlainText(label, text)
@@ -280,6 +359,11 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 				.show()
 	}
 
+	/**
+	 * 选择卸载的类型
+	 *
+	 * @param installAPP 需要卸载的APP
+	 */
 	private fun selectUninstallType(installAPP: InstallAPP) {
 		AlertDialog.Builder(context)
 				.setTitle(R.string.title_dialog_select_uninstall_type)
@@ -292,10 +376,16 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 				.show()
 	}
 
+	/**
+	 * 显示警告信息
+	 *
+	 * @param isUninstall   是否是卸载
+	 * @param isDisable     是否是冻结
+	 * @param appList       需要执行操作的APP列表
+	 */
 	private fun showAlert(isUninstall: Boolean, isDisable: Boolean, appList: ArrayList<InstallAPP>) {
 		Observable.create<Boolean> {
 			val result = CommandTools.execRootCommand("echo test")
-			Logs.i("showAlert: $result")
 			it.onNext(result.isSuccess())
 			it.onComplete()
 		}
@@ -352,6 +442,11 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 				})
 	}
 
+	/**
+	 * 执行卸载操作（使用Root）
+	 *
+	 * @param appList 需要卸载的APP列表
+	 */
 	private fun doUnInstall(appList: ArrayList<InstallAPP>) {
 		Observable.create<CommandTools.CommandResult> {
 			it.onNext(AppManager.uninstallAPPByRoot(appList))
@@ -390,6 +485,12 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 				})
 	}
 
+
+	/**
+	 * 执行冻结操作（使用Root）
+	 *
+	 * @param appList 需要冻结的APP列表
+	 */
 	private fun doDisable(appList: ArrayList<InstallAPP>) {
 		Observable.create<CommandTools.CommandResult> {
 			it.onNext(AppManager.disableAPP(appList))
@@ -430,6 +531,12 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 				})
 	}
 
+
+	/**
+	 * 执行解除冻结操作（使用Root）
+	 *
+	 * @param appList 需要解除冻结的APP列表
+	 */
 	private fun doEnable(appList: ArrayList<InstallAPP>) {
 		Observable.create<CommandTools.CommandResult> {
 			it.onNext(AppManager.enableAPP(appList))

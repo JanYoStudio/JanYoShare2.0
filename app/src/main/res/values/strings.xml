@@ -104,6 +104,21 @@
 	<string name="array_do_operation_disable">Disable</string>
 	<string name="array_do_operation_enable">Enable</string>
 
+	<string name="array_do_operation_long_press_export_only">Export only</string>
+	<string name="array_do_operation_long_press_export_and_share">Export and share</string>
+	<string name="array_do_operation_long_press_rename_and_share">Rename and share</string>
+	<string name="array_do_operation_long_press_rename_extension_and_share">Rename extension name and share</string>
+	<string name="array_do_operation_long_press_export_and_share_with_data">Export and share with data</string>
+	<string name="array_do_operation_long_press_face_to_face_share">Share face to face</string>
+	<string name="array_do_operation_long_press_copy_info_name">Copy Name</string>
+	<string name="array_do_operation_long_press_copy_info_package_name">Copy package name</string>
+	<string name="array_do_operation_long_press_copy_info_version_name">Copy Version name</string>
+	<string name="array_do_operation_long_press_copy_info_version_code">Copy Version code</string>
+	<string name="array_do_operation_long_press_uninstall_normal">Normal Uninstall</string>
+	<string name="array_do_operation_long_press_uninstall_root">Uninstall by root</string>
+	<string name="array_do_operation_long_press_disable">Disable</string>
+	<string name="array_do_operation_long_press_enable">Enable</string>
+
 	<string name="array_share_export_and_share">Export and share</string>
 	<string name="array_share_rename_and_share">Rename and share</string>
 	<string name="array_share_rename_extension_and_share">Rename extension name and share</string>
@@ -145,6 +160,7 @@
 	<string name="title_dialog_select_wifi">Which user do you want to connect? </string>
 	<string name="title_dialog_set_cache_expiration_time">Please enter the cache expiration time you want to set</string>
 	<string name="title_dialog_set_cache_expiration_time_custom">Please enter the cache expiration time you want to set (Days)</string>
+	<string name="title_dialog_set_long_press_action">Please select the action you want to do when you long press?</string>
 	<string name="title_dialog_disable_alert">Do you want to <b>disable</b> the following applications?</string>
 	<string name="title_dialog_enable_alert">Do you want to <b>enable</b> the following applications?</string>
 	<string name="title_dialog_uninstall_alert">Do you want to <b>uninstall</b> the following applications?</string>

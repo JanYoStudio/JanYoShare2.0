@@ -43,5 +43,5 @@ object Constant {
 	const val SORT_TYPE = "sortType"
 	const val CURRENT_LIST_SIZE = "currentListSize_%d"
 	const val CACHE_EXPIRATION_TIME = "cacheExpirationTime"
-	const val UNINSTALL_TYPE = "uninstallType"
+	const val LONG_PRESS_ACTION = "longPressAction"
 }

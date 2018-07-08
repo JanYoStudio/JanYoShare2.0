@@ -67,7 +67,6 @@ import pw.janyo.janyoshare.util.Settings
 
 class SettingsPreferenceFragment : PreferenceFragment() {
 	private var tempExportDir = -1
-
 	private var coordinatorLayout: CoordinatorLayout? = null
 
 	private lateinit var isAutoCleanPreference: SwitchPreference
@@ -76,6 +75,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 	private lateinit var customExportDirPreference: Preference
 	private lateinit var isCustomFormatPreference: SwitchPreference
 	private lateinit var customRenameFormatPreference: Preference
+	private lateinit var longPressActionPreference: Preference
 	private lateinit var gsoyPreference: Preference
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,6 +98,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 		customExportDirPreference = findPreferenceById(R.string.key_custom_export_dir)
 		isCustomFormatPreference = findPreferenceById(R.string.key_custom_format)
 		customRenameFormatPreference = findPreferenceById(R.string.key_custom_rename_format)
+		longPressActionPreference = findPreferenceById(R.string.key_long_press_action)
 		gsoyPreference = findPreferenceById(R.string.gsoy)
 	}
 
@@ -132,6 +133,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 			customRenameFormatPreference.summary = null
 			customRenameFormatPreference.isEnabled = false
 		}
+		setLongPressActionSummary()
 	}
 
 	private fun monitor() {
@@ -281,6 +283,26 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 				}
 			true
 		}
+		longPressActionPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+			var select = Settings.longPressAction
+			val array = resources.getStringArray(R.array.doOperationLongPress)
+			if (select < 0 || select >= array.size) {
+				select = 0
+				Settings.longPressAction = 0
+			}
+			AlertDialog.Builder(activity)
+					.setTitle(R.string.title_dialog_set_long_press_action)
+					.setSingleChoiceItems(R.array.doOperationLongPress, select) { _, which ->
+						select = which
+					}
+					.setPositiveButton(android.R.string.ok) { _, _ ->
+						Settings.longPressAction = select
+						setLongPressActionSummary()
+					}
+					.setNegativeButton(android.R.string.cancel, null)
+					.show()
+			true
+		}
 	}
 
 	private fun <T : Preference> findPreferenceById(@StringRes id: Int): T {
@@ -295,7 +317,17 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 			expirationTime == 1f -> cacheExpirationTimePreference.setSummary(R.string.summary_cache_expiration_time_one)
 			else -> cacheExpirationTimePreference.summary = getString(R.string.summary_cache_expiration_time, expirationTime)
 		}
+	}
 
+	private fun setLongPressActionSummary() {
+		val longPressAction = Settings.longPressAction
+		val array = resources.getStringArray(R.array.doOperationLongPress)
+		if (longPressAction >= 0 && longPressAction < array.size)
+			longPressActionPreference.summary = array[longPressAction]
+		else {
+			longPressActionPreference.summary = array[0]
+			Settings.longPressAction = 0
+		}
 	}
 
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
