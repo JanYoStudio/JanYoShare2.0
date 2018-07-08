@@ -108,15 +108,15 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 			0//仅导出
 			-> export(data, 0)
 			1//提取并分享
-			-> export(data, 0, 0)
+			-> export(data, 1, 0)
 			2//重命名并分享
-			-> export(data, 0, 1)
+			-> export(data, 1, 1)
 			3//重命名扩展名
-			-> export(data, 0, 2)
+			-> export(data, 1, 2)
 			4//和数据包一起提取分享
-			-> export(data, 0, 3)
+			-> export(data, 1, 3)
 			5//面对面分享
-			-> export(data, 0, 4)
+			-> export(data, 1, 4)
 			6//拷贝名称
 			-> copyInfoToClipboard(data, 0)
 			7//拷贝包名
