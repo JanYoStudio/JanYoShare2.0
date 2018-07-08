@@ -45,10 +45,8 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.CheckBox
 import android.widget.ImageView
-import androidx.core.animation.doOnEnd
 import com.zyao89.view.zloading.ZLoadingDialog
 import com.zyao89.view.zloading.Z_TYPE
 import io.reactivex.Observable
@@ -72,7 +70,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 					val fragment: AppFragment,
 					val list: ArrayList<InstallAPP>) {
 
-	private val exportDialog: ZLoadingDialog = ZLoadingDialog(context)
+	private val loadingDialog: ZLoadingDialog = ZLoadingDialog(context)
 			.setLoadingBuilder(Z_TYPE.DOUBLE_CIRCLE)
 			.setHintTextSize(16f)
 			.setCancelable(false)
@@ -210,7 +208,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 					private var code: Int = 0
 
 					override fun onSubscribe(d: Disposable) {
-						exportDialog.show()
+						loadingDialog.show()
 					}
 
 					override fun onNext(integer: Int) {
@@ -218,12 +216,12 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 					}
 
 					override fun onError(e: Throwable) {
-						exportDialog.dismiss()
+						loadingDialog.dismiss()
 						Log.wtf("doOperation: onError: ", e)
 					}
 
 					override fun onComplete() {
-						exportDialog.dismiss()
+						loadingDialog.dismiss()
 						when (code) {
 							JanYoFileUtil.Code.DIR_NOT_EXIST -> Snackbar.make(coordinatorLayout, R.string.hint_export_dir_create_failed, Snackbar.LENGTH_LONG)
 									.show()
@@ -280,7 +278,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 				.subscribe(object : Observer<Map<String, Int>> {
 					private lateinit var map: Map<String, Int>
 					override fun onComplete() {
-						exportDialog.dismiss()
+						loadingDialog.dismiss()
 						when (doAction) {
 							0 ->//仅导出
 							{
@@ -338,7 +336,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 					}
 
 					override fun onSubscribe(d: Disposable) {
-						exportDialog.show()
+						loadingDialog.show()
 					}
 
 					override fun onNext(t: Map<String, Int>) {
@@ -346,7 +344,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 					}
 
 					override fun onError(e: Throwable) {
-						exportDialog.dismiss()
+						loadingDialog.dismiss()
 						Log.wtf("doOperation: onError: ", e)
 					}
 				})
@@ -615,6 +613,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 				.subscribe(object : Observer<CommandTools.CommandResult> {
 					private lateinit var result: CommandTools.CommandResult
 					override fun onComplete() {
+						loadingDialog.dismiss()
 						if (result.isSuccess()) {
 							list.removeAll(appList)
 							fragment.notifyAdapter()
@@ -631,6 +630,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 					}
 
 					override fun onSubscribe(d: Disposable) {
+						loadingDialog.show()
 					}
 
 					override fun onNext(t: CommandTools.CommandResult) {
@@ -638,6 +638,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 					}
 
 					override fun onError(e: Throwable) {
+						loadingDialog.dismiss()
 					}
 				})
 	}
@@ -659,6 +660,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 				.subscribe(object : Observer<CommandTools.CommandResult> {
 					private lateinit var result: CommandTools.CommandResult
 					override fun onComplete() {
+						loadingDialog.dismiss()
 						if (result.isSuccess()) {
 							appList.forEach {
 								it.isDisable = true
@@ -677,6 +679,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 					}
 
 					override fun onSubscribe(d: Disposable) {
+						loadingDialog.show()
 					}
 
 					override fun onNext(t: CommandTools.CommandResult) {
@@ -684,6 +687,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 					}
 
 					override fun onError(e: Throwable) {
+						loadingDialog.dismiss()
 					}
 				})
 	}
@@ -705,6 +709,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 				.subscribe(object : Observer<CommandTools.CommandResult> {
 					private lateinit var result: CommandTools.CommandResult
 					override fun onComplete() {
+						loadingDialog.dismiss()
 						if (result.isSuccess()) {
 							appList.forEach {
 								it.isDisable = false
@@ -723,6 +728,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 					}
 
 					override fun onSubscribe(d: Disposable) {
+						loadingDialog.show()
 					}
 
 					override fun onNext(t: CommandTools.CommandResult) {
@@ -730,6 +736,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 					}
 
 					override fun onError(e: Throwable) {
+						loadingDialog.dismiss()
 					}
 				})
 	}

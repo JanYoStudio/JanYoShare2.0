@@ -1,4 +1,4 @@
-<?xml version="1.﻿0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="title_auto_clean">自动清理临时目录</string>
 	<string name="summary_auto_clean_on">自动清理经已开启，将会喺第次重新启动时进行清理</string>
