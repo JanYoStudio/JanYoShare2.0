@@ -33,6 +33,8 @@
 
 package pw.janyo.janyoshare.handler
 
+import android.animation.Animator
+import android.animation.ObjectAnimator
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -43,6 +45,10 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
+import android.widget.CheckBox
+import android.widget.ImageView
+import androidx.core.animation.doOnEnd
 import com.zyao89.view.zloading.ZLoadingDialog
 import com.zyao89.view.zloading.Z_TYPE
 import io.reactivex.Observable
@@ -61,10 +67,10 @@ import vip.mystery0.logs.Logs
 import vip.mystery0.tools.utils.CommandTools
 import java.io.File
 
-class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
-						  val context: Context,
-						  val fragment: AppFragment,
-						  val list: ArrayList<InstallAPP>) {
+class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
+					val context: Context,
+					val fragment: AppFragment,
+					val list: ArrayList<InstallAPP>) {
 
 	private val exportDialog: ZLoadingDialog = ZLoadingDialog(context)
 			.setLoadingBuilder(Z_TYPE.DOUBLE_CIRCLE)
@@ -74,28 +80,19 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 			.setLoadingColor(ContextCompat.getColor(context, R.color.colorAccent))
 			.setHintTextColor(ContextCompat.getColor(context, R.color.colorAccent))
 
+	private var checkBoxAnimator: Animator? = null
+	private var imageViewAnimator: Animator? = null
+
 	/**
 	 * item单击事件
 	 *
 	 * @param data 点击的item对应的InstallAPP对象
 	 */
 	fun click(data: InstallAPP) {
-		AlertDialog.Builder(context)
-				.setTitle(R.string.title_dialog_select_operation)
-				.setItems(
-						if (data.isDisable)
-							R.array.doOperationDisable
-						else
-							R.array.doOperationEnable
-				) { _, which ->
-					when (which) {
-						0, 1 -> export(data, which)
-						2 -> copyInfoToClipboard(data)
-						3 -> selectUninstallType(data)
-						4 -> showAlert(false, !data.isDisable, arrayListOf(data))
-					}
-				}
-				.show()
+		if (fragment.isSelecting)
+			clickWhenSelecting()
+		else
+			clickSingle(data)
 	}
 
 	/**
@@ -104,6 +101,8 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 	 * @param data 长按的item对应的InstallAPP对象
 	 */
 	fun longClick(data: InstallAPP) {
+		if (fragment.isSelecting)
+			return
 		when (Settings.longPressAction) {
 			0//仅导出
 			-> export(data, 0)
@@ -134,6 +133,62 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 			13//解除冻结
 			-> showAlert(false, false, arrayListOf(data))
 		}
+	}
+
+	private fun clickSingle(data: InstallAPP) {
+		AlertDialog.Builder(context)
+				.setTitle(R.string.title_dialog_select_operation)
+				.setItems(
+						if (data.isDisable)
+							R.array.doOperationDisable
+						else
+							R.array.doOperationEnable
+				) { _, which ->
+					when (which) {
+						0, 1 -> export(data, which)
+						2 -> copyInfoToClipboard(data)
+						3 -> selectUninstallType(data)
+						4 -> showAlert(false, !data.isDisable, arrayListOf(data))
+					}
+				}
+				.show()
+	}
+
+	private fun clickWhenSelecting() {
+		AlertDialog.Builder(context)
+				.setTitle(R.string.title_dialog_select_operation)
+				.setItems(R.array.doOperationSelected) { _, which ->
+					when (which) {
+						0//仅导出
+						-> exportMany(fragment.appList, 0)
+						1//导出并分享
+						-> exportMany(fragment.appList, 1)
+						2//和数据包一起分享
+						-> exportMany(fragment.appList, 2)
+						3//面对面分享
+						-> exportMany(fragment.appList, 3)
+						4//正常卸载
+						-> fragment.appList.forEach {
+							AppManager.uninstallAPP(context, it)
+						}
+						5//使用Root卸载
+						-> doUnInstall(fragment.appList)
+						6//冻结
+						-> doDisable(fragment.appList)
+						7//解除冻结
+						-> doEnable(fragment.appList)
+					}
+				}
+				.show()
+	}
+
+	fun showAnimation(checkBox: CheckBox, imageView: ImageView, isMark: Boolean) {
+		checkBoxAnimator?.cancel()
+		imageViewAnimator?.cancel()
+		checkBoxAnimator = ObjectAnimator.ofFloat(checkBox, "alpha", if (isMark) 0f else 1f, if (isMark) 1f else 0f)
+		imageViewAnimator = ObjectAnimator.ofFloat(imageView, "alpha", if (isMark) 1f else 0f, if (isMark) 0f else 1f)
+		checkBoxAnimator?.start()
+		imageViewAnimator?.start()
 	}
 
 	/**
@@ -191,6 +246,108 @@ class ItemAppClickHandler(val coordinatorLayout: CoordinatorLayout,
 									choose != 0 && doAction != -1 -> doSomething(installAPP, doAction)
 								}
 						}
+					}
+				})
+	}
+
+	private fun exportMany(appList: ArrayList<InstallAPP>, doAction: Int) {
+		val fileList = ArrayList<File>()
+		Observable.create<Map<String, Int>> {
+			val map = HashMap<String, Int>()
+			var num = 0
+			var obbNum = 0
+			appList.forEach {
+				if (JanYoFileUtil.exportAPK(it) == JanYoFileUtil.Code.DONE) {
+					fileList.add(JanYoFileUtil.getExportFile(it))
+					if (doAction == 2) {
+						val obbList = JanYoFileUtil.checkObb(it.packageName)
+						if (obbList.isNotEmpty()) {
+							fileList.addAll(obbList)
+							obbNum += obbList.size
+						}
+					}
+					num++
+				}
+			}
+			map["file"] = num
+			map["obb"] = obbNum
+			it.onNext(map)
+			it.onComplete()
+		}
+				.subscribeOn(Schedulers.newThread())
+				.unsubscribeOn(Schedulers.newThread())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(object : Observer<Map<String, Int>> {
+					private lateinit var map: Map<String, Int>
+					override fun onComplete() {
+						exportDialog.dismiss()
+						when (doAction) {
+							0 ->//仅导出
+							{
+								val fileNum = if (map.containsKey("file")) map["file"] else -1
+								if (fileNum == -1)
+									Snackbar.make(coordinatorLayout, R.string.hint_export_failed, Snackbar.LENGTH_LONG)
+								else
+									Snackbar.make(coordinatorLayout,
+											if (fileNum == 1)
+												context.getString(R.string.hint_export_finish, fileNum)
+											else
+												context.getString(R.string.hint_export_finish_s, fileNum)
+											, Snackbar.LENGTH_LONG)
+											.show()
+							}
+							1 ->//导出并分享
+							{
+								val fileNum = if (map.containsKey("file")) map["file"] else 0
+								Snackbar.make(coordinatorLayout,
+										if (fileNum == 1)
+											context.getString(R.string.hint_export_finish, fileNum)
+										else
+											context.getString(R.string.hint_export_finish_s, fileNum)
+										, Snackbar.LENGTH_LONG)
+										.addCallback(object : Snackbar.Callback() {
+											override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+												JanYoFileUtil.doShareFile(context, fileList)
+											}
+										})
+										.show()
+							}
+							2 ->//和数据一起分享
+							{
+								val fileNum = if (map.containsKey("file")) map["file"] else 0
+								val obbNum = if (map.containsKey("obb")) map["obb"] else 0
+								Snackbar.make(coordinatorLayout,
+										when {
+											fileNum == 1 && obbNum == 1 -> context.getString(R.string.hint_export_with_data_finish___, fileNum, obbNum)
+											fileNum == 1 && obbNum != 1 -> context.getString(R.string.hint_export_with_data_finish__s, fileNum, obbNum)
+											fileNum != 1 && obbNum == 1 -> context.getString(R.string.hint_export_with_data_finish_s_, fileNum, obbNum)
+											fileNum != 1 && obbNum != 1 -> context.getString(R.string.hint_export_with_data_finish_ss, fileNum, obbNum)
+											else -> context.getString(R.string.hint_export_with_data_finish_ss, fileNum, obbNum)
+										}, Snackbar.LENGTH_LONG)
+										.addCallback(object : Snackbar.Callback() {
+											override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+												JanYoFileUtil.doShareFile(context, fileList)
+											}
+										})
+										.show()
+							}
+							3 ->//面对面分享
+								Snackbar.make(coordinatorLayout, R.string.hint_service_unavailable, Snackbar.LENGTH_LONG)
+										.show()
+						}
+					}
+
+					override fun onSubscribe(d: Disposable) {
+						exportDialog.show()
+					}
+
+					override fun onNext(t: Map<String, Int>) {
+						map = t
+					}
+
+					override fun onError(e: Throwable) {
+						exportDialog.dismiss()
+						Log.wtf("doOperation: onError: ", e)
 					}
 				})
 	}

@@ -66,6 +66,12 @@
 	<string name="hint_export_dir_create_failed">Export directory create failed. Please check permission! </string>
 	<string name="hint_source_file_not_exist">The source file is not exist! </string>
 	<string name="hint_file_exist">File already exists! </string>
+	<string name="hint_export_finish">File extraction finish! %1$d application is successful! </string>
+	<string name="hint_export_finish_s">File extraction finish! %1$d applications are successful! </string>
+	<string name="hint_export_with_data_finish___">File extraction finish! %1$d application are successful and %2$d packet was found! </string>
+	<string name="hint_export_with_data_finish_s_">File extraction finish! %1$d applications are successful and %2$d packet was found! </string>
+	<string name="hint_export_with_data_finish_ss">File extraction finish! %1$d applications are successful and %2$d packets was found! </string>
+	<string name="hint_export_with_data_finish__s">File extraction finish! %1$d application are successful and %2$d packet was found! </string>
 
 	<string name="hint_face_create_hotspot">Creating Service Side……</string>
 	<string name="hint_face_scan_hotspot">Scanning……</string>

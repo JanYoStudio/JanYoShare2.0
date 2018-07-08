@@ -7,11 +7,15 @@
 
 		<variable
 			name="handler"
-			type="pw.janyo.janyoshare.handler.ItemAppClickHandler" />
+			type="pw.janyo.janyoshare.handler.ItemAppHelper" />
 
 		<variable
 			name="installAPP"
 			type="pw.janyo.janyoshare.classes.InstallAPP" />
+
+		<variable
+			name="isChecked"
+			type="Boolean" />
 	</data>
 
 	<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -46,7 +50,7 @@
 				android:layout_gravity="center"
 				android:background="?android:attr/listChoiceIndicatorMultiple"
 				android:button="@null"
-				android:visibility="gone" />
+				android:checked="@{isChecked}" />
 
 		</FrameLayout>
 

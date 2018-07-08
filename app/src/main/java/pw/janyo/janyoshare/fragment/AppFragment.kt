@@ -65,6 +65,8 @@ class AppFragment : BaseFragment(R.layout.fragment_app) {
 	private val list = ArrayList<InstallAPP>()
 	private val originList = ArrayList<InstallAPP>()
 	private var appAdapter: AppAdapter? = null
+	var isSelecting = false
+	val appList = ArrayList<InstallAPP>()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -90,12 +92,31 @@ class AppFragment : BaseFragment(R.layout.fragment_app) {
 		loadCacheList()
 	}
 
+	fun mark(data: InstallAPP) {
+		if (!appList.contains(data))
+			appList.add(data)
+		isSelecting = appList.isNotEmpty()
+	}
+
+	fun unMark(data: InstallAPP) {
+		if (appList.contains(data))
+			appList.remove(data)
+		isSelecting = appList.isNotEmpty()
+	}
+
+	fun isChecked(installAPP: InstallAPP): Boolean {
+		appList.forEach {
+			if (it.packageName == installAPP.packageName)
+				return true
+		}
+		return false
+	}
+
 	fun shouldRefresh(): Boolean {
 		return list.isEmpty() || sortType != Settings.sortType
 	}
 
 	fun search(query: String) {
-		Logs.i("search: $query")
 		Observable.create<List<InstallAPP>> { subscriber ->
 			while (true) {
 				if (appAdapter != null)

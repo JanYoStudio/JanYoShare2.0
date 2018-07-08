@@ -35,6 +35,16 @@
 		<item>@string/array_do_operation_long_press_disable</item>
 		<item>@string/array_do_operation_long_press_enable</item>
 	</string-array>
+	<string-array name="doOperationSelected">
+		<item>@string/array_do_operation_long_press_export_only</item>
+		<item>@string/array_do_operation_long_press_export_and_share</item>
+		<item>@string/array_do_operation_long_press_export_and_share_with_data</item>
+		<item>@string/array_do_operation_long_press_face_to_face_share</item>
+		<item>@string/array_do_operation_long_press_uninstall_normal</item>
+		<item>@string/array_do_operation_long_press_uninstall_root</item>
+		<item>@string/array_do_operation_long_press_disable</item>
+		<item>@string/array_do_operation_long_press_enable</item>
+	</string-array>
 	<string-array name="shareMethod">
 		<item>@string/array_share_export_and_share</item>
 		<item>@string/array_share_rename_and_share</item>
