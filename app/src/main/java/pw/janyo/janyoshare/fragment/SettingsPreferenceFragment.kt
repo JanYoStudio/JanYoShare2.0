@@ -47,12 +47,13 @@ import android.support.design.widget.TextInputLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.text.Editable
-import android.text.InputType
+import android.text.SpannableString
+import android.text.Spanned
 import android.text.TextWatcher
+import android.text.style.StrikethroughSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -61,6 +62,7 @@ import pw.janyo.janyoshare.R
 import pw.janyo.janyoshare.activity.DirManagerActivity
 import pw.janyo.janyoshare.activity.SettingsActivity
 import pw.janyo.janyoshare.classes.InstallAPP
+import pw.janyo.janyoshare.databinding.DialogViewEdittextBinding
 import pw.janyo.janyoshare.util.DecimalInputTextWatcher
 import pw.janyo.janyoshare.util.JanYoFileUtil
 import pw.janyo.janyoshare.util.Settings
@@ -76,6 +78,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 	private lateinit var customExportDirPreference: Preference
 	private lateinit var isCustomFormatPreference: SwitchPreference
 	private lateinit var customRenameFormatPreference: Preference
+	private lateinit var gsoyPreference: Preference
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -97,9 +100,14 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 		customExportDirPreference = findPreferenceById(R.string.key_custom_export_dir)
 		isCustomFormatPreference = findPreferenceById(R.string.key_custom_format)
 		customRenameFormatPreference = findPreferenceById(R.string.key_custom_rename_format)
+		gsoyPreference = findPreferenceById(R.string.gsoy)
 	}
 
 	private fun initialization() {
+		val spannableString = SpannableString(getString(R.string.gsoy))
+		spannableString.setSpan(StrikethroughSpan(), 0, spannableString.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+		gsoyPreference.title = spannableString
+
 		isAutoCleanPreference.isChecked = Settings.isAutoClean
 		if (Settings.isAutoClean)
 			isAutoCleanPreference.setSummary(R.string.summary_auto_clean_on)
@@ -165,15 +173,14 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 							3 -> Settings.cacheExpirationTime = 7f
 							4 -> Settings.cacheExpirationTime = 30f
 							5 -> {
-								val editText = EditText(activity)
-								editText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
-								editText.setText(Settings.cacheExpirationTime.toString())
-								editText.addTextChangedListener(DecimalInputTextWatcher(editText))
+								val binding = DialogViewEdittextBinding.inflate(LayoutInflater.from(activity))
+								binding.cacheExpirationTime = Settings.cacheExpirationTime.toString()
+								binding.editText.addTextChangedListener(DecimalInputTextWatcher(binding.editText))
 								AlertDialog.Builder(activity)
 										.setTitle(R.string.title_dialog_set_cache_expiration_time_custom)
-										.setView(editText)
+										.setView(binding.root)
 										.setPositiveButton(android.R.string.ok) { _, _ ->
-											Settings.cacheExpirationTime = editText.text.toString().toFloat()
+											Settings.cacheExpirationTime = binding.editText.text.toString().toFloat()
 										}
 										.setNegativeButton(android.R.string.cancel, null)
 										.setOnDismissListener {
@@ -185,10 +192,6 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 						setCacheExpirationTimeSummary()
 					}
 					.show()
-			true
-		}
-		cacheExpirationTimePreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-			Settings.cacheExpirationTime = newValue.toString().toFloat()
 			true
 		}
 		exportDirPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {

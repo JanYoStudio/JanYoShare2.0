@@ -1,6 +1,5 @@
 package pw.janyo.janyoshare.util
 
-import android.content.Context
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -15,7 +14,6 @@ object APPCacheUtil {
 	fun loadCacheList(type: Int, init: () -> Unit, observer: Observer<List<InstallAPP>>) {
 		Observable.create<List<InstallAPP>> { subscriber ->
 			init.invoke()
-			Logs.i("loadCacheList: ")
 			val fileName: String = when (type) {
 				AppManager.AppType.USER -> "${JanYoFileUtil.USER_LIST_FILE}${Settings.sortType}"
 				AppManager.AppType.SYSTEM -> "${JanYoFileUtil.SYSTEM_LIST_FILE}${Settings.sortType}"

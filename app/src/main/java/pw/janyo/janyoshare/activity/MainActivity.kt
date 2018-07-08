@@ -93,7 +93,6 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 		viewPagerAdapter.addFragment(userFragment, getString(R.string.title_fragment_user))
 		viewPagerAdapter.addFragment(systemFragment, getString(R.string.title_fragment_system))
 		currentFragment = userFragment
-		currentFragment.loadCacheList()
 		binding.viewPager.adapter = viewPagerAdapter
 		binding.titleTabs.setupWithViewPager(binding.viewPager)
 		binding.viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -214,11 +213,6 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 		}
 	}
 
-	override fun onDestroy() {
-		super.onDestroy()
-
-	}
-
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
 		menuInflater.inflate(R.menu.main, menu)
 		val searchView = menu.findItem(R.id.action_search).actionView as SearchView
@@ -250,8 +244,6 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		when (item.itemId) {
-			R.id.action_search -> {
-			}
 			R.id.action_sort -> {
 				val current = Settings.sortType
 				val temp = intArrayOf(current)

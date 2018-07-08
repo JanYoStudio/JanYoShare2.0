@@ -87,6 +87,7 @@ class AppFragment : BaseFragment(R.layout.fragment_app) {
 		binding.recyclerView.adapter = appAdapter
 		binding.recyclerView.addItemDecoration(DividerItemDecoration(activity!!, DividerItemDecoration.VERTICAL))
 		binding.swipeRefreshLayout.setOnRefreshListener { refreshList() }
+		loadCacheList()
 	}
 
 	fun shouldRefresh(): Boolean {

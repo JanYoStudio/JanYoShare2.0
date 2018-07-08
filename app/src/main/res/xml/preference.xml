@@ -1,61 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <SwitchPreference
-        android:key="@string/key_auto_clean"
-        android:title="@string/title_auto_clean" />
+	<SwitchPreference
+		android:key="@string/key_auto_clean"
+		android:title="@string/title_auto_clean" />
 
-    <Preference
-        android:key="@string/key_cache_expiration_time"
-        android:title="@string/title_cache_expiration_time" />
+	<Preference
+		android:key="@string/key_cache_expiration_time"
+		android:title="@string/title_cache_expiration_time" />
 
-    <Preference
-        android:key="@string/key_export_dir"
-        android:title="@string/title_export_dir" />
+	<Preference
+		android:key="@string/key_export_dir"
+		android:title="@string/title_export_dir" />
 
-    <Preference
-        android:key="@string/key_custom_export_dir"
-        android:title="@string/title_custom_export_dir" />
+	<Preference
+		android:key="@string/key_custom_export_dir"
+		android:title="@string/title_custom_export_dir" />
 
-    <SwitchPreference
-        android:key="@string/key_custom_format"
-        android:title="@string/title_custom_format" />
+	<SwitchPreference
+		android:key="@string/key_custom_format"
+		android:title="@string/title_custom_format" />
 
-    <Preference
-        android:key="@string/key_custom_rename_format"
-        android:title="@string/title_custom_rename_format" />
+	<Preference
+		android:key="@string/key_custom_rename_format"
+		android:title="@string/title_custom_rename_format" />
 
-    <PreferenceCategory android:title="@string/janyo_studio">
+	<PreferenceCategory android:title="@string/janyo_studio">
 
-        <Preference android:title="@string/dick_light" />
+		<Preference android:title="@string/dick_light" />
 
-        <Preference
-            android:summary="@string/link_zh_lyh"
-            android:title="@string/zh_lyh">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="@string/link_zh_lyh" />
-        </Preference>
+		<Preference
+			android:summary="@string/link_zh_lyh"
+			android:title="@string/zh_lyh">
+			<intent
+				android:action="android.intent.action.VIEW"
+				android:data="@string/link_zh_lyh" />
+		</Preference>
 
-        <Preference android:title="@string/cieyget" />
+		<Preference android:title="@string/cieyget" />
 
-        <Preference
-            android:summary="@string/link_mystery0"
-            android:title="@string/mystery0">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="@string/link_mystery0" />
-        </Preference>
+		<Preference
+			android:summary="@string/link_mystery0"
+			android:title="@string/mystery0">
+			<intent
+				android:action="android.intent.action.VIEW"
+				android:data="@string/link_mystery0" />
+		</Preference>
 
-        <Preference android:title="@string/gsoy" />
+		<Preference
+			android:key="@string/gsoy"
+			android:title="@string/gsoy" />
 
-        <Preference
-            android:summary="@string/link_kiva"
-            android:title="@string/kiva">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="@string/link_kiva" />
-        </Preference>
+		<Preference
+			android:summary="@string/link_kiva"
+			android:title="@string/kiva">
+			<intent
+				android:action="android.intent.action.VIEW"
+				android:data="@string/link_kiva" />
+		</Preference>
 
-    </PreferenceCategory>
+	</PreferenceCategory>
 </PreferenceScreen>
