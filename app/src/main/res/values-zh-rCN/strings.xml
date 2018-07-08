@@ -84,7 +84,6 @@
     <string name="title_custom_export_dir">自定义导出路径</string>
     <string name="array_sort_type_update_time_ascending_order">根据更新时间升序排列</string>
     <string name="array_sort_type_update_time_descending_order">根据更新时间降序排列</string>
-	<string name="title_uninstall_type">卸载方式</string>
 	<string name="action_refresh_list">刷新列表</string>
 	<string name="action_request_again">重新请求</string>
 	<string name="hint_uninstall_finish">卸载完成！</string>
@@ -119,4 +118,26 @@
 	<string name="array_share_rename_extension_and_share">修改扩展名后分享</string>
 	<string name="array_share_export_and_share_with_data">提取数据包一起分享</string>
 	<string name="array_share_face_to_face_share">面对面分享</string>
+	<string name="hint_export_finish">操作完成！%1$d 个应用导出成功！</string>
+	<string name="title_dialog_set_long_press_action">请选择您想在长按时执行的操作</string>
+	<string name="hint_export_finish_s">操作完成！%1$d个应用导出完成！</string>
+	<string name="hint_export_with_data_finish_ss">操作完成！%1$d个应用导出完成，检测到%2$d个数据包！</string>
+	<string name="hint_export_with_data_finish__s">操作完成！%1$d个应用导出完成，检测到%2$d个数据包！</string>
+	<string name="hint_export_with_data_finish_s_">操作完成！%1$d个应用导出完成，检测到%2$d个数据包！</string>
+	<string name="hint_export_with_data_finish___">操作完成！%1$d个应用导出完成，检测到%2$d个数据包！</string>
+	<string name="title_long_press_action">长按操作</string>
+	<string name="array_do_operation_long_press_export_only">仅提取</string>
+	<string name="array_do_operation_long_press_export_and_share">提取并分享</string>
+	<string name="array_do_operation_long_press_rename_and_share">重命名并分享</string>
+	<string name="array_do_operation_long_press_rename_extension_and_share">修改扩展名后分享</string>
+	<string name="array_do_operation_long_press_export_and_share_with_data">提取数据包一起分享</string>
+	<string name="array_do_operation_long_press_face_to_face_share">面对面分享</string>
+	<string name="array_do_operation_long_press_copy_info_name">复制应用名称</string>
+	<string name="array_do_operation_long_press_copy_info_package_name">复制应用包名</string>
+	<string name="array_do_operation_long_press_copy_info_version_name">复制应用版本名称</string>
+	<string name="array_do_operation_long_press_copy_info_version_code">复制应用版本号</string>
+	<string name="array_do_operation_long_press_uninstall_normal">普通卸载</string>
+	<string name="array_do_operation_long_press_uninstall_root">使用Root卸载</string>
+	<string name="array_do_operation_long_press_disable">冻结</string>
+	<string name="array_do_operation_long_press_enable">解除冻结</string>
 </resources>
