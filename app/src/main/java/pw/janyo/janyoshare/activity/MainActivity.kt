@@ -45,7 +45,6 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
-import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDelegate
@@ -54,7 +53,6 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
 
 import java.util.Calendar
 
@@ -66,6 +64,7 @@ import pw.janyo.janyoshare.R
 import pw.janyo.janyoshare.adapter.ViewPagerAdapter
 import pw.janyo.janyoshare.databinding.ActivityMainBinding
 import pw.janyo.janyoshare.databinding.AppBarMainBinding
+import pw.janyo.janyoshare.databinding.DialogLicenseBinding
 import pw.janyo.janyoshare.fragment.AppFragment
 import pw.janyo.janyoshare.util.AppManager
 import pw.janyo.janyoshare.util.JanYoFileUtil
@@ -137,20 +136,17 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 								AppCompatDelegate.MODE_NIGHT_YES
 							else
 								AppCompatDelegate.MODE_NIGHT_NO)
-					reStartActivity()
+					restartActivity()
 				}
 				R.id.action_license ->
 					Observable.create<View> { subscriber ->
-						val view = LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_license, NestedScrollView(this@MainActivity), false)
-						val licensePoint1 = view.findViewById<TextView>(R.id.license_point1)
-						val licensePoint2 = view.findViewById<TextView>(R.id.license_point2)
-						val licensePoint3 = view.findViewById<TextView>(R.id.license_point3)
+						val binding = DialogLicenseBinding.inflate(LayoutInflater.from(this))
 						val point = VectorDrawableCompat.create(resources, R.drawable.ic_point, null)
 						point?.setBounds(0, 0, point.minimumWidth, point.minimumHeight)
-						licensePoint1.setCompoundDrawables(point, null, null, null)
-						licensePoint2.setCompoundDrawables(point, null, null, null)
-						licensePoint3.setCompoundDrawables(point, null, null, null)
-						subscriber.onNext(view)
+						binding.licensePoint1.setCompoundDrawables(point, null, null, null)
+						binding.licensePoint2.setCompoundDrawables(point, null, null, null)
+						binding.licensePoint3.setCompoundDrawables(point, null, null, null)
+						subscriber.onNext(binding.root)
 						subscriber.onComplete()
 					}
 							.subscribeOn(Schedulers.newThread())
@@ -171,7 +167,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 									AlertDialog.Builder(this@MainActivity)
 											.setTitle(" ")
 											.setView(view)
-											.setPositiveButton(android.R.string.ok) { _, _ -> Logs.i("onClick: ") }
+											.setPositiveButton(android.R.string.ok, null)
 											.show()
 								}
 							})
@@ -184,7 +180,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 		}
 	}
 
-	private fun reStartActivity() {
+	private fun restartActivity() {
 		finish()
 		startActivity(intent)
 	}
