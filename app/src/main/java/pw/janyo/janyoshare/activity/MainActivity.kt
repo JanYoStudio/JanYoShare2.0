@@ -138,9 +138,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 								AppCompatDelegate.MODE_NIGHT_NO)
 					restartActivity()
 				}
-				R.id.action_license ->
+				R.id.action_license -> {
+					val binding = DialogLicenseBinding.inflate(LayoutInflater.from(this))
 					Observable.create<View> { subscriber ->
-						val binding = DialogLicenseBinding.inflate(LayoutInflater.from(this))
 						val point = VectorDrawableCompat.create(resources, R.drawable.ic_point, null)
 						point?.setBounds(0, 0, point.minimumWidth, point.minimumHeight)
 						binding.licensePoint1.setCompoundDrawables(point, null, null, null)
@@ -171,6 +171,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 											.show()
 								}
 							})
+				}
 				R.id.action_support_us -> Snackbar.make(binding.coordinatorLayout, R.string.hint_service_unavailable, Snackbar.LENGTH_LONG)
 						.show()
 				R.id.action_settings -> startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
