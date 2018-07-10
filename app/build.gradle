@@ -56,7 +56,7 @@ android {
         targetSdkVersion 28
         versionCode autoVersion.code
         versionName autoVersion.name
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         setProperty("archivesBaseName", "JanYo Share-$versionName-$versionCode")
     }
     buildTypes {
@@ -83,23 +83,23 @@ android {
 }
 
 dependencies {
-	kapt "com.android.databinding:compiler:3.1.3"
-	implementation 'com.github.Mystery0Tools:Tools:1.3.2'
+	kapt "androidx.databinding:databinding-compiler:3.3.0-alpha02"
+	implementation 'com.github.Mystery0Tools:Tools:1.4.0'
 	implementation 'com.github.Mystery0Tools:CrashHandler:1.0.1'
-	implementation 'com.github.Mystery0Tools:DirManager:1.1.0'
-	implementation 'com.github.Mystery0Tools:Logs:1.1.1'
+	implementation 'com.github.Mystery0Tools:DirManager:1.2.0'
+	implementation 'com.github.Mystery0Tools:Logs:1.2.0'
 	implementation 'com.google.code.gson:gson:2.8.5'
 	implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
 	implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
 	implementation'com.zyao89:zloading:1.1.2'
 	implementation 'com.github.bumptech.glide:glide:4.7.1'
 	annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
-    implementation 'com.android.support:appcompat-v7:28.0.0-alpha3'
-    implementation 'com.android.support:support-v4:28.0.0-alpha3'
-    implementation 'com.android.support:preference-v7:28.0.0-alpha3'
-    implementation 'com.android.support:design:28.0.0-alpha3'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
+    implementation 'androidx.preference:preference:1.0.0-beta01'
+    implementation 'com.google.android.material:material:1.0.0-beta01'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha1'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'androidx.test:runner:1.1.0-alpha3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha3'
 }

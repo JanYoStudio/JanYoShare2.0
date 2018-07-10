@@ -33,8 +33,8 @@
 
 package pw.janyo.janyoshare.util
 
-import android.databinding.BindingAdapter
-import android.databinding.BindingConversion
+import androidx.databinding.BindingAdapter
+import androidx.databinding.BindingConversion
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import com.bumptech.glide.Glide

@@ -35,8 +35,8 @@ package pw.janyo.janyoshare.activity
 
 import android.os.Bundle
 import android.preference.PreferenceActivity
-import android.support.design.widget.CoordinatorLayout
-import android.support.v7.widget.Toolbar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.appcompat.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout

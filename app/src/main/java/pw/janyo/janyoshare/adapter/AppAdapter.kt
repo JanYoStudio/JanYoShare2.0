@@ -34,9 +34,9 @@
 package pw.janyo.janyoshare.adapter
 
 import android.content.Context
-import android.databinding.DataBindingUtil
-import android.support.design.widget.CoordinatorLayout
-import android.support.v7.widget.RecyclerView
+import androidx.databinding.DataBindingUtil
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 

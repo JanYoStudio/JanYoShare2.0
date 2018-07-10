@@ -18,7 +18,7 @@
 			type="Boolean" />
 	</data>
 
-	<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:app="http://schemas.android.com/apk/res-auto"
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/item_app_height"
@@ -95,7 +95,7 @@
 			app:layout_constraintStart_toEndOf="@id/frameLayout"
 			app:layout_constraintTop_toBottomOf="@+id/app_package_name" />
 
-		<android.support.constraint.Barrier
+		<androidx.constraintlayout.widget.Barrier
 			android:id="@+id/barrier"
 			android:layout_width="wrap_content"
 			android:layout_height="0dp"
@@ -131,5 +131,5 @@
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent" />
 
-	</android.support.constraint.ConstraintLayout>
+	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

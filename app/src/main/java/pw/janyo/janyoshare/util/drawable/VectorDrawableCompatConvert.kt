@@ -36,7 +36,7 @@ package pw.janyo.janyoshare.util.drawable
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
-import android.support.graphics.drawable.VectorDrawableCompat
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 
 class VectorDrawableCompatConvert : DrawableConvert() {
 	override fun convert(drawable: Drawable): Bitmap {

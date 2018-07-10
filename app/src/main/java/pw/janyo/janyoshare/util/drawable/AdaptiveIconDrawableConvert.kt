@@ -39,7 +39,7 @@ import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 
 class AdaptiveIconDrawableConvert : DrawableConvert() {
 	@RequiresApi(Build.VERSION_CODES.O)

@@ -33,7 +33,7 @@
 
 package pw.janyo.janyoshare.activity
 
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 
 import pw.janyo.janyoshare.R
 import pw.janyo.janyoshare.databinding.ActivityDirManagerBinding
