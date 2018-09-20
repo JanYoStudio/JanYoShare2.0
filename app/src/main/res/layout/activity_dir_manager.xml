@@ -8,7 +8,7 @@
 		xmlns:tools="http://schemas.android.com/tools"
 		android:layout_width="match_parent"
 		android:layout_height="480dp"
-		tools:context="pw.janyo.janyoshare.activity.DirManagerActivity">
+		tools:context=".ui.activity.DirManagerActivity">
 
 		<vip.mystery0.dirManager.DirManager
 			android:id="@+id/dirManager"

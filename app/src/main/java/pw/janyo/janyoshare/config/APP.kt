@@ -28,38 +28,38 @@
  *                    =                                                   =
  *                    =====================================================
  *
- * Last modified 18-1-16 下午3:43
+ * Last modified 18-2-10 下午4:00
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package pw.janyo.janyoshare.config
 
-buildscript {
+import android.annotation.SuppressLint
+import android.app.Application
+import android.content.Context
+import pw.janyo.janyoshare.BuildConfig
+import pw.janyo.janyoshare.repository.local.db.DBHelper
+import vip.mystery0.crashhandler.CrashConfig
+import vip.mystery0.crashhandler.CrashHandler
+import vip.mystery0.logs.Logs
 
-	ext.kotlin_version = '1.2.70'
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-    }
-    dependencies {
-		classpath 'com.android.tools.build:gradle:3.2.0-rc03'
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-		classpath 'com.github.Mystery0Tools:AutoVersion:1.0.1'
+class APP : Application() {
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
+	override fun onCreate() {
+		super.onCreate()
+		context = applicationContext
+		DBHelper.init(this)
+		CrashHandler.getInstance(this)
+				.setConfig(CrashConfig()
+						.setAutoClean(false))
+				.init()
+		Logs.setConfig {
+			it.setShowLog(BuildConfig.DEBUG)
+		}
+	}
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-		maven { url "https://dl.bintray.com/thelasterstar/maven/" }
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
+	companion object {
+		@SuppressLint("StaticFieldLeak")
+		lateinit var context: Context
+			private set
+	}
 }

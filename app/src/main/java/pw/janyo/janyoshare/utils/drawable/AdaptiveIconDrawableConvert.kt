@@ -28,38 +28,30 @@
  *                    =                                                   =
  *                    =====================================================
  *
- * Last modified 18-1-16 下午3:43
+ * Last modified 18-2-10 下午4:00
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package pw.janyo.janyoshare.utils.drawable
 
-buildscript {
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.AdaptiveIconDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
+import android.os.Build
+import androidx.annotation.RequiresApi
 
-	ext.kotlin_version = '1.2.70'
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-    }
-    dependencies {
-		classpath 'com.android.tools.build:gradle:3.2.0-rc03'
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-		classpath 'com.github.Mystery0Tools:AutoVersion:1.0.1'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-		maven { url "https://dl.bintray.com/thelasterstar/maven/" }
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
+class AdaptiveIconDrawableConvert : DrawableConvert() {
+	@RequiresApi(Build.VERSION_CODES.O)
+	override fun convert(drawable: Drawable): Bitmap? {
+		val adaptiveIconDrawable = drawable as AdaptiveIconDrawable
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+			return null
+		val layerDrawable = LayerDrawable(arrayOf(adaptiveIconDrawable.background, adaptiveIconDrawable.foreground))
+		val bitmap = Bitmap.createBitmap(layerDrawable.intrinsicWidth, layerDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+		val canvas = Canvas(bitmap)
+		layerDrawable.setBounds(0, 0, canvas.width, canvas.height)
+		layerDrawable.draw(canvas)
+		return bitmap
+	}
 }

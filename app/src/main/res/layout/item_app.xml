@@ -11,7 +11,7 @@
 
 		<variable
 			name="installAPP"
-			type="pw.janyo.janyoshare.classes.InstallAPP" />
+			type="pw.janyo.janyoshare.model.InstallAPP" />
 
 		<variable
 			name="isChecked"

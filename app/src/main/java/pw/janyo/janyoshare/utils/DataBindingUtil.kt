@@ -1,5 +1,5 @@
 /*
- * Created by Mystery0 on 18-2-10 下午4:00.
+ * Created by Mystery0 on 6/14/18 10:19 PM.
  * Copyright (c) 2018. All Rights reserved.
  *
  *                    =====================================================
@@ -28,38 +28,34 @@
  *                    =                                                   =
  *                    =====================================================
  *
- * Last modified 18-1-16 下午3:43
+ * Last modified 6/14/18 10:19 PM
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package pw.janyo.janyoshare.utils
 
-buildscript {
+import androidx.databinding.BindingAdapter
+import androidx.databinding.BindingConversion
+import android.graphics.drawable.Drawable
+import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import vip.mystery0.tools.utils.FileTools
 
-	ext.kotlin_version = '1.2.70'
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-    }
-    dependencies {
-		classpath 'com.android.tools.build:gradle:3.2.0-rc03'
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-		classpath 'com.github.Mystery0Tools:AutoVersion:1.0.1'
+object DataBindingUtil {
+	private val options = RequestOptions()
+			.diskCacheStrategy(DiskCacheStrategy.NONE)
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
+	@JvmStatic
+	@BindingAdapter("bind:icon", "bind:path")
+	fun iconLoader(imageView: ImageView, icon: Drawable?, path: String?) {
+		if (path != null)
+			Glide.with(imageView.context).load(path).apply(options).into(imageView)
+		else
+			imageView.setImageDrawable(icon)
+	}
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-		maven { url "https://dl.bintray.com/thelasterstar/maven/" }
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
+	@JvmStatic
+	@BindingConversion
+	fun convertAppSize(size: Long): String = FileTools.formatFileSize(size, 2)
 }

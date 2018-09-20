@@ -43,32 +43,33 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AlertDialog
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.CheckBox
 import android.widget.ImageView
 import com.zyao89.view.zloading.ZLoadingDialog
 import com.zyao89.view.zloading.Z_TYPE
-import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
 import io.reactivex.Observer
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import pw.janyo.janyoshare.R
-import pw.janyo.janyoshare.classes.InstallAPP
-import pw.janyo.janyoshare.fragment.AppFragment
-import pw.janyo.janyoshare.util.AppManager
-import pw.janyo.janyoshare.util.JanYoFileUtil
-import pw.janyo.janyoshare.util.Settings
+import pw.janyo.janyoshare.model.InstallAPP
+import pw.janyo.janyoshare.ui.adapter.AppAdapter
+import pw.janyo.janyoshare.ui.fragment.AppFragment
+import pw.janyo.janyoshare.utils.AppManagerUtil
+import pw.janyo.janyoshare.utils.JanYoFileUtil
+import pw.janyo.janyoshare.utils.Settings
+import pw.janyo.janyoshare.viewModel.MainViewModel
 import vip.mystery0.logs.Logs
+import vip.mystery0.rxpackagedata.rx.RxObservable
+import vip.mystery0.rxpackagedata.rx.RxObserver
 import vip.mystery0.tools.utils.CommandTools
+import vip.mystery0.tools.utils.IntentTools
 import java.io.File
 
-class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
-					val context: Context,
-					val fragment: AppFragment,
-					val list: ArrayList<InstallAPP>) {
+class ItemAppHelper(private val coordinatorLayout: CoordinatorLayout,
+					private val context: Context,
+					private val appAdapter: AppAdapter,
+					private val appFragment: AppFragment,
+					private val mainViewModel: MainViewModel) {
 
 	private val loadingDialog: ZLoadingDialog = ZLoadingDialog(context)
 			.setLoadingBuilder(Z_TYPE.DOUBLE_CIRCLE)
@@ -87,7 +88,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 	 * @param data 点击的item对应的InstallAPP对象
 	 */
 	fun click(data: InstallAPP) {
-		if (fragment.isSelecting)
+		if (mainViewModel.selectedList.isNotEmpty())
 			clickWhenSelecting()
 		else
 			clickSingle(data)
@@ -99,7 +100,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 	 * @param data 长按的item对应的InstallAPP对象
 	 */
 	fun longClick(data: InstallAPP) {
-		if (fragment.isSelecting)
+		if (mainViewModel.selectedList.isNotEmpty())
 			return
 		when (Settings.longPressAction) {
 			0//仅导出
@@ -123,7 +124,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 			9//拷贝版本号
 			-> copyInfoToClipboard(data, 3)
 			10//普通卸载
-			-> AppManager.uninstallAPP(context, data)
+			-> AppManagerUtil.uninstallAPP(context, data)
 			11//root卸载
 			-> showAlert(true, false, arrayListOf(data))
 			12//冻结
@@ -158,23 +159,23 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 				.setItems(R.array.doOperationSelected) { _, which ->
 					when (which) {
 						0//仅导出
-						-> exportMany(fragment.appList, 0)
+						-> exportMany(mainViewModel.selectedList, 0)
 						1//导出并分享
-						-> exportMany(fragment.appList, 1)
+						-> exportMany(mainViewModel.selectedList, 1)
 						2//和数据包一起分享
-						-> exportMany(fragment.appList, 2)
+						-> exportMany(mainViewModel.selectedList, 2)
 						3//面对面分享
-						-> exportMany(fragment.appList, 3)
+						-> exportMany(mainViewModel.selectedList, 3)
 						4//正常卸载
-						-> fragment.appList.forEach {
-							AppManager.uninstallAPP(context, it)
+						-> mainViewModel.selectedList.forEach {
+							AppManagerUtil.uninstallAPP(context, it)
 						}
 						5//使用Root卸载
-						-> showAlert(true, false, fragment.appList)
+						-> showAlert(true, false, mainViewModel.selectedList)
 						6//冻结
-						-> showAlert(false, true, fragment.appList)
+						-> showAlert(false, true, mainViewModel.selectedList)
 						7//解除冻结
-						-> showAlert(false, false, fragment.appList)
+						-> showAlert(false, false, mainViewModel.selectedList)
 					}
 				}
 				.show()
@@ -197,32 +198,20 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 	 * @param doAction    后续执行的操作
 	 */
 	private fun export(installAPP: InstallAPP, choose: Int, doAction: Int = -1) {
-		Observable.create(ObservableOnSubscribe<Int> { subscriber ->
-			subscriber.onNext(JanYoFileUtil.exportAPK(installAPP))
-			subscriber.onComplete()
-		})
-				.subscribeOn(Schedulers.io())
-				.unsubscribeOn(Schedulers.io())
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(object : Observer<Int> {
-					private var code: Int = 0
-
-					override fun onSubscribe(d: Disposable) {
-						loadingDialog.show()
-					}
-
-					override fun onNext(integer: Int) {
-						code = integer
-					}
-
+		loadingDialog.show()
+		RxObservable<Int>()
+				.doThings {
+					it.onFinish(JanYoFileUtil.exportAPK(installAPP))
+				}
+				.subscribe(object : RxObserver<Int>() {
 					override fun onError(e: Throwable) {
 						loadingDialog.dismiss()
-						Log.wtf("doOperation: onError: ", e)
+						Logs.wtfm("doOperation: onError: ", e)
 					}
 
-					override fun onComplete() {
+					override fun onFinish(data: Int?) {
 						loadingDialog.dismiss()
-						when (code) {
+						when (data) {
 							JanYoFileUtil.Code.DIR_NOT_EXIST -> Snackbar.make(coordinatorLayout, R.string.hint_export_dir_create_failed, Snackbar.LENGTH_LONG)
 									.show()
 							JanYoFileUtil.Code.FILE_NOT_EXIST -> Snackbar.make(coordinatorLayout, R.string.hint_source_file_not_exist, Snackbar.LENGTH_LONG)
@@ -250,39 +239,37 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 
 	private fun exportMany(appList: ArrayList<InstallAPP>, doAction: Int) {
 		val fileList = ArrayList<File>()
-		Observable.create<Map<String, Int>> {
-			val map = HashMap<String, Int>()
-			var num = 0
-			var obbNum = 0
-			appList.forEach {
-				if (JanYoFileUtil.exportAPK(it) == JanYoFileUtil.Code.DONE) {
-					fileList.add(JanYoFileUtil.getExportFile(it))
-					if (doAction == 2) {
-						val obbList = JanYoFileUtil.checkObb(it.packageName)
-						if (obbList.isNotEmpty()) {
-							fileList.addAll(obbList)
-							obbNum += obbList.size
+		RxObservable<Map<String, Int>>()
+				.doThings { emitter ->
+					val map = HashMap<String, Int>()
+					var num = 0
+					var obbNum = 0
+					appList.forEach {
+						if (JanYoFileUtil.exportAPK(it) == JanYoFileUtil.Code.DONE) {
+							fileList.add(JanYoFileUtil.getExportFile(it))
+							if (doAction == 2) {
+								val obbList = JanYoFileUtil.checkObb(it.packageName)
+								if (obbList.isNotEmpty()) {
+									fileList.addAll(obbList)
+									obbNum += obbList.size
+								}
+							}
+							num++
 						}
 					}
-					num++
+					map["file"] = num
+					map["obb"] = obbNum
+					emitter.onFinish(map)
 				}
-			}
-			map["file"] = num
-			map["obb"] = obbNum
-			it.onNext(map)
-			it.onComplete()
-		}
-				.subscribeOn(Schedulers.newThread())
-				.unsubscribeOn(Schedulers.newThread())
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(object : Observer<Map<String, Int>> {
-					private lateinit var map: Map<String, Int>
-					override fun onComplete() {
+				.subscribe(object : RxObserver<Map<String, Int>>() {
+					override fun onFinish(data: Map<String, Int>?) {
 						loadingDialog.dismiss()
+						if (data == null)
+							return
 						when (doAction) {
 							0 ->//仅导出
 							{
-								val fileNum = if (map.containsKey("file")) map["file"] else -1
+								val fileNum = if (data.containsKey("file")) data["file"] else -1
 								if (fileNum == -1)
 									Snackbar.make(coordinatorLayout, R.string.hint_export_failed, Snackbar.LENGTH_LONG)
 								else
@@ -296,7 +283,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 							}
 							1 ->//导出并分享
 							{
-								val fileNum = if (map.containsKey("file")) map["file"] else 0
+								val fileNum = if (data.containsKey("file")) data["file"] else 0
 								Snackbar.make(coordinatorLayout,
 										if (fileNum == 1)
 											context.getString(R.string.hint_export_finish, fileNum)
@@ -305,15 +292,15 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 										, Snackbar.LENGTH_LONG)
 										.addCallback(object : Snackbar.Callback() {
 											override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-												JanYoFileUtil.doShareFile(context, fileList)
+												IntentTools.shareMultFile(context, context.getString(R.string.title_activity_share), fileList, context.getString(R.string.authorities))
 											}
 										})
 										.show()
 							}
 							2 ->//和数据一起分享
 							{
-								val fileNum = if (map.containsKey("file")) map["file"] else 0
-								val obbNum = if (map.containsKey("obb")) map["obb"] else 0
+								val fileNum = if (data.containsKey("file")) data["file"] else 0
+								val obbNum = if (data.containsKey("obb")) data["obb"] else 0
 								Snackbar.make(coordinatorLayout,
 										when {
 											fileNum == 1 && obbNum == 1 -> context.getString(R.string.hint_export_with_data_finish___, fileNum, obbNum)
@@ -324,7 +311,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 										}, Snackbar.LENGTH_LONG)
 										.addCallback(object : Snackbar.Callback() {
 											override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-												JanYoFileUtil.doShareFile(context, fileList)
+												IntentTools.shareMultFile(context, context.getString(R.string.title_activity_share), fileList, context.getString(R.string.authorities))
 											}
 										})
 										.show()
@@ -335,17 +322,9 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 						}
 					}
 
-					override fun onSubscribe(d: Disposable) {
-						loadingDialog.show()
-					}
-
-					override fun onNext(t: Map<String, Int>) {
-						map = t
-					}
-
 					override fun onError(e: Throwable) {
 						loadingDialog.dismiss()
-						Log.wtf("doOperation: onError: ", e)
+						Logs.wtfm("doOperation: onError: ", e)
 					}
 				})
 	}
@@ -359,7 +338,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 	private fun doSomething(installAPP: InstallAPP, whatToDo: Int) {
 		when (whatToDo) {
 			0//提取并分享
-			-> JanYoFileUtil.share(context, JanYoFileUtil.getExportFile(installAPP))
+			-> IntentTools.shareFile(context, context.getString(R.string.title_activity_share_app, installAPP.name), JanYoFileUtil.getExportFile(installAPP), context.getString(R.string.authorities))
 			1//重命名后分享
 			-> {
 				val oldFileName = JanYoFileUtil.formatName(installAPP, Settings.renameFormat)
@@ -380,7 +359,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 								JanYoFileUtil.Code.FILE_EXIST -> Snackbar.make(coordinatorLayout, R.string.hint_file_exist, Snackbar.LENGTH_LONG)
 										.setAction(R.string.action_redo) {
 											if (JanYoFileUtil.renameFile(installAPP, newName, true) == JanYoFileUtil.Code.DONE)
-												JanYoFileUtil.share(context, JanYoFileUtil.getFile(newName + JanYoFileUtil.appendExtensionFileName(installAPP.sourceDir)))
+												IntentTools.shareFile(context, context.getString(R.string.title_activity_share_app, installAPP.name), JanYoFileUtil.getFile(newName + JanYoFileUtil.appendExtensionFileName(installAPP.sourceDir)), context.getString(R.string.authorities))
 											else
 												Snackbar.make(coordinatorLayout, R.string.hint_rename_failed, Snackbar.LENGTH_LONG)
 														.show()
@@ -388,13 +367,13 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 										.addCallback(object : Snackbar.Callback() {
 											override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
 												if (event != Snackbar.Callback.DISMISS_EVENT_ACTION)
-													JanYoFileUtil.share(context, JanYoFileUtil.getFile(newName + JanYoFileUtil.appendExtensionFileName(installAPP.sourceDir)))
+													IntentTools.shareFile(context, context.getString(R.string.title_activity_share_app, installAPP.name), JanYoFileUtil.getFile(newName + JanYoFileUtil.appendExtensionFileName(installAPP.sourceDir)), context.getString(R.string.authorities))
 											}
 										})
 										.show()
 								JanYoFileUtil.Code.ERROR -> Snackbar.make(coordinatorLayout, R.string.hint_rename_failed, Snackbar.LENGTH_LONG)
 										.show()
-								JanYoFileUtil.Code.DONE -> JanYoFileUtil.share(context, JanYoFileUtil.getFile(newName + JanYoFileUtil.appendExtensionFileName(installAPP.sourceDir)))
+								JanYoFileUtil.Code.DONE -> IntentTools.shareFile(context, context.getString(R.string.title_activity_share_app, installAPP.name), JanYoFileUtil.getFile(newName + JanYoFileUtil.appendExtensionFileName(installAPP.sourceDir)), context.getString(R.string.authorities))
 							}
 						}
 						.show()
@@ -418,7 +397,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 								JanYoFileUtil.Code.FILE_EXIST -> Snackbar.make(coordinatorLayout, R.string.hint_file_exist, Snackbar.LENGTH_LONG)
 										.setAction(R.string.action_redo) {
 											if (JanYoFileUtil.renameExtension(installAPP, newExtensionName, true) == JanYoFileUtil.Code.DONE)
-												JanYoFileUtil.share(context, JanYoFileUtil.getFile(JanYoFileUtil.formatName(installAPP, Settings.renameFormat) + if (newExtensionName.isEmpty()) "" else ".$newExtensionName"))
+												IntentTools.shareFile(context, context.getString(R.string.title_activity_share_app, installAPP.name), JanYoFileUtil.getFile(JanYoFileUtil.formatName(installAPP, Settings.renameFormat) + if (newExtensionName.isEmpty()) "" else ".$newExtensionName"), context.getString(R.string.authorities))
 											else
 												Snackbar.make(coordinatorLayout, R.string.hint_rename_failed, Snackbar.LENGTH_LONG)
 														.show()
@@ -426,13 +405,13 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 										.addCallback(object : Snackbar.Callback() {
 											override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
 												if (event != Snackbar.Callback.DISMISS_EVENT_ACTION)
-													JanYoFileUtil.share(context, JanYoFileUtil.getFile(JanYoFileUtil.formatName(installAPP, Settings.renameFormat) + if (newExtensionName.isEmpty()) "" else ".$newExtensionName"))
+													IntentTools.shareFile(context, context.getString(R.string.title_activity_share_app, installAPP.name), JanYoFileUtil.getFile(JanYoFileUtil.formatName(installAPP, Settings.renameFormat) + if (newExtensionName.isEmpty()) "" else ".$newExtensionName"), context.getString(R.string.authorities))
 											}
 										})
 										.show()
 								JanYoFileUtil.Code.ERROR -> Snackbar.make(coordinatorLayout, R.string.hint_rename_failed, Snackbar.LENGTH_LONG)
 										.show()
-								JanYoFileUtil.Code.DONE -> JanYoFileUtil.share(context, JanYoFileUtil.getFile(JanYoFileUtil.formatName(installAPP, Settings.renameFormat) + if (newExtensionName.isEmpty()) "" else ".$newExtensionName"))
+								JanYoFileUtil.Code.DONE -> IntentTools.shareFile(context, context.getString(R.string.title_activity_share_app, installAPP.name), JanYoFileUtil.getFile(JanYoFileUtil.formatName(installAPP, Settings.renameFormat) + if (newExtensionName.isEmpty()) "" else ".$newExtensionName"), context.getString(R.string.authorities))
 							}
 						}
 						.show()
@@ -447,21 +426,21 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 					obbList.isEmpty() -> Snackbar.make(coordinatorLayout, context.getString(R.string.hint_warning_check_obb_no), Snackbar.LENGTH_SHORT)
 							.addCallback(object : Snackbar.Callback() {
 								override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-									JanYoFileUtil.doShareFile(context, shareList)
+									IntentTools.shareMultFile(context, context.getString(R.string.title_activity_share), shareList, context.getString(R.string.authorities))
 								}
 							})
 							.show()
 					obbList.size == 1 -> Snackbar.make(coordinatorLayout, context.getString(R.string.hint_warning_check_obb, obbList.size), Snackbar.LENGTH_SHORT)
 							.addCallback(object : Snackbar.Callback() {
 								override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-									JanYoFileUtil.doShareFile(context, shareList)
+									IntentTools.shareMultFile(context, context.getString(R.string.title_activity_share), shareList, context.getString(R.string.authorities))
 								}
 							})
 							.show()
 					else -> Snackbar.make(coordinatorLayout, context.getString(R.string.hint_warning_check_obb_s, obbList.size), Snackbar.LENGTH_SHORT)
 							.addCallback(object : Snackbar.Callback() {
 								override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-									JanYoFileUtil.doShareFile(context, shareList)
+									IntentTools.shareMultFile(context, context.getString(R.string.title_activity_share), shareList, context.getString(R.string.authorities))
 								}
 							})
 							.show()
@@ -524,7 +503,7 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 				.setTitle(R.string.title_dialog_select_uninstall_type)
 				.setItems(R.array.uninstallType) { _, which ->
 					when (which) {
-						0 -> AppManager.uninstallAPP(context, installAPP)
+						0 -> AppManagerUtil.uninstallAPP(context, installAPP)
 						1 -> showAlert(true, false, arrayListOf(installAPP))
 					}
 				}
@@ -539,18 +518,16 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 	 * @param appList       需要执行操作的APP列表
 	 */
 	private fun showAlert(isUninstall: Boolean, isDisable: Boolean, appList: ArrayList<InstallAPP>) {
-		Observable.create<Boolean> {
-			val result = CommandTools.execRootCommand("echo test")
-			it.onNext(result.isSuccess())
-			it.onComplete()
-		}
-				.subscribeOn(Schedulers.newThread())
-				.unsubscribeOn(Schedulers.newThread())
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(object : Observer<Boolean> {
-					private var isRoot = false
-					override fun onComplete() {
-						if (!isRoot) {
+		RxObservable<Boolean>()
+				.doThings {
+					val result = CommandTools.execRootCommand("echo test")
+					it.onFinish(result.isSuccess())
+				}
+				.subscribe(object : RxObserver<Boolean>() {
+					override fun onFinish(data: Boolean?) {
+						if (data == null)
+							return
+						if (!data) {
 							Snackbar.make(coordinatorLayout, R.string.hint_no_su, Snackbar.LENGTH_LONG)
 									.setAction(R.string.action_request_again) {
 										showAlert(isUninstall, isDisable, appList)
@@ -584,15 +561,8 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 								.show()
 					}
 
-					override fun onSubscribe(d: Disposable) {
-					}
-
-					override fun onNext(t: Boolean) {
-						isRoot = t
-					}
-
 					override fun onError(e: Throwable) {
-						Logs.wtf("onError: request root", e)
+						Logs.wtfm("onError: request root", e)
 					}
 				})
 	}
@@ -602,46 +572,35 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 	 *
 	 * @param appList 需要卸载的APP列表
 	 */
-	private fun doUnInstall(appList: ArrayList<InstallAPP>) {
-		Observable.create<CommandTools.CommandResult> {
-			it.onNext(AppManager.uninstallAPPByRoot(appList))
-			it.onComplete()
-		}
-				.subscribeOn(Schedulers.newThread())
-				.unsubscribeOn(Schedulers.newThread())
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(object : Observer<CommandTools.CommandResult> {
-					private lateinit var result: CommandTools.CommandResult
-					override fun onComplete() {
-						loadingDialog.dismiss()
-						if (result.isSuccess()) {
-							list.removeAll(appList)
-							fragment.notifyAdapter()
-							Snackbar.make(coordinatorLayout, R.string.hint_uninstall_finish, Snackbar.LENGTH_SHORT)
-									.show()
-						} else {
-							Logs.wtf("onComplete: uninstall", result.toString())
-							Snackbar.make(coordinatorLayout, R.string.hint_uninstall_error, Snackbar.LENGTH_LONG)
-									.setAction(R.string.action_refresh_list) {
-										fragment.refreshList()
-									}
-									.show()
+	private fun doUnInstall(appList: ArrayList<InstallAPP>) =
+			RxObservable<CommandTools.CommandResult>()
+					.doThings {
+						it.onFinish(AppManagerUtil.uninstallAPPByRoot(appList))
+					}
+					.subscribe(object : RxObserver<CommandTools.CommandResult>() {
+						override fun onFinish(data: CommandTools.CommandResult?) {
+							loadingDialog.dismiss()
+							if (data == null)
+								return
+							if (data.isSuccess()) {
+								appAdapter.removeList(appList)
+								Snackbar.make(coordinatorLayout, R.string.hint_uninstall_finish, Snackbar.LENGTH_SHORT)
+										.show()
+							} else {
+								Logs.wtf("onComplete: uninstall", data.toString())
+								Snackbar.make(coordinatorLayout, R.string.hint_uninstall_error, Snackbar.LENGTH_LONG)
+										.setAction(R.string.action_refresh_list) {
+											appFragment.refreshList()
+										}
+										.show()
+							}
 						}
-					}
 
-					override fun onSubscribe(d: Disposable) {
-						loadingDialog.show()
-					}
-
-					override fun onNext(t: CommandTools.CommandResult) {
-						result = t
-					}
-
-					override fun onError(e: Throwable) {
-						loadingDialog.dismiss()
-					}
-				})
-	}
+						override fun onError(e: Throwable) {
+							loadingDialog.dismiss()
+							Logs.wtfm("onError: ", e)
+						}
+					})
 
 
 	/**
@@ -650,13 +609,10 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 	 * @param appList 需要冻结的APP列表
 	 */
 	private fun doDisable(appList: ArrayList<InstallAPP>) {
-		Observable.create<CommandTools.CommandResult> {
-			it.onNext(AppManager.disableAPP(appList))
-			it.onComplete()
-		}
-				.subscribeOn(Schedulers.newThread())
-				.unsubscribeOn(Schedulers.newThread())
-				.observeOn(AndroidSchedulers.mainThread())
+		RxObservable<CommandTools.CommandResult>()
+				.doThings {
+					it.onFinish(AppManagerUtil.disableAPP(appList))
+				}
 				.subscribe(object : Observer<CommandTools.CommandResult> {
 					private lateinit var result: CommandTools.CommandResult
 					override fun onComplete() {
@@ -665,14 +621,14 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 							appList.forEach {
 								it.isDisable = true
 							}
-							fragment.notifyAdapter()
+							appAdapter.updateList(appList)
 							Snackbar.make(coordinatorLayout, R.string.hint_disable_finish, Snackbar.LENGTH_SHORT)
 									.show()
 						} else {
 							Logs.wtf("onComplete: disable", result.toString())
 							Snackbar.make(coordinatorLayout, R.string.hint_disable_error, Snackbar.LENGTH_LONG)
 									.setAction(R.string.action_refresh_list) {
-										fragment.refreshList()
+										appFragment.refreshList()
 									}
 									.show()
 						}
@@ -699,13 +655,10 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 	 * @param appList 需要解除冻结的APP列表
 	 */
 	private fun doEnable(appList: ArrayList<InstallAPP>) {
-		Observable.create<CommandTools.CommandResult> {
-			it.onNext(AppManager.enableAPP(appList))
-			it.onComplete()
-		}
-				.subscribeOn(Schedulers.newThread())
-				.unsubscribeOn(Schedulers.newThread())
-				.observeOn(AndroidSchedulers.mainThread())
+		RxObservable<CommandTools.CommandResult>()
+				.doThings {
+					it.onFinish(AppManagerUtil.enableAPP(appList))
+				}
 				.subscribe(object : Observer<CommandTools.CommandResult> {
 					private lateinit var result: CommandTools.CommandResult
 					override fun onComplete() {
@@ -714,14 +667,14 @@ class ItemAppHelper(val coordinatorLayout: CoordinatorLayout,
 							appList.forEach {
 								it.isDisable = false
 							}
-							fragment.notifyAdapter()
+							appAdapter.updateList(appList)
 							Snackbar.make(coordinatorLayout, R.string.hint_enable_finish, Snackbar.LENGTH_SHORT)
 									.show()
 						} else {
 							Logs.wtf("onComplete: enable", result.toString())
 							Snackbar.make(coordinatorLayout, R.string.hint_enable_error, Snackbar.LENGTH_LONG)
 									.setAction(R.string.action_refresh_list) {
-										fragment.refreshList()
+										appFragment.refreshList()
 									}
 									.show()
 						}

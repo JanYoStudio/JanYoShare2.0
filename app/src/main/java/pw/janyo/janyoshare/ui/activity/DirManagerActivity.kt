@@ -1,5 +1,5 @@
 /*
- * Created by Mystery0 on 18-2-10 下午4:00.
+ * Created by Mystery0 on 18-2-10 下午4:44.
  * Copyright (c) 2018. All Rights reserved.
  *
  *                    =====================================================
@@ -28,38 +28,37 @@
  *                    =                                                   =
  *                    =====================================================
  *
- * Last modified 18-1-16 下午3:43
+ * Last modified 18-2-10 下午4:44
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package pw.janyo.janyoshare.ui.activity
 
-buildscript {
+import androidx.databinding.DataBindingUtil
 
-	ext.kotlin_version = '1.2.70'
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-    }
-    dependencies {
-		classpath 'com.android.tools.build:gradle:3.2.0-rc03'
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-		classpath 'com.github.Mystery0Tools:AutoVersion:1.0.1'
+import pw.janyo.janyoshare.R
+import pw.janyo.janyoshare.databinding.ActivityDirManagerBinding
+import pw.janyo.janyoshare.utils.Settings
+import vip.mystery0.tools.base.BaseActivity
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
+class DirManagerActivity : BaseActivity(R.layout.activity_dir_manager) {
+	private lateinit var binding: ActivityDirManagerBinding
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-		maven { url "https://dl.bintray.com/thelasterstar/maven/" }
-    }
-}
+	override fun inflateView(layoutId: Int) {
+		binding = DataBindingUtil.setContentView(this, layoutId)
+	}
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+	override fun initData() {
+		super.initData()
+		title = " "
+
+		binding.dirManager.setCurrentPath(Settings.customExportDir)
+	}
+
+	override fun monitor() {
+		binding.buttonOk.setOnClickListener {
+			Settings.customExportDir = binding.dirManager.getCurrentPath()
+			finish()
+		}
+		binding.buttonCancel.setOnClickListener { finish() }
+	}
 }

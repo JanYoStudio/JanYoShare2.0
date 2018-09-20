@@ -28,38 +28,39 @@
  *                    =                                                   =
  *                    =====================================================
  *
- * Last modified 18-1-16 下午3:43
+ * Last modified 18-2-10 下午4:00
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package pw.janyo.janyoshare.ui.activity
 
-buildscript {
+import android.os.Bundle
+import android.preference.PreferenceActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.appcompat.widget.Toolbar
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.LinearLayout
 
-	ext.kotlin_version = '1.2.70'
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-    }
-    dependencies {
-		classpath 'com.android.tools.build:gradle:3.2.0-rc03'
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-		classpath 'com.github.Mystery0Tools:AutoVersion:1.0.1'
+import pw.janyo.janyoshare.R
+import pw.janyo.janyoshare.ui.fragment.SettingsPreferenceFragment
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
+class SettingsActivity : PreferenceActivity() {
+	private var toolbar: Toolbar? = null
+	var coordinatorLayout: CoordinatorLayout? = null
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-		maven { url "https://dl.bintray.com/thelasterstar/maven/" }
-    }
-}
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		fragmentManager.beginTransaction().replace(R.id.content_wrapper, SettingsPreferenceFragment()).commit()
+		toolbar!!.title = title
+	}
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+	override fun setContentView(layoutResID: Int) {
+		val contentView = LayoutInflater.from(this).inflate(R.layout.activity_settings, LinearLayout(this), false) as ViewGroup
+		toolbar = contentView.findViewById(R.id.toolbar)
+		toolbar!!.setNavigationOnClickListener { finish() }
+		coordinatorLayout = contentView.findViewById(R.id.coordinatorLayout)
+		val contentWrapper = contentView.findViewById<ViewGroup>(R.id.content_wrapper)
+		LayoutInflater.from(this).inflate(layoutResID, contentWrapper, true)
+		window.setContentView(contentView)
+	}
 }

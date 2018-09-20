@@ -71,6 +71,7 @@
 	<string name="title_dialog_select_sort_type">請選擇排序方式</string>
 	<string name="title_dialog_select_wifi">請選擇你要連接的用戶</string>
 	<string name="title_activity_share">分享到</string>
+	<string name="title_activity_share_app">分享 %1$s 到</string>
 	<string name="title_activity_settings">設置</string>
 	<string name="hint_warning_check_obb_s">文件已導出，找到%1$d個數據包！</string>
 	<string name="hint_warning_check_obb_no">文件已導出，沒有找到數據包！</string>

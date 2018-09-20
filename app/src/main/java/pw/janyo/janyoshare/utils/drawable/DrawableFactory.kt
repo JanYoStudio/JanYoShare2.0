@@ -28,38 +28,50 @@
  *                    =                                                   =
  *                    =====================================================
  *
- * Last modified 18-1-16 下午3:43
+ * Last modified 18-2-10 下午4:00
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package pw.janyo.janyoshare.utils.drawable
 
-buildscript {
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 
-	ext.kotlin_version = '1.2.70'
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-    }
-    dependencies {
-		classpath 'com.android.tools.build:gradle:3.2.0-rc03'
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-		classpath 'com.github.Mystery0Tools:AutoVersion:1.0.1'
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
+import vip.mystery0.logs.Logs
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-		maven { url "https://dl.bintray.com/thelasterstar/maven/" }
-    }
-}
+class DrawableFactory {
+	private val drawableConvertContext = DrawableConvertContext()
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+	fun save(drawable: Drawable, path: String): Boolean {
+		val file = File(path)
+		if (!file.parentFile.exists()) {
+			val mkdirs = file.parentFile.mkdirs()
+			if (!mkdirs) {
+				Logs.e("save: 创建文件夹失败")
+				return false
+			}
+		}
+		var fileOutputStream: FileOutputStream? = null
+		try {
+			fileOutputStream = FileOutputStream(file)
+			val bitmap = drawableConvertContext.convert(drawable) ?: return false
+			//图片裁剪在这里调用
+			bitmap.compress(Bitmap.CompressFormat.PNG, 1, fileOutputStream)
+		} catch (e: Exception) {
+			e.printStackTrace()
+			return false
+		} finally {
+			if (fileOutputStream != null)
+				try {
+					fileOutputStream.close()
+				} catch (e: IOException) {
+					e.printStackTrace()
+				}
+
+		}
+		return true
+	}
 }

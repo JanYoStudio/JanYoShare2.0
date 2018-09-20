@@ -1,5 +1,5 @@
 /*
- * Created by Mystery0 on 18-2-10 下午4:00.
+ * Created by Mystery0 on 18-3-17 上午10:37.
  * Copyright (c) 2018. All Rights reserved.
  *
  *                    =====================================================
@@ -28,38 +28,20 @@
  *                    =                                                   =
  *                    =====================================================
  *
- * Last modified 18-1-16 下午3:43
+ * Last modified 18-3-17 上午10:37
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package pw.janyo.janyoshare.ui.activity
 
-buildscript {
+import android.content.Intent
 
-	ext.kotlin_version = '1.2.70'
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-    }
-    dependencies {
-		classpath 'com.android.tools.build:gradle:3.2.0-rc03'
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-		classpath 'com.github.Mystery0Tools:AutoVersion:1.0.1'
+import vip.mystery0.tools.base.BaseActivity
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
+class SplashActivity : BaseActivity(null) {
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-		maven { url "https://dl.bintray.com/thelasterstar/maven/" }
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
+	override fun initData() {
+		super.initData()
+		startActivity(Intent(this, MainActivity::class.java))
+		finish()
+	}
 }

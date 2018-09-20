@@ -28,38 +28,20 @@
  *                    =                                                   =
  *                    =====================================================
  *
- * Last modified 18-1-16 下午3:43
+ * Last modified 18-2-10 下午4:00
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package pw.janyo.janyoshare.utils
 
-buildscript {
-
-	ext.kotlin_version = '1.2.70'
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-    }
-    dependencies {
-		classpath 'com.android.tools.build:gradle:3.2.0-rc03'
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-		classpath 'com.github.Mystery0Tools:AutoVersion:1.0.1'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-		maven { url "https://dl.bintray.com/thelasterstar/maven/" }
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
+object Constant {
+	const val IS_AUTO_CLEAN = "isAutoClean"
+	const val TEMP_DIR = "tempDir"
+	const val CUSTOM_TEMP_DIR = "customTempDir"
+	const val IS_CUSTOM_FORMAT = "isCustomFormat"
+	const val RENAME_FORMAT = "renameFormat"
+	const val NICK_NAME = "nickName"
+	const val SORT_TYPE = "sortType"
+	const val CURRENT_LIST_SIZE = "currentListSize_%d"
+	const val CACHE_EXPIRATION_TIME = "cacheExpirationTime"
+	const val LONG_PRESS_ACTION = "longPressAction"
 }

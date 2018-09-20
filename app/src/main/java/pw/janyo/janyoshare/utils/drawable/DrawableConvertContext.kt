@@ -28,38 +28,42 @@
  *                    =                                                   =
  *                    =====================================================
  *
- * Last modified 18-1-16 下午3:43
+ * Last modified 18-2-10 下午4:00
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package pw.janyo.janyoshare.utils.drawable
 
-buildscript {
+import android.graphics.Bitmap
+import android.graphics.drawable.AdaptiveIconDrawable
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.VectorDrawable
+import android.os.Build
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 
-	ext.kotlin_version = '1.2.70'
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-    }
-    dependencies {
-		classpath 'com.android.tools.build:gradle:3.2.0-rc03'
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-		classpath 'com.github.Mystery0Tools:AutoVersion:1.0.1'
+import vip.mystery0.logs.Logs
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
+class DrawableConvertContext {
+	private var drawableConvert: DrawableConvert? = null
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-		maven { url "https://dl.bintray.com/thelasterstar/maven/" }
-    }
-}
+	fun convert(drawable: Drawable): Bitmap? {
+		try {
+			if (drawable is BitmapDrawable)
+				drawableConvert = BitmapDrawableConvert()
+			else if (drawable is VectorDrawableCompat)
+				drawableConvert = VectorDrawableCompatConvert()
+			else if (drawable is VectorDrawable)
+				drawableConvert = VectorDrawableConvert()
+			else if (Build.VERSION.SDK_INT >= 26)
+				if (drawable is AdaptiveIconDrawable)
+					drawableConvert = AdaptiveIconDrawableConvert()
+				else
+					return null
+			return drawableConvert!!.convert(drawable)
+		} catch (e: Exception) {
+			Logs.wtf("convert: ", e)
+			return null
+		}
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+	}
 }

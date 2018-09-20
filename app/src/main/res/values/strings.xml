@@ -172,5 +172,6 @@
 	<string name="title_dialog_uninstall_alert">Do you want to <b>uninstall</b> the following applications?</string>
 
 	<string name="title_activity_share">Share to</string>
+	<string name="title_activity_share_app">Share %1$s to</string>
 	<string name="title_activity_settings">Settings</string>
 </resources>

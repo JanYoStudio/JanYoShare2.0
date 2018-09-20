@@ -28,38 +28,33 @@
  *                    =                                                   =
  *                    =====================================================
  *
- * Last modified 18-1-16 下午3:43
+ * Last modified 18-2-10 下午4:00
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package pw.janyo.janyoshare.ui.adapter
 
-buildscript {
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 
-	ext.kotlin_version = '1.2.70'
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-    }
-    dependencies {
-		classpath 'com.android.tools.build:gradle:3.2.0-rc03'
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-		classpath 'com.github.Mystery0Tools:AutoVersion:1.0.1'
+class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+	private val fragmentList = ArrayList<Fragment>()
+	private val titleList = ArrayList<String>()
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
+	fun addFragment(fragment: Fragment, title: String) {
+		fragmentList.add(fragment)
+		titleList.add(title)
+	}
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-		maven { url 'https://jitpack.io' }
-		maven { url "https://dl.bintray.com/thelasterstar/maven/" }
-    }
-}
+	override fun getPageTitle(position: Int): CharSequence? {
+		return titleList[position]
+	}
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+	override fun getItem(position: Int): Fragment {
+		return fragmentList[position]
+	}
+
+	override fun getCount(): Int {
+		return fragmentList.size
+	}
 }
