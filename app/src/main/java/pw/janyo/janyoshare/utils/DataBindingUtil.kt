@@ -40,6 +40,7 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.signature.ObjectKey
 import vip.mystery0.tools.utils.FileTools
 
 object DataBindingUtil {
@@ -50,7 +51,7 @@ object DataBindingUtil {
 	@BindingAdapter("bind:icon", "bind:path")
 	fun iconLoader(imageView: ImageView, icon: Drawable?, path: String?) {
 		if (path != null)
-			Glide.with(imageView.context).load(path).apply(options).into(imageView)
+			Glide.with(imageView.context).load(path).apply(options.signature(ObjectKey(Settings.cropType))).into(imageView)
 		else
 			imageView.setImageDrawable(icon)
 	}

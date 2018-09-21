@@ -4,6 +4,7 @@
 	<string name="summary_auto_clean_on">自动清理经已开启，将会喺第次重新启动时进行清理</string>
 	<string name="summary_auto_clean_off">自动清理经已关闭</string>
 	<string name="title_export_dir">设置临时目录</string>
+	<string name="title_crop_type">图标裁剪样式</string>
 	<string name="summary_export_dir">将会保存喺 %1$S</string>
 	<string name="title_custom_rename_format">自定义导出文件命名格式</string>
 	<string name="title_custom_format">自定义格式</string>
@@ -55,10 +56,11 @@
 	<string name="array_export_dir_sdcard">SD卡（/sdcard/JanYo Share/）</string>
 	<string name="array_do_operation_export_only">仅提取</string>
 	<string name="array_do_operation_copy_info">应用声气</string>
-	<string name="array_application_info_name">应用名称</string>
-	<string name="array_application_info_package_name">应用包名</string>
-	<string name="array_application_info_version_name">版本名称</string>
-	<string name="array_application_info_version_code">版本号</string>
+	<string name="array_application_info_name">复制应用名称</string>
+	<string name="array_application_info_package_name">复制应用包名</string>
+	<string name="array_application_info_version_name">复制版本名称</string>
+	<string name="array_application_info_version_code">复制版本号</string>
+	<string name="array_application_info_detail_settings">应用声气界面</string>
 	<string name="array_sort_type_none">默认排序</string>
 	<string name="array_sort_type_name_ascending_order">根据应用名称升序排列</string>
 	<string name="array_sort_type_name_descending_order">根据应用名称降序排列</string>
@@ -66,8 +68,12 @@
 	<string name="array_sort_type_size_descending_order">根据应用大小降序排列</string>
 	<string name="array_sort_type_package_name_ascending_order">根据应用包名升序排列</string>
 	<string name="array_sort_type_package_name_descending_order">根据应用包名降序排列</string>
+	<string name="array_night_mode_auto">自动</string>
+	<string name="array_night_mode_on">开</string>
+	<string name="array_night_mode_off">关</string>
+	<string name="array_night_mode_follow_system">跟随系统</string>
 	<string name="title_dialog_select_operation">请选择需要进行嘅操作</string>
-	<string name="title_dialog_select_copy_info">请选择需要复制嘅声气</string>
+	<string name="title_dialog_select_copy_info">请选择睺住执行嘅操作</string>
 	<string name="title_dialog_select_sort_type">请选择排序方式</string>
 	<string name="title_dialog_select_wifi">请选择你要连接嘅用户</string>
 	<string name="title_activity_share">分享到</string>
@@ -137,8 +143,15 @@
 	<string name="array_do_operation_long_press_application_info_package_name">复制应用包名</string>
 	<string name="array_do_operation_long_press_application_info_version_name">复制应用版本名称</string>
 	<string name="array_do_operation_long_press_application_info_version_code">复制应用版本号</string>
+	<string name="array_do_operation_long_press_application_info_detail_setting">应用声气页面</string>
 	<string name="array_do_operation_long_press_uninstall_normal">普通卸载</string>
 	<string name="array_do_operation_long_press_uninstall_root">使用Root卸载</string>
 	<string name="array_do_operation_long_press_disable">冻结</string>
 	<string name="array_do_operation_long_press_enable">解除冻结</string>
+	<string name="title_dialog_select_night_mode">请选择你想启用嘅夜间模式设置</string>
+	<string name="title_dialog_select_icon_crop_type">请选择你想裁剪嘅样式</string>
+	<string name="array_icon_crop_type_default">默认</string>
+	<string name="array_icon_crop_type_round">圆形</string>
+	<string name="array_icon_crop_type_rectangle">矩形</string>
+	<string name="array_icon_crop_type_round_rectangle">圆角矩形</string>
 </resources>

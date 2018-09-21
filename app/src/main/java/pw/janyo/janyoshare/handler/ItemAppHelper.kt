@@ -67,7 +67,6 @@ import java.io.File
 import android.content.Intent
 import android.net.Uri
 
-
 class ItemAppHelper(private val coordinatorLayout: CoordinatorLayout,
 					private val context: Context,
 					private val appAdapter: AppAdapter,
@@ -134,6 +133,8 @@ class ItemAppHelper(private val coordinatorLayout: CoordinatorLayout,
 			-> showAlert(false, true, arrayListOf(data))
 			13//解除冻结
 			-> showAlert(false, false, arrayListOf(data))
+			14//跳转应用详情页面
+			-> linkToDetailSetting(data)
 		}
 	}
 
@@ -478,14 +479,16 @@ class ItemAppHelper(private val coordinatorLayout: CoordinatorLayout,
 							1 -> copyToClipboard(installAPP.name, installAPP.packageName)
 							2 -> copyToClipboard(installAPP.name, installAPP.versionName)
 							3 -> copyToClipboard(installAPP.name, installAPP.versionCode.toString())
-							4 -> {
-								val intent = Intent("android.settings.APPLICATION_DETAILS_SETTINGS")
-								intent.data = Uri.fromParts("package", installAPP.packageName, null)
-								context.startActivity(intent)
-							}
+							4 -> linkToDetailSetting(installAPP)
 						}
 					}
 					.show()
+	}
+
+	private fun linkToDetailSetting(installAPP: InstallAPP) {
+		val intent = Intent("android.settings.APPLICATION_DETAILS_SETTINGS")
+		intent.data = Uri.fromParts("package", installAPP.packageName, null)
+		context.startActivity(intent)
 	}
 
 	/**

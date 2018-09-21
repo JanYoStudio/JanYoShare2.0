@@ -17,6 +17,10 @@
 		android:key="@string/key_custom_export_dir"
 		android:title="@string/title_custom_export_dir" />
 
+	<Preference
+		android:key="@string/key_crop_type"
+		android:title="@string/title_crop_type" />
+
 	<SwitchPreference
 		android:key="@string/key_custom_format"
 		android:title="@string/title_custom_format" />

@@ -143,4 +143,9 @@ object Settings {
 				.putInt(Constant.NIGHT_MODE, value)
 				.apply()
 		get() = SHARED_PREFERENCES.getInt(Constant.NIGHT_MODE, 3)
+	var cropType: Int
+		set(value) = SHARED_PREFERENCES.edit()
+				.putInt(Constant.CROP_TYPE, value)
+				.apply()
+		get() = SHARED_PREFERENCES.getInt(Constant.CROP_TYPE, 0)
 }

@@ -42,6 +42,7 @@ import pw.janyo.janyoshare.config.APP
 import java.util.ArrayList
 
 import pw.janyo.janyoshare.model.InstallAPP
+import pw.janyo.janyoshare.utils.drawable.DrawableFactory
 import vip.mystery0.tools.utils.CommandTools
 
 object AppManagerUtil {
@@ -72,6 +73,7 @@ object AppManagerUtil {
 	 * @return 列表
 	 */
 	fun getInstallAPPList(appType: Int): List<InstallAPP> {
+		val drawableFactory = DrawableFactory()
 		val packageManager = APP.context.packageManager
 		val packageInfoList = packageManager.getInstalledPackages(0)
 		val tempList = ArrayList<InstallAPP>()
@@ -80,13 +82,13 @@ object AppManagerUtil {
 			AppType.USER -> {
 				for (packageInfo in packageInfoList)
 					if (packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM <= 0)
-						tempList.add(InstallAPP().convertPackageInfo(packageInfo, packageManager, AppType.USER))
+						tempList.add(InstallAPP().convertPackageInfo(packageInfo, packageManager, AppType.USER, drawableFactory))
 				installAPPList.addAll(sort(tempList))
 			}
 			AppType.SYSTEM -> {
 				for (packageInfo in packageInfoList)
 					if (packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM > 0)
-						tempList.add(InstallAPP().convertPackageInfo(packageInfo, packageManager, AppType.SYSTEM))
+						tempList.add(InstallAPP().convertPackageInfo(packageInfo, packageManager, AppType.SYSTEM, drawableFactory))
 				installAPPList.addAll(sort(tempList))
 			}
 		}
@@ -108,7 +110,7 @@ object AppManagerUtil {
 	 *
 	 * @return 排序之后的列表
 	 */
-	private fun sort(originList: List<InstallAPP>): List<InstallAPP> {
+	fun sort(originList: List<InstallAPP>): List<InstallAPP> {
 		return when (Settings.sortType) {
 			SortType.SORT_TYPE_NAME_UP -> originList.sortedBy { it.name }
 			SortType.SORT_TYPE_NAME_DOWN -> originList.sortedByDescending { it.name }

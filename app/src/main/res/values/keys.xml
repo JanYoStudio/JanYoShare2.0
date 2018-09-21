@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_auto_clean" translatable="false">key_auto_clean</string>
-    <string name="title_auto_clean">Auto clean temp directory</string>
-    <string name="summary_auto_clean_on">Automatic cleanup is turned on, and temporary files will be cleaned up on the next startup. </string>
-    <string name="summary_auto_clean_off">Automatic cleanup is turned off.</string>
-    <string name="key_cache_expiration_time" translatable="false">key_cache_expiration_time</string>
-    <string name="title_cache_expiration_time">Cache Expiration Time</string>
-    <string name="summary_cache_expiration_time">List will be updated automatically after %1$.1f days.</string>
-    <string name="summary_cache_expiration_time_one">List will be updated automatically after one day.</string>
-    <string name="summary_cache_expiration_time_no">List automatically update disabled.</string>
-    <string name="key_export_dir" translatable="false">key_export_dir</string>
-    <string name="title_export_dir">Export path</string>
-    <string name="key_custom_export_dir" translatable="false">key_custom_export_dir</string>
-    <string name="title_custom_export_dir">Custom export path</string>
-    <string name="summary_export_dir">Will be saved to %1$s.</string>
-    <string name="key_custom_rename_format" translatable="false">key_custom_rename_format</string>
-    <string name="title_custom_rename_format">Custom rename format</string>
-    <string name="key_custom_format" translatable="false">key_custom_format</string>
-    <string name="title_custom_format">Custom format</string>
-    <string name="summary_custom_format">Will rename like: %1$s</string>
+	<string name="key_auto_clean" translatable="false">key_auto_clean</string>
+	<string name="title_auto_clean">Auto clean temp directory</string>
+	<string name="summary_auto_clean_on">Automatic cleanup is turned on, and temporary files will be cleaned up on the next startup. </string>
+	<string name="summary_auto_clean_off">Automatic cleanup is turned off.</string>
+	<string name="key_cache_expiration_time" translatable="false">key_cache_expiration_time</string>
+	<string name="title_cache_expiration_time">Cache Expiration Time</string>
+	<string name="summary_cache_expiration_time">List will be updated automatically after %1$.1f days.</string>
+	<string name="summary_cache_expiration_time_one">List will be updated automatically after one day.</string>
+	<string name="summary_cache_expiration_time_no">List automatically update disabled.</string>
+	<string name="key_export_dir" translatable="false">key_export_dir</string>
+	<string name="title_export_dir">Export path</string>
+	<string name="key_crop_type" translatable="false">key_crop_type</string>
+	<string name="title_crop_type">Icon crop type</string>
+	<string name="key_custom_export_dir" translatable="false">key_custom_export_dir</string>
+	<string name="title_custom_export_dir">Custom export path</string>
+	<string name="summary_export_dir">Will be saved to %1$s.</string>
+	<string name="key_custom_rename_format" translatable="false">key_custom_rename_format</string>
+	<string name="title_custom_rename_format">Custom rename format</string>
+	<string name="key_custom_format" translatable="false">key_custom_format</string>
+	<string name="title_custom_format">Custom format</string>
+	<string name="summary_custom_format">Will rename like: %1$s</string>
 	<string name="key_long_press_action" translatable="false">key_long_press_action</string>
 	<string name="title_long_press_action">Long press action</string>
 </resources>

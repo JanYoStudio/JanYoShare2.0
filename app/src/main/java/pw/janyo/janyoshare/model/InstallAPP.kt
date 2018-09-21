@@ -42,6 +42,7 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import pw.janyo.janyoshare.utils.JanYoFileUtil
 import pw.janyo.janyoshare.utils.drawable.DrawableFactory
+import vip.mystery0.logs.Logs
 import java.io.File
 
 @Entity(tableName = "tb_install_app")
@@ -76,7 +77,7 @@ class InstallAPP {
 	@ColumnInfo(name = "ia_type")
 	var type = 0
 
-	fun convertPackageInfo(packageInfo: PackageInfo, packageManager: PackageManager, type: Int): InstallAPP {
+	fun convertPackageInfo(packageInfo: PackageInfo, packageManager: PackageManager, type: Int, drawableFactory: DrawableFactory): InstallAPP {
 		name = packageInfo.applicationInfo.loadLabel(packageManager).toString()
 		versionName = packageInfo.versionName
 		versionCode = packageInfo.versionCode
@@ -87,7 +88,7 @@ class InstallAPP {
 		installTime = packageInfo.firstInstallTime
 		updateTime = packageInfo.lastUpdateTime
 		val drawable = packageInfo.applicationInfo.loadIcon(packageManager)
-		if (DrawableFactory().save(drawable, sourceIconPath))
+		if (drawableFactory.save(drawable, sourceIconPath))
 			iconPath = sourceIconPath
 		else
 			icon = drawable
@@ -96,5 +97,6 @@ class InstallAPP {
 		return this
 	}
 
-	override fun equals(other: Any?): Boolean =other is InstallAPP && packageName == other.packageName
+	override fun equals(other: Any?): Boolean = other is InstallAPP &&
+			packageName == other.packageName
 }

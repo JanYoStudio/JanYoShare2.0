@@ -5,10 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.observers.DisposableObserver
-import io.reactivex.schedulers.Schedulers
 import pw.janyo.janyoshare.R
 import pw.janyo.janyoshare.databinding.DialogLicenseBinding
 import vip.mystery0.logs.Logs
@@ -29,7 +25,7 @@ object LayoutUtil {
 				}
 				.subscribe(object :RxObserver<View>(){
 					override fun onError(e: Throwable) {
-						Logs.wtf("onError: ", e)
+						Logs.wtfm("onError: ", e)
 					}
 
 					override fun onFinish(data: View?) {

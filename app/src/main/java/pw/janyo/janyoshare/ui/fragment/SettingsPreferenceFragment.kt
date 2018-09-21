@@ -62,6 +62,7 @@ class SettingsPreferenceFragment : BasePreferenceFragment(R.xml.preference) {
 	private lateinit var isAutoCleanPreference: SwitchPreference
 	private lateinit var cacheExpirationTimePreference: Preference
 	private lateinit var exportDirPreference: Preference
+	private lateinit var cropTypePreference: Preference
 	private lateinit var customExportDirPreference: Preference
 	private lateinit var isCustomFormatPreference: SwitchPreference
 	private lateinit var customRenameFormatPreference: Preference
@@ -77,6 +78,7 @@ class SettingsPreferenceFragment : BasePreferenceFragment(R.xml.preference) {
 		isAutoCleanPreference = findPreferenceById(R.string.key_auto_clean)
 		cacheExpirationTimePreference = findPreferenceById(R.string.key_cache_expiration_time)
 		exportDirPreference = findPreferenceById(R.string.key_export_dir)
+		cropTypePreference = findPreferenceById(R.string.key_crop_type)
 		customExportDirPreference = findPreferenceById(R.string.key_custom_export_dir)
 		isCustomFormatPreference = findPreferenceById(R.string.key_custom_format)
 		customRenameFormatPreference = findPreferenceById(R.string.key_custom_rename_format)
@@ -140,7 +142,7 @@ class SettingsPreferenceFragment : BasePreferenceFragment(R.xml.preference) {
 			}
 			true
 		}
-		cacheExpirationTimePreference.onPreferenceClickListener = Preference.OnPreferenceClickListener { _ ->
+		cacheExpirationTimePreference.setOnPreferenceClickListener { _ ->
 			AlertDialog.Builder(activity!!)
 					.setTitle(R.string.title_dialog_set_cache_expiration_time)
 					.setItems(R.array.cacheExpirationTime) { _, which ->
@@ -172,7 +174,7 @@ class SettingsPreferenceFragment : BasePreferenceFragment(R.xml.preference) {
 					.show()
 			true
 		}
-		exportDirPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener { _ ->
+		exportDirPreference.setOnPreferenceClickListener { _ ->
 			tempExportDir = Settings.exportDir
 			val dialog = AlertDialog.Builder(activity!!)
 					.setTitle(R.string.title_export_dir)
@@ -193,7 +195,21 @@ class SettingsPreferenceFragment : BasePreferenceFragment(R.xml.preference) {
 			})
 			true
 		}
-		customExportDirPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+		cropTypePreference.setOnPreferenceClickListener {
+			var select = Settings.cropType
+			AlertDialog.Builder(activity!!)
+					.setTitle(R.string.title_dialog_set_long_press_action)
+					.setSingleChoiceItems(R.array.iconCropType, select) { _, which ->
+						select = which
+					}
+					.setPositiveButton(android.R.string.ok) { _, _ ->
+						Settings.cropType = select
+					}
+					.setNegativeButton(android.R.string.cancel, null)
+					.show()
+			true
+		}
+		customExportDirPreference.setOnPreferenceClickListener {
 			startActivityForResult(Intent(activity, DirManagerActivity::class.java), CODE_SET_EXPORT_DIR)
 			true
 		}
@@ -214,7 +230,7 @@ class SettingsPreferenceFragment : BasePreferenceFragment(R.xml.preference) {
 			Settings.isCustomFormat = isCustomFormat
 			true
 		}
-		customRenameFormatPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener { _ ->
+		customRenameFormatPreference.setOnPreferenceClickListener { _ ->
 			val binding = DialogCustomRenameFormatBinding.inflate(LayoutInflater.from(activity))
 			binding.renameFormat = Settings.renameFormat
 			val test = InstallAPP()
@@ -260,7 +276,7 @@ class SettingsPreferenceFragment : BasePreferenceFragment(R.xml.preference) {
 				}
 			true
 		}
-		longPressActionPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+		longPressActionPreference.setOnPreferenceClickListener {
 			var select = Settings.longPressAction
 			val array = resources.getStringArray(R.array.doOperationLongPress)
 			if (select < 0 || select >= array.size) {

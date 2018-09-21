@@ -37,7 +37,6 @@ import android.content.Intent
 import pw.janyo.janyoshare.base.JanYoBaseActivity
 
 class SplashActivity : JanYoBaseActivity(null) {
-
 	override fun initData() {
 		super.initData()
 		startActivity(Intent(this, MainActivity::class.java))

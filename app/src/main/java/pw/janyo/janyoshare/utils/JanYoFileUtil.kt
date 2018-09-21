@@ -33,19 +33,11 @@
 
 package pw.janyo.janyoshare.utils
 
-import android.content.Context
 import android.os.Environment
 import android.text.TextUtils
 
-import com.google.gson.Gson
-import com.google.gson.JsonParser
-
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.InputStreamReader
 import java.util.ArrayList
-import java.util.Calendar
 
 import pw.janyo.janyoshare.config.APP
 import pw.janyo.janyoshare.model.InstallAPP
@@ -54,8 +46,6 @@ import vip.mystery0.tools.utils.FileTools
 
 object JanYoFileUtil {
 	private const val JANYO_SHARE = "JanYo Share"//临时目录名
-	const val USER_LIST_FILE = "user.list"//用户软件列表存储文件名
-	const val SYSTEM_LIST_FILE = "system.list"//系统软件列表存储文件名
 
 	object Export {
 		const val EXPORT_DIR_SDCARD_DATA = 0//导出到sdcard的data
@@ -253,104 +243,6 @@ object JanYoFileUtil {
 			else
 				return Code.FILE_EXIST
 		return if (exportFile.renameTo(newFile)) Code.DONE else Code.ERROR
-	}
-
-	/**
-	 * 存储app临时列表
-	 *
-	 * @param context  Context
-	 * @param list     列表
-	 * @param fileName 存储的文件名
-	 * @return 存储结果
-	 */
-	fun saveAppList(context: Context, list: List<InstallAPP>, fileName: String): Boolean {
-		val file = File(context.externalCacheDir, fileName)
-		return saveObject(list, file)
-	}
-
-	/**
-	 * 存储对象
-	 *
-	 * @param any 要存储的对象
-	 * @param file   存储到的文件
-	 * @return 结果
-	 */
-	fun saveObject(any: Any, file: File): Boolean {
-		val gson = Gson()
-		return saveMessage(gson.toJson(any), file)
-	}
-
-	/**
-	 * 存储文本信息
-	 *
-	 * @param message 信息
-	 * @param file    文件
-	 * @return 结果
-	 */
-	fun saveMessage(message: String, file: File): Boolean {
-		if (file.exists())
-			file.delete()
-		if (!file.parentFile.exists())
-			file.parentFile.mkdirs()
-		var fileOutputStream: FileOutputStream? = null
-		try {
-			fileOutputStream = FileOutputStream(file)
-			fileOutputStream.write(message.toByteArray())
-		} catch (e: Exception) {
-			e.printStackTrace()
-			return false
-		} finally {
-			fileOutputStream?.close()
-		}
-		return true
-	}
-
-	/**
-	 * 从文件中获取缓存的列表
-	 *
-	 * @param file   文件
-	 * @param tClass 列表中的类
-	 * @param <T>    泛型
-	 * @return 列表
-	</T> */
-	fun <T> getListFromFile(file: File, tClass: Class<T>): List<T> {
-		if (!file.exists())
-			return ArrayList()
-		var fileInputStream: FileInputStream? = null
-		try {
-			val parser = JsonParser()
-			val gson = Gson()
-			fileInputStream = FileInputStream(file)
-			val jsonArray = parser.parse(InputStreamReader(fileInputStream)).asJsonArray
-			val list = ArrayList<T>()
-			for (jsonElement in jsonArray) {
-				list.add(gson.fromJson(jsonElement, tClass))
-			}
-			return list
-		} catch (e: Exception) {
-			e.printStackTrace()
-			return ArrayList()
-		} finally {
-			fileInputStream?.close()
-		}
-	}
-
-	/**
-	 * 判断缓存是否可用
-	 *
-	 * @param context Context
-	 * @return 结果
-	 */
-	fun isCacheAvailable(context: Context, fileName: String): Boolean {
-		if (Settings.cacheExpirationTime == 0f)
-			return true
-		val dir = context.externalCacheDir ?: return false
-		val cacheFile = File(dir, fileName)
-		if (!cacheFile.exists())
-			return false
-		val now = Calendar.getInstance().timeInMillis
-		val modified = cacheFile.lastModified()
-		return now - modified <= Settings.cacheExpirationTime
 	}
 
 	/**

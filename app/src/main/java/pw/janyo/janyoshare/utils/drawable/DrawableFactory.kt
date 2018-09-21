@@ -34,16 +34,19 @@
 package pw.janyo.janyoshare.utils.drawable
 
 import android.graphics.Bitmap
+import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
+import pw.janyo.janyoshare.utils.bitmap.BitmapCropContext
 
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 
 import vip.mystery0.logs.Logs
 
 class DrawableFactory {
 	private val drawableConvertContext = DrawableConvertContext()
+	private val bitmapCropContext = BitmapCropContext()
 
 	fun save(drawable: Drawable, path: String): Boolean {
 		val file = File(path)
@@ -57,20 +60,16 @@ class DrawableFactory {
 		var fileOutputStream: FileOutputStream? = null
 		try {
 			fileOutputStream = FileOutputStream(file)
-			val bitmap = drawableConvertContext.convert(drawable) ?: return false
+			var bitmap = drawableConvertContext.convert(drawable) ?: return false
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && drawable is AdaptiveIconDrawable)
+				bitmap = bitmapCropContext.crop(bitmap)
 			//图片裁剪在这里调用
 			bitmap.compress(Bitmap.CompressFormat.PNG, 1, fileOutputStream)
 		} catch (e: Exception) {
 			e.printStackTrace()
 			return false
 		} finally {
-			if (fileOutputStream != null)
-				try {
-					fileOutputStream.close()
-				} catch (e: IOException) {
-					e.printStackTrace()
-				}
-
+			fileOutputStream?.close()
 		}
 		return true
 	}

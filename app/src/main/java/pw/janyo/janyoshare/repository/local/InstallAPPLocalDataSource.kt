@@ -17,7 +17,7 @@ object InstallAPPLocalDataSource : InstallAPPDataSource {
 		appListLiveData.value = PackageData.loading()
 		RxObservable<List<InstallAPP>>()
 				.doThings {
-					it.onFinish(installAPPService.queryAPPForType(type))
+					it.onFinish(AppManagerUtil.sort(installAPPService.queryAPPForType(type)))
 				}
 				.subscribe(object : RxObserver<List<InstallAPP>>() {
 					override fun onError(e: Throwable) {
@@ -40,7 +40,7 @@ object InstallAPPLocalDataSource : InstallAPPDataSource {
 		RxObservable<List<InstallAPP>>()
 				.doThings {
 					val list = AppManagerUtil.getInstallAPPList(type)
-					saveList(list)
+					saveList(list, type)
 					it.onFinish(list)
 				}
 				.subscribe(object : RxObserver<List<InstallAPP>>() {
@@ -59,10 +59,10 @@ object InstallAPPLocalDataSource : InstallAPPDataSource {
 				})
 	}
 
-	private fun saveList(list: List<InstallAPP>) {
-		list.forEach {
-			installAPPService.addInstallAPP(it)
-		}
+	private fun saveList(list: List<InstallAPP>, type: Int) {
+		val savedList = installAPPService.queryAPPForType(type)
+		savedList.forEach { installAPPService.delInstallAPP(it) }
+		list.forEach { installAPPService.addInstallAPP(it) }
 		Settings.saveTimeZone = Calendar.getInstance()
 	}
 }

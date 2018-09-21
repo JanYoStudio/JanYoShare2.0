@@ -34,6 +34,7 @@
 		<item>@string/array_do_operation_long_press_uninstall_root</item>
 		<item>@string/array_do_operation_long_press_disable</item>
 		<item>@string/array_do_operation_long_press_enable</item>
+		<item>@string/array_do_operation_long_press_application_info_detail_setting</item>
 	</string-array>
 	<string-array name="doOperationSelected">
 		<item>@string/array_do_operation_long_press_export_only</item>
@@ -89,5 +90,11 @@
 		<item>@string/array_night_mode_on</item>
 		<item>@string/array_night_mode_off</item>
 		<item>@string/array_night_mode_follow_system</item>
+	</string-array>
+	<string-array name="iconCropType">
+		<item>@string/array_icon_crop_type_default</item>
+		<item>@string/array_icon_crop_type_round</item>
+		<item>@string/array_icon_crop_type_rectangle</item>
+		<item>@string/array_icon_crop_type_round_rectangle</item>
 	</string-array>
 </resources>
