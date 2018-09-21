@@ -64,6 +64,9 @@ import vip.mystery0.rxpackagedata.rx.RxObserver
 import vip.mystery0.tools.utils.CommandTools
 import vip.mystery0.tools.utils.IntentTools
 import java.io.File
+import android.content.Intent
+import android.net.Uri
+
 
 class ItemAppHelper(private val coordinatorLayout: CoordinatorLayout,
 					private val context: Context,
@@ -469,12 +472,17 @@ class ItemAppHelper(private val coordinatorLayout: CoordinatorLayout,
 		} else
 			AlertDialog.Builder(context)
 					.setTitle(R.string.title_dialog_select_copy_info)
-					.setItems(R.array.copyInfo) { _, which ->
+					.setItems(R.array.applicationInfo) { _, which ->
 						when (which) {
 							0 -> copyToClipboard(installAPP.name, installAPP.name)
 							1 -> copyToClipboard(installAPP.name, installAPP.packageName)
 							2 -> copyToClipboard(installAPP.name, installAPP.versionName)
 							3 -> copyToClipboard(installAPP.name, installAPP.versionCode.toString())
+							4 -> {
+								val intent = Intent("android.settings.APPLICATION_DETAILS_SETTINGS")
+								intent.data = Uri.fromParts("package", installAPP.packageName, null)
+								context.startActivity(intent)
+							}
 						}
 					}
 					.show()

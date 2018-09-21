@@ -26,10 +26,10 @@
 		<item>@string/array_do_operation_long_press_rename_extension_and_share</item>
 		<item>@string/array_do_operation_long_press_export_and_share_with_data</item>
 		<item>@string/array_do_operation_long_press_face_to_face_share</item>
-		<item>@string/array_do_operation_long_press_copy_info_name</item>
-		<item>@string/array_do_operation_long_press_copy_info_package_name</item>
-		<item>@string/array_do_operation_long_press_copy_info_version_name</item>
-		<item>@string/array_do_operation_long_press_copy_info_version_code</item>
+		<item>@string/array_do_operation_long_press_application_info_name</item>
+		<item>@string/array_do_operation_long_press_application_info_package_name</item>
+		<item>@string/array_do_operation_long_press_application_info_version_name</item>
+		<item>@string/array_do_operation_long_press_application_info_version_code</item>
 		<item>@string/array_do_operation_long_press_uninstall_normal</item>
 		<item>@string/array_do_operation_long_press_uninstall_root</item>
 		<item>@string/array_do_operation_long_press_disable</item>
@@ -52,11 +52,12 @@
 		<item>@string/array_share_export_and_share_with_data</item>
 		<item>@string/array_share_face_to_face_share</item>
 	</string-array>
-	<string-array name="copyInfo">
-		<item>@string/array_copy_info_name</item>
-		<item>@string/array_copy_info_package_name</item>
-		<item>@string/array_copy_info_version_name</item>
-		<item>@string/array_copy_info_version_code</item>
+	<string-array name="applicationInfo">
+		<item>@string/array_application_info_name</item>
+		<item>@string/array_application_info_package_name</item>
+		<item>@string/array_application_info_version_name</item>
+		<item>@string/array_application_info_version_code</item>
+		<item>@string/array_application_info_detail_settings</item>
 	</string-array>
 	<string-array name="sortType">
 		<item>@string/array_sort_type_none</item>

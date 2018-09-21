@@ -105,7 +105,7 @@
 
 	<string name="array_do_operation_export_only">Export only</string>
 	<string name="array_do_operation_share">Share</string>
-	<string name="array_do_operation_copy_info">Copy info</string>
+	<string name="array_do_operation_copy_info">Application info</string>
 	<string name="array_do_operation_uninstall">Uninstall</string>
 	<string name="array_do_operation_disable">Disable</string>
 	<string name="array_do_operation_enable">Enable</string>
@@ -116,10 +116,10 @@
 	<string name="array_do_operation_long_press_rename_extension_and_share">Rename extension name and share</string>
 	<string name="array_do_operation_long_press_export_and_share_with_data">Export and share with data</string>
 	<string name="array_do_operation_long_press_face_to_face_share">Share face to face</string>
-	<string name="array_do_operation_long_press_copy_info_name">Copy Name</string>
-	<string name="array_do_operation_long_press_copy_info_package_name">Copy package name</string>
-	<string name="array_do_operation_long_press_copy_info_version_name">Copy Version name</string>
-	<string name="array_do_operation_long_press_copy_info_version_code">Copy Version code</string>
+	<string name="array_do_operation_long_press_application_info_name">Copy application Name</string>
+	<string name="array_do_operation_long_press_application_info_package_name">Copy application package name</string>
+	<string name="array_do_operation_long_press_application_info_version_name">Copy application version name</string>
+	<string name="array_do_operation_long_press_application_info_version_code">Copy application version code</string>
 	<string name="array_do_operation_long_press_uninstall_normal">Normal Uninstall</string>
 	<string name="array_do_operation_long_press_uninstall_root">Uninstall by root</string>
 	<string name="array_do_operation_long_press_disable">Disable</string>
@@ -131,10 +131,11 @@
 	<string name="array_share_export_and_share_with_data">Export and share with data</string>
 	<string name="array_share_face_to_face_share">Share face to face</string>
 
-	<string name="array_copy_info_name">Name</string>
-	<string name="array_copy_info_package_name">Package name</string>
-	<string name="array_copy_info_version_name">Version name</string>
-	<string name="array_copy_info_version_code">Version code</string>
+	<string name="array_application_info_name">Copy application name</string>
+	<string name="array_application_info_package_name">Copy application package name</string>
+	<string name="array_application_info_version_name">Copy application version name</string>
+	<string name="array_application_info_version_code">Copy application version code</string>
+	<string name="array_application_info_detail_settings">Detail setting</string>
 
 	<string name="array_uninstall_type_normal">Normal</string>
 	<string name="array_uninstall_type_root">Root</string>
@@ -160,7 +161,7 @@
 
 	<string name="title_dialog_select_operation">Please select operation</string>
 	<string name="title_dialog_select_share_method">Please select which type you want to share this application</string>
-	<string name="title_dialog_select_copy_info">Please select info which you want to copy</string>
+	<string name="title_dialog_select_copy_info">Please select action which you want to do</string>
 	<string name="title_dialog_select_uninstall_type">Please select method which you want to finish uninstall</string>
 	<string name="title_dialog_select_sort_type">Please select method which you want to sort</string>
 	<string name="title_dialog_select_wifi">Which user do you want to connect? </string>
