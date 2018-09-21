@@ -36,6 +36,7 @@ package pw.janyo.janyoshare.utils
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.net.Uri
 import pw.janyo.janyoshare.config.APP
 
@@ -75,7 +76,7 @@ object AppManagerUtil {
 	fun getInstallAPPList(appType: Int): List<InstallAPP> {
 		val drawableFactory = DrawableFactory()
 		val packageManager = APP.context.packageManager
-		val packageInfoList = packageManager.getInstalledPackages(0)
+		val packageInfoList = packageManager.getInstalledPackages(PackageManager.GET_PERMISSIONS)
 		val tempList = ArrayList<InstallAPP>()
 		val installAPPList = ArrayList<InstallAPP>()
 		when (appType) {

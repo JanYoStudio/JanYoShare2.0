@@ -36,14 +36,13 @@ package pw.janyo.janyoshare.model
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
+import android.os.Build
+import androidx.room.*
 import pw.janyo.janyoshare.utils.JanYoFileUtil
+import pw.janyo.janyoshare.utils.RoomUtil
 import pw.janyo.janyoshare.utils.drawable.DrawableFactory
-import vip.mystery0.logs.Logs
 import java.io.File
+import java.util.*
 
 @Entity(tableName = "tb_install_app")
 class InstallAPP {
@@ -66,6 +65,13 @@ class InstallAPP {
 	var installTime: Long = 0
 	@ColumnInfo(name = "ia_update_time")
 	var updateTime: Long = 0
+	@ColumnInfo(name = "ia_min_sdk")
+	var minSDK = 1
+	@ColumnInfo(name = "ia_target_sdk")
+	var targetSDK = 1
+	@ColumnInfo(name = "ia_permissions")
+	@TypeConverters(RoomUtil::class)
+	lateinit var permissions: Array<String>
 	@ColumnInfo(name = "ia_icon_path")
 	var iconPath: String? = null
 	@Transient
@@ -87,6 +93,10 @@ class InstallAPP {
 		size = File(packageInfo.applicationInfo.publicSourceDir).length()
 		installTime = packageInfo.firstInstallTime
 		updateTime = packageInfo.lastUpdateTime
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+			minSDK = packageInfo.applicationInfo.minSdkVersion
+		targetSDK = packageInfo.applicationInfo.targetSdkVersion
+		permissions = packageInfo.requestedPermissions
 		val drawable = packageInfo.applicationInfo.loadIcon(packageManager)
 		if (drawableFactory.save(drawable, sourceIconPath))
 			iconPath = sourceIconPath
@@ -99,4 +109,24 @@ class InstallAPP {
 
 	override fun equals(other: Any?): Boolean = other is InstallAPP &&
 			packageName == other.packageName
+
+	override fun hashCode(): Int {
+		var result = id
+		result = 31 * result + name.hashCode()
+		result = 31 * result + versionName.hashCode()
+		result = 31 * result + versionCode
+		result = 31 * result + sourceDir.hashCode()
+		result = 31 * result + packageName.hashCode()
+		result = 31 * result + size.hashCode()
+		result = 31 * result + installTime.hashCode()
+		result = 31 * result + updateTime.hashCode()
+		result = 31 * result + minSDK
+		result = 31 * result + targetSDK
+		result = 31 * result + Arrays.hashCode(permissions)
+		result = 31 * result + (iconPath?.hashCode() ?: 0)
+		result = 31 * result + (icon?.hashCode() ?: 0)
+		result = 31 * result + isDisable.hashCode()
+		result = 31 * result + type
+		return result
+	}
 }
