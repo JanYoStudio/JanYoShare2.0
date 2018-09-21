@@ -123,53 +123,11 @@ class AppFragment : BaseBindingFragment<FragmentAppBinding>(R.layout.fragment_ap
 		return appAdapter.items.isEmpty() || sortType != Settings.sortType
 	}
 
-	fun search(query: String) {
-	}
+	fun search(query: String) = InstallAPPRepository.query(mainViewModel, type, query)
 
-	fun refreshList() {
-		InstallAPPRepository.loadList(mainViewModel, type)
-	}
+	fun refreshList() = InstallAPPRepository.loadList(mainViewModel, type)
 
-	fun loadCacheList() {
-//		APPCacheUtil.loadCacheList(type, {
-//			while (true) {
-//				if (appAdapter != null)
-//					break
-//				Thread.sleep(200)
-//			}
-//		}, object : Observer<List<InstallAPP>> {
-//			private val installAPPList = ArrayList<InstallAPP>()
-//
-//			override fun onSubscribe(d: Disposable) {
-//				sortType = Settings.sortType
-//			}
-//
-//			override fun onNext(installAPPList: List<InstallAPP>) {
-//				this.installAPPList.clear()
-//				this.installAPPList.addAll(installAPPList)
-//			}
-//
-//			override fun onError(e: Throwable) {
-//				refreshList()
-//			}
-//
-//			override fun onComplete() {
-//				if (installAPPList.size != 0) {
-//					list.clear()
-//					list.addAll(installAPPList)
-//					originList.clear()
-//					originList.addAll(installAPPList)
-//					appAdapter!!.notifyDataSetChanged()
-//					binding.swipeRefreshLayout.isRefreshing = false
-//				} else
-//					refreshList()
-//			}
-//		})
-	}
-
-	fun notifyAdapter() {
-		appAdapter.notifyDataSetChanged()
-	}
+	fun loadCacheList() = InstallAPPRepository.loadCacheList(mainViewModel, type)
 
 	companion object {
 		fun newInstance(type: Int): AppFragment {

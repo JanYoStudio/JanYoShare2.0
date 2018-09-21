@@ -41,7 +41,7 @@ object Constant {
 	const val RENAME_FORMAT = "renameFormat"
 	const val NICK_NAME = "nickName"
 	const val SORT_TYPE = "sortType"
-	const val CURRENT_LIST_SIZE = "currentListSize_%d"
 	const val CACHE_EXPIRATION_TIME = "cacheExpirationTime"
 	const val LONG_PRESS_ACTION = "longPressAction"
+	const val SAVE_TIME_ZONE = "saveTimeZone"
 }

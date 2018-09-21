@@ -36,9 +36,9 @@ package pw.janyo.janyoshare.utils
 import android.content.Context
 import android.os.Environment
 
-import java.util.Locale
-
 import pw.janyo.janyoshare.config.APP
+import java.text.SimpleDateFormat
+import java.util.*
 
 object Settings {
 	private val SHARED_PREFERENCES = APP.context.getSharedPreferences("settings", Context.MODE_PRIVATE)
@@ -123,13 +123,19 @@ object Settings {
 					.apply()
 		}
 
-	fun getCurrentListSize(appType: Int): Int {
-		return SHARED_PREFERENCES.getInt(String.format(Locale.CHINESE, Constant.CURRENT_LIST_SIZE, appType), 0)
-	}
-
-	fun setCurrentListSize(appType: Int, size: Int) {
-		SHARED_PREFERENCES.edit()
-				.putInt(String.format(Locale.CHINESE, Constant.CURRENT_LIST_SIZE, appType), size)
-				.apply()
-	}
+	var saveTimeZone: Calendar
+		get() {
+			val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
+			val calendar = Calendar.getInstance()
+			val timeString = SHARED_PREFERENCES.getString(Constant.SAVE_TIME_ZONE, "")
+			if (timeString != "")
+				calendar.time = simpleDateFormat.parse(timeString)
+			return calendar
+		}
+		set(value) {
+			val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
+			SHARED_PREFERENCES.edit()
+					.putString(Constant.SAVE_TIME_ZONE, simpleDateFormat.format(value.time))
+					.apply()
+		}
 }

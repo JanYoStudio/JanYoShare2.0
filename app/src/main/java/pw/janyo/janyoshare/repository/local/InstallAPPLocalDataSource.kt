@@ -5,9 +5,11 @@ import pw.janyo.janyoshare.model.InstallAPP
 import pw.janyo.janyoshare.repository.dataSource.InstallAPPDataSource
 import pw.janyo.janyoshare.repository.local.service.impl.InstallAPPServiceImpl
 import pw.janyo.janyoshare.utils.AppManagerUtil
+import pw.janyo.janyoshare.utils.Settings
 import vip.mystery0.rxpackagedata.PackageData
 import vip.mystery0.rxpackagedata.rx.RxObservable
 import vip.mystery0.rxpackagedata.rx.RxObserver
+import java.util.*
 
 object InstallAPPLocalDataSource : InstallAPPDataSource {
 	private val installAPPService = InstallAPPServiceImpl()
@@ -61,5 +63,6 @@ object InstallAPPLocalDataSource : InstallAPPDataSource {
 		list.forEach {
 			installAPPService.addInstallAPP(it)
 		}
+		Settings.saveTimeZone = Calendar.getInstance()
 	}
 }

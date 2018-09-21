@@ -33,32 +33,26 @@
 
 package pw.janyo.janyoshare.ui.activity
 
-import androidx.databinding.DataBindingUtil
+import kotlinx.android.synthetic.main.activity_dir_manager.*
 
 import pw.janyo.janyoshare.R
-import pw.janyo.janyoshare.databinding.ActivityDirManagerBinding
 import pw.janyo.janyoshare.utils.Settings
 import vip.mystery0.tools.base.BaseActivity
 
 class DirManagerActivity : BaseActivity(R.layout.activity_dir_manager) {
-	private lateinit var binding: ActivityDirManagerBinding
-
-	override fun inflateView(layoutId: Int) {
-		binding = DataBindingUtil.setContentView(this, layoutId)
-	}
 
 	override fun initData() {
 		super.initData()
 		title = " "
 
-		binding.dirManager.setCurrentPath(Settings.customExportDir)
+		dirManager.setCurrentPath(Settings.customExportDir)
 	}
 
 	override fun monitor() {
-		binding.buttonOk.setOnClickListener {
-			Settings.customExportDir = binding.dirManager.getCurrentPath()
+		button_ok.setOnClickListener {
+			Settings.customExportDir = dirManager.getCurrentPath()
 			finish()
 		}
-		binding.buttonCancel.setOnClickListener { finish() }
+		button_cancel.setOnClickListener { finish() }
 	}
 }

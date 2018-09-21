@@ -162,7 +162,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 			}
 			true
 		}
-		cacheExpirationTimePreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+		cacheExpirationTimePreference.onPreferenceClickListener = Preference.OnPreferenceClickListener { _ ->
 			AlertDialog.Builder(activity)
 					.setTitle(R.string.title_dialog_set_cache_expiration_time)
 					.setItems(R.array.cacheExpirationTime) { _, which ->
@@ -194,7 +194,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 					.show()
 			true
 		}
-		exportDirPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+		exportDirPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener { _ ->
 			tempExportDir = Settings.exportDir
 			val dialog = AlertDialog.Builder(activity)
 					.setTitle(R.string.title_export_dir)
@@ -236,7 +236,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 			Settings.isCustomFormat = isCustomFormat
 			true
 		}
-		customRenameFormatPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+		customRenameFormatPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener { _ ->
 			val binding = DialogCustomRenameFormatBinding.inflate(LayoutInflater.from(activity))
 			binding.renameFormat = Settings.renameFormat
 			val test = InstallAPP()
