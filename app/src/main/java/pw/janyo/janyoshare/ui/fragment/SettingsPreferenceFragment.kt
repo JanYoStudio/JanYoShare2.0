@@ -198,7 +198,7 @@ class SettingsPreferenceFragment : BasePreferenceFragment(R.xml.preference) {
 		cropTypePreference.setOnPreferenceClickListener {
 			var select = Settings.cropType
 			AlertDialog.Builder(activity!!)
-					.setTitle(R.string.title_dialog_set_long_press_action)
+					.setTitle(R.string.title_dialog_select_icon_crop_type)
 					.setSingleChoiceItems(R.array.iconCropType, select) { _, which ->
 						select = which
 					}
