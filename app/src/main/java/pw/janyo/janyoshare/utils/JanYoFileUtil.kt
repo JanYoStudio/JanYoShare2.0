@@ -54,12 +54,12 @@ object JanYoFileUtil {
 	}
 
 	object Code {
-		const val DONE = 100//完成
-		const val ERROR = 101//失败
-		const val FILE_NOT_EXIST = 102//文件不存在
-		const val FILE_EXIST = 103//文件已存在
-		const val DIR_NOT_EXIST = 104//目录不存在
-		const val MAKE_DIR_ERROR = 105//创建目录失败
+		const val DONE = FileTools.DONE//完成
+		const val ERROR = FileTools.ERROR//失败
+		const val FILE_NOT_EXIST = FileTools.FILE_NOT_EXIST//文件不存在
+		const val MAKE_DIR_ERROR = FileTools.MAKE_DIR_ERROR//创建目录失败
+		const val FILE_EXIST = 104//文件已存在
+		const val DIR_NOT_EXIST = 105//目录不存在
 	}
 
 	private var EXPORT_APK_DIR: File? = null
@@ -73,6 +73,17 @@ object JanYoFileUtil {
 		get() {
 			initExportDir()
 			return EXPORT_APK_DIR!!.absolutePath
+		}
+
+	/**
+	 * 获取导出图标目录绝对路径
+	 *
+	 * @return
+	 */
+	val exportIconPath: String
+		get() {
+			initExportDir()
+			return File(EXPORT_APK_DIR, "icon").absolutePath
 		}
 
 	/**
@@ -127,8 +138,12 @@ object JanYoFileUtil {
 				return Code.MAKE_DIR_ERROR
 		}
 		if (EXPORT_APK_DIR!!.isDirectory) {
-			for (file in EXPORT_APK_DIR!!.listFiles())
-				Logs.i("cleanFileDir: fileName: " + file.name + " deleteResult: " + file.delete())
+			for (file in EXPORT_APK_DIR!!.listFiles()) {
+				if (file.isFile)
+					file.delete()
+				else if (file.isDirectory)
+					FileTools.deleteDir(file)
+			}
 			return Code.DONE
 		}
 		return Code.ERROR
@@ -198,7 +213,7 @@ object JanYoFileUtil {
 			return Code.DIR_NOT_EXIST
 		val oldName = installAPP.sourceDir.substring(installAPP.sourceDir.lastIndexOf(File.separator) + 1)
 		val outputPath = EXPORT_APK_DIR!!.absolutePath + File.separator + formatName(installAPP, Settings.renameFormat) + appendExtensionFileName(oldName)
-		return FileTools.copyFile(installAPP.sourceDir,outputPath)
+		return FileTools.copyFile(installAPP.sourceDir, outputPath)
 	}
 
 	/**

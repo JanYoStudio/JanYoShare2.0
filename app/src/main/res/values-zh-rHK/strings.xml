@@ -60,6 +60,8 @@
 	<string name="array_application_info_package_name">复制应用包名</string>
 	<string name="array_application_info_version_name">复制版本名称</string>
 	<string name="array_application_info_version_code">复制版本号</string>
+	<string name="array_application_info_export_icon">导出图标</string>
+	<string name="array_do_operation_long_press_export_icon">导出图标</string>
 	<string name="array_application_info_detail_settings">应用声气界面</string>
 	<string name="array_sort_type_none">默认排序</string>
 	<string name="array_sort_type_name_ascending_order">根据应用名称升序排列</string>

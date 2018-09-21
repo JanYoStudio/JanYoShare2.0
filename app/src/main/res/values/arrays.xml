@@ -35,6 +35,7 @@
 		<item>@string/array_do_operation_long_press_disable</item>
 		<item>@string/array_do_operation_long_press_enable</item>
 		<item>@string/array_do_operation_long_press_application_info_detail_setting</item>
+		<item>@string/array_do_operation_long_press_export_icon</item>
 	</string-array>
 	<string-array name="doOperationSelected">
 		<item>@string/array_do_operation_long_press_export_only</item>
@@ -58,6 +59,7 @@
 		<item>@string/array_application_info_package_name</item>
 		<item>@string/array_application_info_version_name</item>
 		<item>@string/array_application_info_version_code</item>
+		<item>@string/array_application_info_export_icon</item>
 		<item>@string/array_application_info_detail_settings</item>
 	</string-array>
 	<string-array name="sortType">

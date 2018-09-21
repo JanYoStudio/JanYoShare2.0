@@ -66,6 +66,7 @@ import vip.mystery0.tools.utils.IntentTools
 import java.io.File
 import android.content.Intent
 import android.net.Uri
+import vip.mystery0.tools.utils.FileTools
 
 class ItemAppHelper(private val coordinatorLayout: CoordinatorLayout,
 					private val context: Context,
@@ -135,6 +136,8 @@ class ItemAppHelper(private val coordinatorLayout: CoordinatorLayout,
 			-> showAlert(false, false, arrayListOf(data))
 			14//跳转应用详情页面
 			-> linkToDetailSetting(data)
+			15//导出图标
+			-> exportIcon(data)
 		}
 	}
 
@@ -192,6 +195,23 @@ class ItemAppHelper(private val coordinatorLayout: CoordinatorLayout,
 		imageViewAnimator = ObjectAnimator.ofFloat(imageView, "alpha", if (isMark) 1f else 0f, if (isMark) 0f else 1f)
 		checkBoxAnimator?.start()
 		imageViewAnimator?.start()
+	}
+
+	private fun exportIcon(installAPP: InstallAPP) {
+		if (installAPP.iconPath != null) {
+			val exportPath = JanYoFileUtil.exportIconPath
+			when (FileTools.copyFile(installAPP.iconPath!!, "$exportPath${File.separator}${installAPP.packageName}.png")) {
+				JanYoFileUtil.Code.FILE_NOT_EXIST -> Snackbar.make(coordinatorLayout, R.string.hint_source_file_not_exist, Snackbar.LENGTH_LONG)
+						.show()
+				JanYoFileUtil.Code.ERROR -> Snackbar.make(coordinatorLayout, R.string.hint_export_failed, Snackbar.LENGTH_LONG)
+						.show()
+				JanYoFileUtil.Code.DONE -> Snackbar.make(coordinatorLayout, context.getString(R.string.hint_export_done, exportPath), Snackbar.LENGTH_SHORT)
+						.show()
+			}
+		} else {
+			Snackbar.make(coordinatorLayout, R.string.hint_export_failed, Snackbar.LENGTH_SHORT)
+					.show()
+		}
 	}
 
 	/**
@@ -479,7 +499,8 @@ class ItemAppHelper(private val coordinatorLayout: CoordinatorLayout,
 							1 -> copyToClipboard(installAPP.name, installAPP.packageName)
 							2 -> copyToClipboard(installAPP.name, installAPP.versionName)
 							3 -> copyToClipboard(installAPP.name, installAPP.versionCode.toString())
-							4 -> linkToDetailSetting(installAPP)
+							4 -> exportIcon(installAPP)
+							5 -> linkToDetailSetting(installAPP)
 						}
 					}
 					.show()

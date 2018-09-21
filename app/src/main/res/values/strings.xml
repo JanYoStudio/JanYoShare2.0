@@ -126,6 +126,7 @@
 	<string name="array_do_operation_long_press_uninstall_root">Uninstall by root</string>
 	<string name="array_do_operation_long_press_disable">Disable</string>
 	<string name="array_do_operation_long_press_enable">Enable</string>
+	<string name="array_do_operation_long_press_export_icon">Export icon</string>
 
 	<string name="array_share_export_and_share">Export and share</string>
 	<string name="array_share_rename_and_share">Rename and share</string>
@@ -137,6 +138,7 @@
 	<string name="array_application_info_package_name">Copy application package name</string>
 	<string name="array_application_info_version_name">Copy application version name</string>
 	<string name="array_application_info_version_code">Copy application version code</string>
+	<string name="array_application_info_export_icon">Export icon</string>
 	<string name="array_application_info_detail_settings">Detail setting</string>
 
 	<string name="array_uninstall_type_normal">Normal</string>

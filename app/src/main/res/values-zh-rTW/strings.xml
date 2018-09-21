@@ -60,6 +60,8 @@
 	<string name="array_application_info_package_name">複製應用包名</string>
 	<string name="array_application_info_version_name">複製版本名稱</string>
 	<string name="array_application_info_version_code">複製版本號</string>
+	<string name="array_application_info_export_icon">導出圖標</string>
+	<string name="array_do_operation_long_press_export_icon">導出圖標</string>
 	<string name="array_application_info_detail_settings">應用信息界麵</string>
 	<string name="array_sort_type_none">默認排序</string>
 	<string name="array_sort_type_name_ascending_order">根據應用名稱升序排列</string>
