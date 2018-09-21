@@ -34,33 +34,37 @@
 package pw.janyo.janyoshare.ui.activity
 
 import android.os.Bundle
-import android.preference.PreferenceActivity
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.appcompat.widget.Toolbar
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.view.MenuItem
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_settings.*
 
 import pw.janyo.janyoshare.R
 import pw.janyo.janyoshare.ui.fragment.SettingsPreferenceFragment
+import vip.mystery0.tools.base.BaseActivity
 
-class SettingsActivity : PreferenceActivity() {
-	private var toolbar: Toolbar? = null
-	var coordinatorLayout: CoordinatorLayout? = null
+class SettingsActivity : BaseActivity(R.layout.activity_settings) {
+	private var snackbar: Snackbar? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		fragmentManager.beginTransaction().replace(R.id.content_wrapper, SettingsPreferenceFragment()).commit()
-		toolbar!!.title = title
+		supportFragmentManager.beginTransaction()
+				.replace(R.id.content_wrapper, SettingsPreferenceFragment())
+				.commit()
+		setSupportActionBar(toolbar)
+		supportActionBar?.setDisplayHomeAsUpEnabled(true)
 	}
 
-	override fun setContentView(layoutResID: Int) {
-		val contentView = LayoutInflater.from(this).inflate(R.layout.activity_settings, LinearLayout(this), false) as ViewGroup
-		toolbar = contentView.findViewById(R.id.toolbar)
-		toolbar!!.setNavigationOnClickListener { finish() }
-		coordinatorLayout = contentView.findViewById(R.id.coordinatorLayout)
-		val contentWrapper = contentView.findViewById<ViewGroup>(R.id.content_wrapper)
-		LayoutInflater.from(this).inflate(layoutResID, contentWrapper, true)
-		window.setContentView(contentView)
+	fun snackbarMessage(message: String, isLong: Boolean = false) {
+		snackbar?.dismiss()
+		snackbar = Snackbar.make(coordinatorLayout, message, if (isLong) Snackbar.LENGTH_LONG else Snackbar.LENGTH_SHORT)
+		snackbar?.show()
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		when (item.itemId) {
+			android.R.id.home ->
+				onBackPressed()
+		}
+		return true
 	}
 }

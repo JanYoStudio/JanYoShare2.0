@@ -37,27 +37,18 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.os.Bundle
-import android.preference.Preference
-import android.preference.PreferenceFragment
-import android.preference.SwitchPreference
-import androidx.annotation.StringRes
-import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.preference.Preference
+import androidx.preference.SwitchPreference
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AlertDialog
 import android.text.Editable
-import android.text.SpannableString
-import android.text.Spanned
 import android.text.TextWatcher
-import android.text.style.StrikethroughSpan
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 
 import pw.janyo.janyoshare.R
+import pw.janyo.janyoshare.base.BasePreferenceFragment
 import pw.janyo.janyoshare.ui.activity.DirManagerActivity
-import pw.janyo.janyoshare.ui.activity.SettingsActivity
 import pw.janyo.janyoshare.model.InstallAPP
 import pw.janyo.janyoshare.databinding.DialogCustomRenameFormatBinding
 import pw.janyo.janyoshare.databinding.DialogViewEdittextBinding
@@ -65,9 +56,8 @@ import pw.janyo.janyoshare.utils.DecimalInputTextWatcher
 import pw.janyo.janyoshare.utils.JanYoFileUtil
 import pw.janyo.janyoshare.utils.Settings
 
-class SettingsPreferenceFragment : PreferenceFragment() {
+class SettingsPreferenceFragment : BasePreferenceFragment(R.xml.preference) {
 	private var tempExportDir = -1
-	private var coordinatorLayout: CoordinatorLayout? = null
 
 	private lateinit var isAutoCleanPreference: SwitchPreference
 	private lateinit var cacheExpirationTimePreference: Preference
@@ -76,19 +66,11 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 	private lateinit var isCustomFormatPreference: SwitchPreference
 	private lateinit var customRenameFormatPreference: Preference
 	private lateinit var longPressActionPreference: Preference
-	private lateinit var gsoyPreference: Preference
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		addPreferencesFromResource(R.xml.preference)
-		coordinatorLayout = (activity as SettingsActivity).coordinatorLayout
-	}
-
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+	override fun initPreference() {
+		super.initPreference()
 		bindView()
 		initialization()
-		monitor()
-		return super.onCreateView(inflater, container, savedInstanceState)
 	}
 
 	private fun bindView() {
@@ -99,14 +81,9 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 		isCustomFormatPreference = findPreferenceById(R.string.key_custom_format)
 		customRenameFormatPreference = findPreferenceById(R.string.key_custom_rename_format)
 		longPressActionPreference = findPreferenceById(R.string.key_long_press_action)
-		gsoyPreference = findPreferenceById(R.string.gsoy)
 	}
 
 	private fun initialization() {
-		val spannableString = SpannableString(getString(R.string.gsoy))
-		spannableString.setSpan(StrikethroughSpan(), 0, spannableString.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-		gsoyPreference.title = spannableString
-
 		isAutoCleanPreference.isChecked = Settings.isAutoClean
 		if (Settings.isAutoClean)
 			isAutoCleanPreference.setSummary(R.string.summary_auto_clean_on)
@@ -136,11 +113,12 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 		setLongPressActionSummary()
 	}
 
-	private fun monitor() {
+
+	override fun monitor() {
 		isAutoCleanPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, _ ->
 			val isAutoClean = !isAutoCleanPreference.isChecked
 			if (isAutoClean)
-				AlertDialog.Builder(activity)
+				AlertDialog.Builder(activity!!)
 						.setTitle(" ")
 						.setMessage(R.string.hint_warning_auto_clean)
 						.setPositiveButton(R.string.action_open) { _, _ -> Settings.isAutoClean = true }
@@ -163,7 +141,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 			true
 		}
 		cacheExpirationTimePreference.onPreferenceClickListener = Preference.OnPreferenceClickListener { _ ->
-			AlertDialog.Builder(activity)
+			AlertDialog.Builder(activity!!)
 					.setTitle(R.string.title_dialog_set_cache_expiration_time)
 					.setItems(R.array.cacheExpirationTime) { _, which ->
 						when (which) {
@@ -176,7 +154,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 								val binding = DialogViewEdittextBinding.inflate(LayoutInflater.from(activity))
 								binding.cacheExpirationTime = Settings.cacheExpirationTime.toString()
 								binding.editText.addTextChangedListener(DecimalInputTextWatcher(binding.editText))
-								AlertDialog.Builder(activity)
+								AlertDialog.Builder(activity!!)
 										.setTitle(R.string.title_dialog_set_cache_expiration_time_custom)
 										.setView(binding.root)
 										.setPositiveButton(android.R.string.ok) { _, _ ->
@@ -196,7 +174,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 		}
 		exportDirPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener { _ ->
 			tempExportDir = Settings.exportDir
-			val dialog = AlertDialog.Builder(activity)
+			val dialog = AlertDialog.Builder(activity!!)
 					.setTitle(R.string.title_export_dir)
 					.setSingleChoiceItems(R.array.exportDir, tempExportDir) { _, which -> tempExportDir = which }
 					.setPositiveButton(android.R.string.ok, null)
@@ -204,7 +182,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 			dialog.show()
 			dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(View.OnClickListener {
 				if (tempExportDir == JanYoFileUtil.Export.EXPORT_DIR_SDCARD || tempExportDir == JanYoFileUtil.Export.EXPORT_DIR_CUSTOM)
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(activity!!, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 						requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE), CODE_PERMISSION_REQUEST)
 						return@OnClickListener
 					}
@@ -255,7 +233,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 					binding.show.text = getString(R.string.summary_custom_format, JanYoFileUtil.formatName(test, format))
 				}
 			})
-			val dialog = AlertDialog.Builder(activity)
+			val dialog = AlertDialog.Builder(activity!!)
 					.setTitle(R.string.title_custom_rename_format)
 					.setView(binding.root)
 					.setPositiveButton(android.R.string.ok, null)
@@ -267,8 +245,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 				dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(View.OnClickListener {
 					val format = binding.textInputLayout.editText!!.text.toString()
 					if (format.isEmpty()) {
-						Toast.makeText(activity, R.string.hint_custom_rename_format_empty, Toast.LENGTH_SHORT)
-								.show()
+						toastMessage(R.string.hint_custom_rename_format_empty)
 						return@OnClickListener
 					}
 					Settings.renameFormat = format
@@ -290,7 +267,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 				select = 0
 				Settings.longPressAction = 0
 			}
-			AlertDialog.Builder(activity)
+			AlertDialog.Builder(activity!!)
 					.setTitle(R.string.title_dialog_set_long_press_action)
 					.setSingleChoiceItems(R.array.doOperationLongPress, select) { _, which ->
 						select = which
@@ -303,11 +280,6 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 					.show()
 			true
 		}
-	}
-
-	private fun <T : Preference> findPreferenceById(@StringRes id: Int): T {
-		@Suppress("UNCHECKED_CAST")
-		return findPreference(getString(id)) as T
 	}
 
 	private fun setCacheExpirationTimeSummary() {
@@ -334,8 +306,7 @@ class SettingsPreferenceFragment : PreferenceFragment() {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 		if (requestCode == CODE_PERMISSION_REQUEST)
 			if (grantResults[0] != PackageManager.PERMISSION_GRANTED)
-				Toast.makeText(activity, R.string.hint_permission_write_external, Toast.LENGTH_LONG)
-						.show()
+				toastMessage(R.string.hint_permission_write_external, true)
 		exportDirPreference.summary = getString(R.string.summary_export_dir, JanYoFileUtil.exportDirPath)
 	}
 

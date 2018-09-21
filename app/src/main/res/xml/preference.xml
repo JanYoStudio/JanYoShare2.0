@@ -51,9 +51,7 @@
 				android:data="@string/link_mystery0" />
 		</Preference>
 
-		<Preference
-			android:key="@string/gsoy"
-			android:title="@string/gsoy" />
+		<Preference android:title="@string/gsoy" />
 
 		<Preference
 			android:summary="@string/link_kiva"
