@@ -17,16 +17,17 @@
 	<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:app="http://schemas.android.com/apk/res-auto"
 		android:layout_width="match_parent"
-		android:layout_height="@dimen/item_app_height"
+		android:layout_height="wrap_content"
+		android:minHeight="@dimen/item_app_height"
 		android:onClick="@{()->handler.click(installAPP)}">
 
 		<FrameLayout
 			android:id="@+id/frameLayout"
 			android:layout_width="@dimen/item_app_img_height"
 			android:layout_height="@dimen/item_app_img_height"
-			android:layout_marginBottom="5dp"
 			android:layout_marginStart="@dimen/constraintLayout_margin1"
 			android:layout_marginTop="5dp"
+			android:layout_marginBottom="5dp"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent">
@@ -95,8 +96,18 @@
 			android:layout_width="wrap_content"
 			android:layout_height="0dp"
 			app:barrierDirection="start"
-			app:constraint_referenced_ids="app_disable,app_size"
+			app:constraint_referenced_ids="app_disable,app_size,app_target_sdk"
 			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<TextView
+			android:id="@+id/app_target_sdk"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="@dimen/constraintLayout_margin1"
+			android:textSize="12sp"
+			app:layout_constraintBottom_toTopOf="@id/app_disable"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent" />
 
@@ -105,26 +116,26 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="@dimen/constraintLayout_margin1"
-			android:layout_marginTop="@dimen/constraintLayout_margin1"
 			android:text="@string/hint_app_disabled"
 			android:textColor="@android:color/holo_red_light"
 			android:textSize="12sp"
 			android:textStyle="bold"
 			android:visibility="gone"
+			app:layout_constraintBottom_toTopOf="@id/app_size"
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
+			app:layout_constraintTop_toBottomOf="@id/app_target_sdk" />
 
 
 		<TextView
 			android:id="@+id/app_size"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="@dimen/constraintLayout_margin1"
 			android:layout_marginEnd="@dimen/constraintLayout_margin1"
 			android:gravity="center_vertical"
 			android:text="@{installAPP.size}"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent" />
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/app_disable" />
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

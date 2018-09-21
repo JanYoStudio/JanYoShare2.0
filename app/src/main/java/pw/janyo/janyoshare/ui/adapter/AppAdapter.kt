@@ -45,7 +45,6 @@ import pw.janyo.janyoshare.databinding.ItemAppBinding
 import pw.janyo.janyoshare.ui.fragment.AppFragment
 import pw.janyo.janyoshare.handler.ItemAppHelper
 import pw.janyo.janyoshare.viewModel.MainViewModel
-import vip.mystery0.logs.Logs
 import vip.mystery0.tools.base.binding.BaseBindingRecyclerViewAdapter
 
 class AppAdapter(private val context: Context,
@@ -58,6 +57,7 @@ class AppAdapter(private val context: Context,
 		val checked = fragment.isChecked(data)
 		binding.handler = handler
 		binding.installAPP = data
+		binding.appTargetSdk.text = context.getString(R.string.hint_app_target_sdk, data.targetSDK)
 		binding.appDisable.visibility = if (data.isDisable) View.VISIBLE else View.GONE
 		binding.checkBox.setOnCheckedChangeListener(null)
 		binding.checkBox.isChecked = checked

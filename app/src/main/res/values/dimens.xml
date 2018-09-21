@@ -1,21 +1,21 @@
 <resources>
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="nav_header_vertical_spacing">8dp</dimen>
-    <dimen name="nav_header_height">176dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="dialog_margin">16dp</dimen>
+	<dimen name="activity_horizontal_margin">16dp</dimen>
+	<dimen name="activity_vertical_margin">16dp</dimen>
+	<dimen name="nav_header_vertical_spacing">8dp</dimen>
+	<dimen name="nav_header_height">176dp</dimen>
+	<dimen name="fab_margin">16dp</dimen>
+	<dimen name="dialog_margin">16dp</dimen>
 
-    <dimen name="dialog_license_title">18sp</dimen>
-    <dimen name="dialog_license_margin_top_title">20dp</dimen>
-    <dimen name="dialog_license_margin_top">5dp</dimen>
+	<dimen name="dialog_license_title">18sp</dimen>
+	<dimen name="dialog_license_margin_top_title">20dp</dimen>
+	<dimen name="dialog_license_margin_top">5dp</dimen>
 
-    <dimen name="item_app_height">70dp</dimen>
-    <dimen name="item_app_img_height">60dp</dimen>
-    <dimen name="item_app_margin">5dp</dimen>
+	<dimen name="item_app_height">70dp</dimen>
+	<dimen name="item_app_img_height">60dp</dimen>
+	<dimen name="item_app_margin">5dp</dimen>
 
-    <dimen name="constraintLayout_margin1">8dp</dimen>
-    <dimen name="constraintLayout_margin2">16dp</dimen>
-    <dimen name="constraintLayout_margin3">24dp</dimen>
-    <dimen name="constraintLayout_margin4">32dp</dimen>
+	<dimen name="constraintLayout_margin1">8dp</dimen>
+	<dimen name="constraintLayout_margin2">16dp</dimen>
+	<dimen name="constraintLayout_margin3">24dp</dimen>
+	<dimen name="constraintLayout_margin4">32dp</dimen>
 </resources>

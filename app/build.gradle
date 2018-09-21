@@ -38,26 +38,26 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 autoVersion {
-    major 2
-    minor 0
-    patch 2
-    beta 0
-    alpha 0
+	major 2
+	minor 0
+	patch 2
+	beta 0
+	alpha 0
 }
 
 android {
-    compileSdkVersion 28
+	compileSdkVersion 28
 	dataBinding {
 		enabled = true
 	}
-    defaultConfig {
-        applicationId "pw.janyo.janyoshare"
-        minSdkVersion 21
-        targetSdkVersion 28
-        versionCode autoVersion.code
-        versionName autoVersion.name
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        setProperty("archivesBaseName", "JanYo Share-$versionName-$versionCode")
+	defaultConfig {
+		applicationId "pw.janyo.janyoshare"
+		minSdkVersion 21
+		targetSdkVersion 28
+		versionCode autoVersion.code
+		versionName autoVersion.name
+		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+		setProperty("archivesBaseName", "JanYo Share-$versionName-$versionCode")
 
 		//指定room.schemaLocation生成的文件路径
 		javaCompileOptions {
@@ -65,25 +65,25 @@ android {
 				arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
 			}
 		}
-    }
-    buildTypes {
-        debug {
-            resValue "string", "app_version_name", autoVersion.name
-            resValue "string", "app_version_code", "$autoVersion.code"
-            resValue "string", "app_version", "$autoVersion.name-$autoVersion.code"
-            resValue "string", "app_package_name", "pw.janyo.janyoshare"
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        release {
-            resValue "string", "app_version_name", autoVersion.name
-            resValue "string", "app_version_code", "$autoVersion.code"
-            resValue "string", "app_version", "$autoVersion.name-$autoVersion.code"
-            resValue "string", "app_package_name", "pw.janyo.janyoshare"
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
+	}
+	buildTypes {
+		debug {
+			resValue "string", "app_version_name", autoVersion.name
+			resValue "string", "app_version_code", "$autoVersion.code"
+			resValue "string", "app_version", "$autoVersion.name-$autoVersion.code"
+			resValue "string", "app_package_name", "pw.janyo.janyoshare"
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+		}
+		release {
+			resValue "string", "app_version_name", autoVersion.name
+			resValue "string", "app_version_code", "$autoVersion.code"
+			resValue "string", "app_version", "$autoVersion.name-$autoVersion.code"
+			resValue "string", "app_package_name", "pw.janyo.janyoshare"
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+		}
+	}
 	kapt {
 		generateStubs = true
 	}

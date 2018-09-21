@@ -39,10 +39,8 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.room.*
 import pw.janyo.janyoshare.utils.JanYoFileUtil
-import pw.janyo.janyoshare.utils.RoomUtil
 import pw.janyo.janyoshare.utils.drawable.DrawableFactory
 import java.io.File
-import java.util.*
 
 @Entity(tableName = "tb_install_app")
 class InstallAPP {
@@ -69,9 +67,6 @@ class InstallAPP {
 	var minSDK = 1
 	@ColumnInfo(name = "ia_target_sdk")
 	var targetSDK = 1
-	@ColumnInfo(name = "ia_permissions")
-	@TypeConverters(RoomUtil::class)
-	lateinit var permissions: Array<String>
 	@ColumnInfo(name = "ia_icon_path")
 	var iconPath: String? = null
 	@Transient
@@ -96,7 +91,6 @@ class InstallAPP {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
 			minSDK = packageInfo.applicationInfo.minSdkVersion
 		targetSDK = packageInfo.applicationInfo.targetSdkVersion
-		permissions = packageInfo.requestedPermissions
 		val drawable = packageInfo.applicationInfo.loadIcon(packageManager)
 		if (drawableFactory.save(drawable, sourceIconPath))
 			iconPath = sourceIconPath
@@ -122,7 +116,6 @@ class InstallAPP {
 		result = 31 * result + updateTime.hashCode()
 		result = 31 * result + minSDK
 		result = 31 * result + targetSDK
-		result = 31 * result + Arrays.hashCode(permissions)
 		result = 31 * result + (iconPath?.hashCode() ?: 0)
 		result = 31 * result + (icon?.hashCode() ?: 0)
 		result = 31 * result + isDisable.hashCode()

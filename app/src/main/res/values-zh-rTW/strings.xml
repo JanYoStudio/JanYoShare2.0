@@ -99,6 +99,7 @@
 	<string name="hint_disable_error">凍結失敗！</string>
 	<string name="hint_enable_finish">解除凍結成功！</string>
 	<string name="hint_enable_error">解除凍結失敗！</string>
+	<string name="hint_app_target_sdk">API %1$d</string>
 	<string name="hint_app_disabled">**已凍結**</string>
 	<string name="hint_no_su">獲取Root權限出錯！</string>
 	<string name="array_do_operation_share">分享</string>

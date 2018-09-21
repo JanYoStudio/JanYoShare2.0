@@ -26,7 +26,7 @@ object InstallAPPLocalDataSource : InstallAPPDataSource {
 
 					override fun onFinish(data: List<InstallAPP>?) {
 						if (data == null || data.isEmpty())
-							appListLiveData.value = PackageData.empty()
+							loadList(appListLiveData, originAPPListLiveData, type)
 						else {
 							originAPPListLiveData.value = data
 							appListLiveData.value = PackageData.content(data)

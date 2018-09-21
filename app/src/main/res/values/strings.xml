@@ -87,6 +87,7 @@
 	<string name="hint_enable_finish">Enable finish!</string>
 	<string name="hint_enable_error">Enable error!</string>
 
+	<string name="hint_app_target_sdk">API %1$d</string>
 	<string name="hint_app_disabled">**Disabled**</string>
 
 	<string name="hint_no_su">Request root permission failed!</string>
