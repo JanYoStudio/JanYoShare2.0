@@ -39,10 +39,10 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_settings.*
 
 import pw.janyo.janyoshare.R
+import pw.janyo.janyoshare.base.JanYoBaseActivity
 import pw.janyo.janyoshare.ui.fragment.SettingsPreferenceFragment
-import vip.mystery0.tools.base.BaseActivity
 
-class SettingsActivity : BaseActivity(R.layout.activity_settings) {
+class SettingsActivity : JanYoBaseActivity(R.layout.activity_settings) {
 	private var snackbar: Snackbar? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {

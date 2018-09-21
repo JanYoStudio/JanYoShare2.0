@@ -36,10 +36,10 @@ package pw.janyo.janyoshare.ui.activity
 import kotlinx.android.synthetic.main.activity_dir_manager.*
 
 import pw.janyo.janyoshare.R
+import pw.janyo.janyoshare.base.JanYoBaseActivity
 import pw.janyo.janyoshare.utils.Settings
-import vip.mystery0.tools.base.BaseActivity
 
-class DirManagerActivity : BaseActivity(R.layout.activity_dir_manager) {
+class DirManagerActivity : JanYoBaseActivity(R.layout.activity_dir_manager) {
 
 	override fun initData() {
 		super.initData()

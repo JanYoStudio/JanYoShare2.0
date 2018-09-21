@@ -44,4 +44,5 @@ object Constant {
 	const val CACHE_EXPIRATION_TIME = "cacheExpirationTime"
 	const val LONG_PRESS_ACTION = "longPressAction"
 	const val SAVE_TIME_ZONE = "saveTimeZone"
+	const val NIGHT_MODE="nightMode"
 }

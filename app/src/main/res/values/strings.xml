@@ -159,12 +159,18 @@
 	<string name="array_sort_type_update_time_ascending_order">By update time in ascending order</string>
 	<string name="array_sort_type_update_time_descending_order">By update time in descending order</string>
 
+	<string name="array_night_mode_auto">Auto</string>
+	<string name="array_night_mode_on">On</string>
+	<string name="array_night_mode_off">Off</string>
+	<string name="array_night_mode_follow_system">Follow system</string>
+
 	<string name="title_dialog_select_operation">Please select operation</string>
 	<string name="title_dialog_select_share_method">Please select which type you want to share this application</string>
 	<string name="title_dialog_select_copy_info">Please select action which you want to do</string>
 	<string name="title_dialog_select_uninstall_type">Please select method which you want to finish uninstall</string>
 	<string name="title_dialog_select_sort_type">Please select method which you want to sort</string>
 	<string name="title_dialog_select_wifi">Which user do you want to connect? </string>
+	<string name="title_dialog_select_night_mode">Please select mode which you want enable</string>
 	<string name="title_dialog_set_cache_expiration_time">Please enter the cache expiration time you want to set</string>
 	<string name="title_dialog_set_cache_expiration_time_custom">Please enter the cache expiration time you want to set (Days)</string>
 	<string name="title_dialog_set_long_press_action">Please select the action you want to do when you long press?</string>

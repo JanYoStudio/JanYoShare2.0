@@ -36,7 +36,6 @@ package pw.janyo.janyoshare.ui.activity
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import com.google.android.material.snackbar.Snackbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -44,7 +43,6 @@ import androidx.core.view.GravityCompat
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
@@ -55,6 +53,7 @@ import java.util.Calendar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import pw.janyo.janyoshare.R
+import pw.janyo.janyoshare.base.JanYoBaseActivity
 import pw.janyo.janyoshare.ui.adapter.ViewPagerAdapter
 import pw.janyo.janyoshare.ui.fragment.AppFragment
 import pw.janyo.janyoshare.utils.AppManagerUtil
@@ -62,9 +61,8 @@ import pw.janyo.janyoshare.utils.JanYoFileUtil
 import pw.janyo.janyoshare.utils.LayoutUtil
 import pw.janyo.janyoshare.utils.Settings
 import pw.janyo.janyoshare.viewModel.MainViewModel
-import vip.mystery0.tools.base.BaseActivity
 
-class MainActivity : BaseActivity(R.layout.activity_main) {
+class MainActivity : JanYoBaseActivity(R.layout.activity_main) {
 	private lateinit var mainViewModel: MainViewModel
 	private var lastPressTime: Long = 0
 	private lateinit var currentFragment: AppFragment
@@ -122,13 +120,21 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 						.show()
 				R.id.action_clear_temp_dir -> clearFiles()
 				R.id.action_night_mode -> {
-					val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-					delegate.setLocalNightMode(
-							if (currentNightMode == Configuration.UI_MODE_NIGHT_NO)
-								AppCompatDelegate.MODE_NIGHT_YES
-							else
-								AppCompatDelegate.MODE_NIGHT_NO)
-					recreate()
+					val itemArray = resources.getStringArray(R.array.night_mode)
+					var selectedIndex = Settings.nightMode
+					AlertDialog.Builder(this)
+							.setTitle(R.string.title_dialog_select_night_mode)
+							.setSingleChoiceItems(itemArray, selectedIndex) { _, index ->
+								selectedIndex = index
+							}
+							.setPositiveButton(android.R.string.ok) { _, _ ->
+								if (Settings.nightMode != selectedIndex) {
+									Settings.nightMode = selectedIndex
+									recreate()
+								}
+							}
+							.setNegativeButton(android.R.string.cancel, null)
+							.show()
 				}
 				R.id.action_license -> LayoutUtil.showLicense(this)
 				R.id.action_support_us -> Snackbar.make(coordinatorLayout, R.string.hint_service_unavailable, Snackbar.LENGTH_LONG)

@@ -138,4 +138,9 @@ object Settings {
 					.putString(Constant.SAVE_TIME_ZONE, simpleDateFormat.format(value.time))
 					.apply()
 		}
+	var nightMode: Int
+		set(value) = SHARED_PREFERENCES.edit()
+				.putInt(Constant.NIGHT_MODE, value)
+				.apply()
+		get() = SHARED_PREFERENCES.getInt(Constant.NIGHT_MODE, 3)
 }

@@ -34,10 +34,9 @@
 package pw.janyo.janyoshare.ui.activity
 
 import android.content.Intent
+import pw.janyo.janyoshare.base.JanYoBaseActivity
 
-import vip.mystery0.tools.base.BaseActivity
-
-class SplashActivity : BaseActivity(null) {
+class SplashActivity : JanYoBaseActivity(null) {
 
 	override fun initData() {
 		super.initData()
