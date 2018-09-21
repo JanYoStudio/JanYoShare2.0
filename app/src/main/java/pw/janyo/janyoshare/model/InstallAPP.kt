@@ -95,4 +95,6 @@ class InstallAPP {
 		this.type = type
 		return this
 	}
+
+	override fun equals(other: Any?): Boolean =other is InstallAPP && packageName == other.packageName
 }

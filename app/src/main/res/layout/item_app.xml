@@ -12,10 +12,6 @@
 		<variable
 			name="installAPP"
 			type="pw.janyo.janyoshare.model.InstallAPP" />
-
-		<variable
-			name="isChecked"
-			type="Boolean" />
 	</data>
 
 	<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -49,8 +45,7 @@
 				android:layout_height="@dimen/item_app_img_height"
 				android:layout_gravity="center"
 				android:background="?android:attr/listChoiceIndicatorMultiple"
-				android:button="@null"
-				android:checked="@{isChecked}" />
+				android:button="@null" />
 
 		</FrameLayout>
 

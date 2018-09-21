@@ -111,23 +111,21 @@ class AppFragment : BaseBindingFragment<FragmentAppBinding>(R.layout.fragment_ap
 			mainViewModel.selectedList.remove(data)
 	}
 
-	fun isChecked(installAPP: InstallAPP): Boolean {
-		mainViewModel.selectedList.forEach {
-			if (it.packageName == installAPP.packageName)
-				return true
-		}
-		return false
-	}
+	fun isChecked(installAPP: InstallAPP): Boolean = mainViewModel.selectedList.contains(installAPP)
 
-	fun shouldRefresh(): Boolean {
-		return appAdapter.items.isEmpty() || sortType != Settings.sortType
-	}
+	fun shouldRefresh(): Boolean = ::appAdapter.isInitialized && (appAdapter.items.isEmpty() || sortType != Settings.sortType)
 
 	fun search(query: String) = InstallAPPRepository.query(mainViewModel, type, query)
 
-	fun refreshList() = InstallAPPRepository.loadList(mainViewModel, type)
+	fun refreshList() {
+		InstallAPPRepository.loadList(mainViewModel, type)
+		sortType = Settings.sortType
+	}
 
-	fun loadCacheList() = InstallAPPRepository.loadCacheList(mainViewModel, type)
+	fun loadCacheList() {
+		InstallAPPRepository.loadCacheList(mainViewModel, type)
+		sortType = Settings.sortType
+	}
 
 	companion object {
 		fun newInstance(type: Int): AppFragment {

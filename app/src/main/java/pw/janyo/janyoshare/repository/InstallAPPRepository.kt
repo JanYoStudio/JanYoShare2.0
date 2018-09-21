@@ -6,6 +6,7 @@ import pw.janyo.janyoshare.repository.local.InstallAPPLocalDataSource
 import pw.janyo.janyoshare.utils.AppManagerUtil
 import pw.janyo.janyoshare.utils.Settings
 import pw.janyo.janyoshare.viewModel.MainViewModel
+import vip.mystery0.logs.Logs
 import vip.mystery0.rxpackagedata.PackageData
 import vip.mystery0.rxpackagedata.rx.RxObservable
 import vip.mystery0.rxpackagedata.rx.RxObserver
@@ -13,6 +14,7 @@ import java.util.*
 
 object InstallAPPRepository {
 	fun loadCacheList(mainViewModel: MainViewModel, type: Int) {
+		Logs.i("loadCacheList: ")
 		mainViewModel.selectedList.clear()
 		val calendar = Calendar.getInstance()
 		if (calendar.timeInMillis - Settings.saveTimeZone.timeInMillis >= Settings.cacheExpirationTime * 24f * 60f * 60f * 1000f)
@@ -22,6 +24,7 @@ object InstallAPPRepository {
 	}
 
 	fun loadList(mainViewModel: MainViewModel, type: Int) {
+		Logs.i("loadList: ")
 		mainViewModel.selectedList.clear()
 		InstallAPPLocalDataSource.loadList(getAPPListFromType(mainViewModel, type), getOriginAPPListFromType(mainViewModel, type), type)
 	}
